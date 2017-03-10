@@ -1,0 +1,756 @@
+;;; Package --- Summary
+;;; Emacs main configuration file
+
+;;; Commentary:
+;;; Copyright (c) 2016 Pierre Seimandi
+;;; Under GPL Licence v2.0 and after.
+;;;
+;;; Parts of this file were found in others Emacs configuration
+;;; files.  Some credits are due to:
+;;; - Copyright (c) 2010, Cédric Mauclair;
+;;; - Copyright (c) 2008, Nikolaj Schumacher.
+;;; All licenced under GPL v3.0 and after.
+;;;
+;;; Parts of this file come from Emacs wiki.
+;;; These parts are licenced under GPL v2.0 and after.
+;;;
+;;; Time-stamp: <2016-11-05 20:48:05 seimandp>
+;;;
+;;; Code:
+;;; ————————————————————————————————————————————————————————
+
+;;; ————————————————————————— utility function: with-library
+(defmacro with-library (lib &rest body)
+  "Try to load LIB and, if available, execute BODY."
+  `(if (require ',lib nil t)
+       (progn ,@body)
+     (message (format "Package %s is unavailable." ',lib)) nil))
+
+;; Define the indent level for this function
+(put 'with-library 'lisp-indent-function 1)
+;;; ——————————————————— [end] utility function: with-library
+
+;;; ——————————————— utility function: byte-compile-this-file
+(defun my:byte-compile-this-file ()
+  "Compile the file the buffer is visiting."
+  (interactive)
+  (byte-compile-file (expand-file-name buffer-file-name)))
+;;; ————————— [end] utility function: byte-compile-this-file
+
+;;; ———————————————————— before-save-hook & write-file-hooks
+(add-hook 'write-file-hooks 'time-stamp)
+;;; —————————————— [end] before-save-hook & write-file-hooks
+
+;;; —————————————————————————————————————— packages archives
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("gnu"   . "http://elpa.gnu.org/packages/"))
+
+(package-initialize)
+;;; ———————————————————————————————— [end] packages archives
+
+;;; ————————————————————————————————————— whitespace cleanup
+(setq-default show-trailing-whitespace t)
+
+;; Cleanup whitespace if the file was originally clean
+(with-library whitespace-cleanup-mode
+  (global-whitespace-cleanup-mode))
+;;; ——————————————————————————————— [end] whitespace cleanup
+
+;;; ——————————————————————————————————————— startup settings
+;; Don't show the startup message & screen on launch
+(setq inhibit-startup-message t)
+(setq inhibit-startup-screen t)
+(setq inhibit-startup-buffer-menu t)
+
+;; By default, don't show the menu bar
+;; (can be reenabled with C-c t m)
+(menu-bar-mode -1)
+
+;; Disable the tool bar
+(tool-bar-mode -1)
+
+;; Don't wrap lines
+(set-default 'truncate-lines t)
+
+;; Show the column number
+(setq column-number-mode t)
+
+;; No tabulations, inserts spaces instead
+(setq-default indent-tabs-mode nil)
+
+;; Get some stuff from the CUA mode (mainly, the rectangular selection)
+(cua-selection-mode t)
+
+;; C-k kills the whole line (including the eol marker) if the cursor
+;; is at the begining
+(setq kill-whole-line t)
+
+;; No duplicates allowed in the history
+(setq history-delete-duplicates t)
+
+;; Auto refresh buffers when files changed on disk
+(global-auto-revert-mode t)
+
+; Default font
+(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-8"))
+
+;; Intial frame size and position
+(add-to-list 'default-frame-alist '(fullscreen . fullheight))
+(add-to-list 'default-frame-alist '(width  . 131))
+(add-to-list 'default-frame-alist '(height . 81))
+(add-to-list 'default-frame-alist '(top    . 0))
+(add-to-list 'default-frame-alist '(left   . 0))
+
+;; Load the theme
+(load-theme 'clearview-light t)
+
+;; To avoid dead circumflex issue
+(load-library "iso-transl")
+;;; ————————————————————————————————— [end] startup settings
+
+;;; ————————————————————————————————————————————————— cursor
+(blink-cursor-mode 0)
+;;; ——————————————————————————————————————————— [end] cursor
+
+;;; ———————————————————————————————————————————— winner mode
+;; Undo/Redo window configuration cganges (C-c left, C-c right)
+(with-library winner
+  (winner-mode t))
+;;; —————————————————————————————————————— [end] winner mode
+
+;;; ————————————————————————————————————————————————— eshell
+;; Allows to completely clear the eshell buffer using C-l
+(defun my:eshell-clear-buffer ()
+  "Clear terminal."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
+
+(add-hook 'eshell-mode-hook
+          '(lambda() (local-set-key (kbd "C-l") 'my:eshell-clear-buffer)))
+;;; ——————————————————————————————————————————— [end] eshell
+
+;;; —————————————————————————————————————————————————— ediff
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(setq ediff-split-window-function 'split-window-horizontally)
+
+;; Restore window configuration after ediff
+(defvar my-ediff-bwin-config nil "Window configuration before ediff.")
+(defcustom my-ediff-bwin-reg ?b
+  "*Register to be set up to hold `my-ediff-bwin-config' configuration.")
+
+(defvar my-ediff-awin-config nil "Window configuration after ediff.")
+(defcustom my-ediff-awin-reg ?e
+  "*Register to be used to hold `my-ediff-awin-config' window configuration.")
+
+(defun my-ediff-bsh ()
+  "Function to be called before any buffers or window setup for ediff."
+  (setq my-ediff-bwin-config (current-window-configuration))
+  (when (characterp my-ediff-bwin-reg)
+    (set-register my-ediff-bwin-reg
+                  (list my-ediff-bwin-config (point-marker)))))
+
+(defun my-ediff-ash ()
+  "Function to be called after buffers and window setup for ediff."
+  (setq my-ediff-awin-config (current-window-configuration))
+  (when (characterp my-ediff-awin-reg)
+    (set-register my-ediff-awin-reg
+                  (list my-ediff-awin-config (point-marker)))))
+
+(defun my-ediff-qh ()
+  "Function to be called when ediff quits."
+  (when my-ediff-bwin-config
+    (set-window-configuration my-ediff-bwin-config)))
+
+(add-hook 'ediff-before-setup-hook 'my-ediff-bsh)
+(add-hook 'ediff-after-setup-windows-hook 'my-ediff-ash 'append)
+(add-hook 'ediff-quit-hook 'my-ediff-qh)
+;;; ———————————————————————————————————————————— [end] ediff
+
+;;; ———————————————————————————————————— general keybindings
+(global-set-key (kbd "RET") 'newline-and-indent)
+
+(global-set-key (kbd "C-z")     'undo)
+(global-set-key (kbd "C-x C-k")         'kill-this-buffer)
+(global-set-key (kbd "C-x C-b")         'ibuffer)
+
+(global-set-key (kbd "<f4>")    'eshell)
+(global-set-key (kbd "<f5>")    'query-replace)
+(global-set-key (kbd "<S-f5>")  'query-replace-regexp)
+(global-set-key (kbd "<f6>")    'align-regexp)
+(global-set-key (kbd "<S-f6>")  'align-repeat)
+(global-set-key (kbd "<f7>")    'dired)
+(global-set-key (kbd "<S-f7>")  (lambda () (interactive) (dired default-directory)))
+(global-set-key (kbd "<f8>")    'my:byte-compile-this-file)
+(global-set-key (kbd "<f9>")    'imenu)
+(global-set-key (kbd "<f12>")   'list-packages)
+
+(global-set-key (kbd "<backtab>") (lambda () (interactive) (switch-to-buffer (other-buffer))))
+(global-set-key (kbd "<C-tab>")           'next-buffer)
+
+(global-set-key (kbd "M-SPC") 'dabbrev-expand) ; swaped with just-one-space "M-/"
+(global-set-key (kbd "M-/")   'just-one-space) ; swaped with dabbrev-expand "M-SPC"
+
+(global-set-key (kbd "<mouse-3>") 'ignore)
+(global-set-key (kbd "<S-mouse-3>") 'mouse-appearance-menu)
+(global-set-key (kbd "<S-down-mouse-1>") 'ignore) ; switched to right click
+(global-set-key (kbd "<S-mouse-1>") 'ignore)
+
+(global-set-key (kbd "C-c") 'nil)
+(global-set-key (kbd "C-c t m") 'menu-bar-mode)
+(global-set-key (kbd "C-c t t") 'tool-bar-mode)
+
+;; switch comment-dwim and xref-pop-marker-stack
+(global-set-key (kbd "M-;") 'xref-pop-marker-stack)
+(global-set-key (kbd "M-,") 'comment-dwim)
+
+(windmove-default-keybindings 'meta)
+;;; ——————————————————————————————— [end] general keybindings
+
+;;; ———————————————————————————————————————————— vimish-fold
+(with-library vimish-fold
+  (global-set-key (kbd "M-RET")   'vimish-fold-toggle)
+  (global-set-key (kbd "C-c f")   'nil)
+  (global-set-key (kbd "C-c f f") 'vimish-fold)
+  (global-set-key (kbd "C-c f d") 'vimish-fold-delete)
+  (global-set-key (kbd "C-c f o") 'vimish-fold-unfold-all)
+  (global-set-key (kbd "C-c f c") 'vimish-fold-refold-all)
+
+  (vimish-fold-global-mode 1)
+
+  (defun my:vimish-fold-next-block (n)
+    "Find the next N custom folding delimiters and create the corresponding fold."
+    (interactive "p")
+
+    (catch 'done
+      (while (>= (setq n (1- n)) 0)
+        (when (eobp) (throw 'done nil))
+
+        (let (p1 p2)
+          ;; move to the previous fold delimiter (end or start), in case
+          ;; we are inside a region to fold.
+          (re-search-backward   "[ ]*\\s<+[ ]*—+[ ]*\\(.*\\)\n" nil t)
+          (move-beginning-of-line nil)
+
+          ;; go to the end of the region to fold, mark it.
+          (re-search-forward   "[ ]*\\s<+[ ]*—+[ ]*\\(.*\\)\n\\(.*\n\\)*?[ ]*\\s<+[ ]*—+[ ]*\\[end\\][ ]*\\1$" nil t)
+          (move-beginning-of-line 2)
+          (setq p2 (point))
+
+          ;; go back to the start of the region to fold, mark it.
+          (re-search-backward  "[ ]*\\s<+[ ]*—+[ ]*\\(.*\\)\n\\(.*\n\\)*?[ ]*\\s<+[ ]*—+[ ]*\\[end\\][ ]*\\1$" nil t)
+          (move-beginning-of-line nil)
+          (setq p1 (point))
+
+          ;; fold the region between p1 and p2
+          (condition-case nil
+              (vimish-fold p1 p2)
+            ((debug error) nil))
+
+          ;; go back to the end of the region we just folded.
+          (goto-char p2) ))) )
+
+  (global-set-key (kbd "C-c f b") 'my:vimish-fold-next-block))
+;;; —————————————————————————————————————— [end] vimish-fold
+
+;;; ————————————————————————————————————————————— drag stuff
+(with-library drag-stuff
+  (global-set-key (kbd "C-«") 'drag-stuff-left)
+  (global-set-key (kbd "C-»") 'drag-stuff-right)
+  (global-set-key (kbd "C-+") 'drag-stuff-up)
+  (global-set-key (kbd "C--") 'drag-stuff-down))
+;;; ——————————————————————————————————————— [end] drag stuff
+
+;;; ———————————————————————————————————————————————— backups
+(setq
+ backup-by-copying t   ; copy all files, don't rename them.
+ delete-old-versions t ; don't ask to delete excess backup versions.
+ kept-new-versions 10  ; number of newest versions to keep.
+ kept-old-versions 0   ; number of oldest versions to keep.
+ version-control t)    ; use version numbers for backups
+
+;; Directory for the backup per save
+(setq backup-directory-alist '(("." . "~/.emacs.d/backup/per-save")))
+
+(defun my:force-backup-of-buffer ()
+  "Make a special \"per session\" backup at the first save of each emacs session."
+  (when (not buffer-backed-up)
+    ;; Override the default parameters for per-session backups.
+    (let ((backup-directory-alist '(("" . "~/.emacs.d/backup/per-session")))
+          (kept-new-versions 5))
+      (backup-buffer)))
+
+  ;; Make a "per save" backup on each save. The first save results in
+  ;; both a per-session and a per-save backup, to keep the numbering of
+  ;; per-save backups consistent.
+  (let ((buffer-backed-up nil))
+    (backup-buffer)))
+
+(add-hook 'before-save-hook 'my:force-backup-of-buffer)
+;;; —————————————————————————————————————————— [end] backups
+
+;;; ————————————————————————————————————————————— completion
+(add-to-list 'completion-ignored-extensions '".bak")
+(add-to-list 'completion-ignored-extensions '"~")
+(add-to-list 'completion-ignored-extensions '"#")
+(add-to-list 'completion-ignored-extensions '".o")
+(add-to-list 'completion-ignored-extensions '".obj")
+(add-to-list 'completion-ignored-extensions '".lib")
+(add-to-list 'completion-ignored-extensions '".elc")
+(add-to-list 'completion-ignored-extensions '".exe")
+;;; ——————————————————————————————————————— [end] completion
+
+;;; ———————————————————————————————————————————— smartparens
+(with-library smartparens-config
+  (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
+  (show-smartparens-global-mode +1))
+;;; —————————————————————————————————————— [end] smartparens
+
+;;; ——————————————————————————————————————————— align-repeat
+(defun align-repeat (start end regexp)
+  "Between START and END, repeat alignment with respect to the given regular expression REGEXP."
+  (interactive "r\nsAlign regexp: ")
+  (align-regexp start end (concat "\\(\\s-*\\)" regexp) 1 1 t))
+;;; ————————————————————————————————————— [end] align-repeat
+
+;;; —————————————————————————————————————————————— scrolling
+(setq scroll-margin 1
+      scroll-conservatively 0
+      scroll-up-aggressively 0.01
+      scroll-down-aggressively 0.01)
+
+(with-library view
+  (global-set-key (kbd "<next>")  (lambda () (interactive) (condition-case nil (View-scroll-half-page-forward) (end-of-buffer (goto-char (point-max))))))
+  (global-set-key (kbd "<prior>") (lambda () (interactive) (condition-case nil (View-scroll-half-page-backward) (beginning-of-buffer (goto-char (point-min)))))))
+;;; ———————————————————————————————————————— [end] scrolling
+
+;;; ————————————————————————————————————————————— alarm bell
+;; Disable the bell when scrolling to limits
+(defun my-bell-function ()
+  "Custom alarm bell to avoid unecessary alarms event."
+  (unless (memq this-command
+                '(isearch-abort
+                  abort-recursive-edit
+                  exit-minibuffer
+                  keyboard-quit
+                  mwheel-scroll
+                  down
+                  up
+                  View-scroll-half-page-forward
+                  View-scroll-half-page-backward
+                  scroll-down
+                  scroll-up
+                  next-line
+                  previous-line
+                  backward-char
+                  forward-char))
+    (ding)))
+(setq ring-bell-function 'my-bell-function)
+
+;; Visual bell
+(setq visible-bell 1)
+;;; ——————————————————————————————————————— [end] alarm bell
+
+;;; ————————————————————————————————————————————— commenting
+(defvar my:comment-line-last-col nil)
+
+(defun my:toggle-comment-line (n again)
+  "Comment or uncomment the next N line(s).
+If AGAIN is true, use the same mode as the last call."
+  (if comment-start
+      (let*(
+            (end    (cond ((or (not comment-end) (equal comment-end "")) "")
+                          ((string-match "^ " comment-end) comment-end)
+                          (t (concat " " comment-end))))
+            (start  (cond ((string-match " $" comment-start) comment-start)
+                          ((and (= (length comment-start) 1) (equal end ""))
+                           (concat comment-start " "))
+                          (t (concat comment-start " "))))
+
+            (end    (concat comment-end))
+            (start  (concat comment-start))
+
+            (qstart (regexp-quote start))
+            (qend   (regexp-quote end))
+
+            (col    (and again my:comment-line-last-col))
+            (mode   (and again (if col 'comment 'uncomment)))
+            (direction (if (< 0 n) 1 -1))
+            (n  (abs n)))
+
+        (catch 'done
+          (beginning-of-line)
+          (if (< direction 0) (forward-line -1))
+
+          (while (>= (setq n (1- n)) 0)
+            (when (eobp) (throw 'done nil))
+
+            (skip-chars-forward "\t ")
+            (unless (eolp)
+              (unless mode (setq mode (if (looking-at (concat qstart "\\(.*\\)" qend "$")) 'uncomment 'comment)))
+
+              (let ((cur (current-column)))
+                (cond ((and col (< col cur))
+                       (move-to-column col t))
+                      ((eq mode 'comment)
+                       (setq col cur))))
+
+              (cond ((eq mode 'comment)
+                     (insert start) (end-of-line) (insert end))
+
+                    ((eq mode 'uncomment)
+                     (when (looking-at (concat qstart "\\(.*\\)" qend "$"))
+                       (replace-match "\\1" t)))))
+
+            (forward-line direction))
+
+          (if (< direction 0)
+              (forward-line 1)))
+
+        (setq my:comment-line-last-col col))
+    (message "Comments not available for this mode")))
+
+(defun my:comment-line-and-go-down (n)
+  "Toggle a comment on current N line(s) (disable line by line)."
+  (interactive "p")
+  (my:toggle-comment-line (+ n) (eq last-command 'my:comment-line-and-go-down)))
+
+(defun my:go-up-and-comment-line (n)
+  "Toggle a comment on current N line(s) (disable line by line)."
+  (interactive "p")
+  (my:toggle-comment-line (- n) (eq last-command 'my:go-up-and-comment-line)))
+
+(global-set-key (kbd "<C-down>") 'my:comment-line-and-go-down)
+(global-set-key (kbd "<C-up>")   'my:go-up-and-comment-line)
+;;; ——————————————————————————————————————— [end] commenting
+
+;;; ————————————————————————— kill/copy whole line or region
+;; M-w saves the current line if no region is selected
+(defadvice kill-ring-save (before slick-copy activate compile)
+  "When called interactively with no active region, copy a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (message "Copied line")
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
+
+;; C-w deletes and saves the current line if no region is selected
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
+;;; ——————————————————— [end] kill/copy whole line or region
+
+;;; ——————————————————————————————————————————————————— helm
+(with-library helm-config
+  (global-set-key (kbd "M-x")     'helm-M-x)
+  ;; (global-set-key (kbd "M-SPC")   'helm-dabbrev)
+  (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
+  (global-set-key (kbd "C-x b")   'helm-mini)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "C-x f")   'helm-recentf)
+  (global-set-key (kbd "C-S-h")   'helm-apropos)
+  (global-set-key (kbd "<f9>")    'helm-imenu)
+  (global-set-key (kbd "<S-f9>")  'helm-imenu-in-all-buffers)
+  (global-set-key (kbd "<f12>")   'helm-list-elisp-packages)
+  (helm-mode 1)
+
+  (helm-autoresize-mode 1)
+  (setq helm-autoresize-max-height 60
+        helm-autoresize-min-height 60
+        helm-split-window-in-side-p 1)
+
+  ;; '(helm-full-frame t)
+  ;; '(helm-reuse-last-window-split-state t)
+
+  ;; --
+
+  ;; Helm swoop (send isearch to helm)
+  (with-library helm-swoop
+    (global-set-key (kbd "M-i") 'helm-swoop)
+    (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+    (global-set-key (kbd "C-M-i") 'helm-multi-swoop-current)
+    ;; (global-set-key (kbd "C-M") 'helm-multi-swoop)
+
+    ;; When doing isearch, hand the word over to helm-swoop
+    (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+    (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+
+    ;; Move up and down like isearch
+    (define-key helm-swoop-map       (kbd "C-r") 'helm-previous-line)
+    (define-key helm-swoop-map       (kbd "C-s") 'helm-next-line)
+    (define-key helm-multi-swoop-map (kbd "C-r") 'helm-previous-line)
+    (define-key helm-multi-swoop-map (kbd "C-s") 'helm-next-line)
+
+    ;; Save buffer when helm-multi-swoop-edit complete
+    (setq helm-multi-swoop-edit-save t)
+    ;; If this value is t, split window inside the current window
+    (setq helm-swoop-split-with-multiple-windows t)
+    ;; Split direction. 'split-window-vertically or 'split-window-horizontally
+    (setq helm-swoop-split-direction 'split-window-horizontally)
+    ;; If nil, you can slightly boost invoke speed in exchange for text color
+    (setq helm-swoop-speed-or-color t)
+    ;; Go to the opposite side of line from the end or beginning of line
+    (setq helm-swoop-move-to-line-cycle t)
+
+    ;; If there is no symbol at the cursor, use the last used words instead.
+    (setq helm-swoop-pre-input-function
+          (lambda ()
+            (let (($pre-input (thing-at-point 'symbol)))
+              (if (eq (length $pre-input) 0)
+                  helm-swoop-pattern ; this variable keeps the last used words
+                $pre-input)))))
+
+  ;; --
+
+  ;; Those variables need to be set before loading helm-gtags.el
+  (setq helm-gtags-prefix-key "C-c t")
+  (setq helm-gtags-suggested-key-mapping t)
+
+  ;; Helm gtags
+  (with-library helm-gtags
+    ;; Enable helm-gtags-mode
+    (add-hook 'c-mode-hook 'helm-gtags-mode)
+    (add-hook 'c++-mode-hook 'helm-gtags-mode)
+    (add-hook 'java-mode-hook 'helm-gtags-mode)
+    (add-hook 'python-mode-hook 'helm-gtags-mode)
+
+    (define-key helm-gtags-mode-map (kbd "<f3>") 'helm-gtags-dwim)
+    (define-key helm-gtags-mode-map (kbd "<S-f3>") 'helm-gtags-find-rtag)
+    (define-key helm-gtags-mode-map (kbd "M-«") 'helm-gtags-previous-history)
+    (define-key helm-gtags-mode-map (kbd "M-»") 'helm-gtags-next-history)
+
+    (setq helm-gtags-path-style 'relative)
+    (setq helm-gtags-ignore-case t)
+    (setq helm-gtags-auto-update t))
+
+  ;; --
+
+  ;; Helm dash (offline doc browsing)
+  (with-library helm-dash
+    (setq helm-dash-browser-func 'eww)))
+;;; ————————————————————————————————————————————— [end] helm
+
+;;; ———————————————————————————————————————————————— company
+(with-library company
+  ;; delay before displaying auto completion choices
+  (setq company-idle-delay 0.5)
+  ;; Number of characters needed before auto completion popup
+  (setq company-minimum-prefix-length 1)
+  ;; Show the quick access numbers
+  (setq company-show-numbers nil)
+
+  ;; (global-set-key (kbd "C-c c")   'nil)
+  ;; (global-set-key (kbd "C-c c c") 'company-complete)
+
+  (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
+
+  (delete "company-dabbrev" company-backends)
+
+  ;; Add jedi backend for python
+  (with-library company-jedi
+    (add-to-list 'company-backends 'company-jedi))
+
+  ;; Add jedi backend for python
+  (with-library company-anaconda
+    (add-to-list 'company-backends 'company-anaconda))
+
+  ;; Activate company globally
+  (add-hook 'after-init-hook 'global-company-mode))
+
+;; Company help
+(with-library company-quickhelp
+  ;; delay before displaying the help
+  (setq company-quickhelp-delay 0.25)
+  ;; Activate quickhelp
+  (company-quickhelp-mode 1)
+  ;; Set M-h for manual help display, only when company is active
+  (eval-after-load 'company
+    '(define-key company-active-map (kbd "M-h") #'company-quickhelp-manual-begin)))
+
+(with-library company-auctex
+  (company-auctex-init))
+;;; —————————————————————————————————————————— [end] company
+
+;;; ————————————————————————————————————————————————— popwin
+;; Manage some buffer as popups (less invasive frames)
+(with-library popwin
+  (popwin-mode 1)
+  (setq popwin:popup-window-height 30))
+;;; ——————————————————————————————————————————— [end] popwin
+
+;;; ————————————————————————————————————————————————— python
+(with-library anaconda-mode
+  (add-hook 'python-mode-hook 'anaconda-mode))
+;;; ——————————————————————————————————————————— [end] python
+
+;;; —————————————————————————————————————————————— yasnippet
+(with-library yasnippet
+  (global-set-key (kbd "C-c y") 'nil)
+  (global-set-key (kbd "M-n") 'yas-insert-snippet)
+  (global-set-key (kbd "C-c y y") 'yas-insert-snippet)
+  (global-set-key (kbd "C-c y u") 'company-yasnippet)
+
+  (yas-global-mode 1)
+
+  ;; ------
+
+  ;; Make yasnippet play nice(r) with company
+  (with-library company
+    (defun company-yasnippet-or-completion ()
+      (interactive)
+      (let ((yas-maybe-expand nil))
+        (unless (yas-expand)
+          (call-interactively #'company-complete-common))))
+
+    (add-hook 'company-mode-hook
+              (lambda () (substitute-key-definition 'company-complete-common
+                                                    'company-yasnippet-or-completion company-active-map)))))
+
+;;; ———————————————————————————————————————— [end] yasnippet
+
+;;; ——————————————————————————————————————————————— flycheck
+(with-library flycheck
+  (global-flycheck-mode t)
+
+(global-set-key (kbd "C-c s b") 'flycheck-buffer)
+(global-set-key (kbd "C-c s c") 'flycheck-clear)
+(global-set-key (kbd "C-c s n") 'flycheck-next-error)
+(global-set-key (kbd "C-c s p") 'flycheck-previous-error)
+
+;; Helm fly check (browse flycheck messages in helm)
+(with-library helm-flycheck
+  (eval-after-load 'flycheck
+    '(define-key flycheck-mode-map (kbd "C-c s s") 'helm-flycheck))))
+;;; ————————————————————————————————————————— [end] flycheck
+
+;;; —————————————————————————————————————————————————— latex
+;; Changes the default fontification for the given keywords
+(eval-after-load "font-latex"
+  '(font-latex-add-keywords
+    '(("newenvironment" "*{[[")
+      ("renewenvironment" "*{[[")
+      ("newcommand" "*|{\\[[")
+      ("renewcommand" "*|{\\[[")
+      ("providecommand" "*|{\\[[")
+      ("fbox" "")
+      ("mbox" "")
+      ("sbox" ""))
+    'function))
+;;; ———————————————————————————————————————————— [end] latex
+
+;;; —————————————————————————————————————————— expand region
+(with-library expand-region
+  (global-set-key (kbd "C-.") 'er/expand-region)
+  (global-set-key (kbd "C-,") 'er/contract-region))
+;;; ———————————————————————————————————— [end] expand region
+
+;;; —————————————————————————————————————————— visual regexp
+(with-library visual-regexp-steroids
+  (define-key esc-map (kbd "C-r") 'vr/isearch-backward) ; C-M-r
+  (define-key esc-map (kbd "C-s") 'vr/isearch-forward)  ; C-M-s
+  (global-set-key (kbd "<S-f5>")   'vr/query-replace))
+;;(global-set-key (kbd "<S-f5>") 'vr/replace))
+;;; ———————————————————————————————————— [end] visual regexp
+
+;;; ———————————————————————————————————————— ispell/flyspell
+;; ispell
+(with-library ispell
+  (setq ispell-program-name "hunspell"     ; Use hunspell to correct mistakes
+        ispell-dictionary   "hunspell-fr") ; Default dictionary to use
+
+  (with-library flyspell
+    ;; flycheck: avoid printing messages for every word (because it can be very slow)
+    (setq flyspell-issue-message-flag nil)
+
+    ;; flyspell activated for text mode, but not for log edit
+    (dolist (hook '(text-mode-hook))
+      (add-hook hook (lambda () (flyspell-mode 1))))
+    (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+      (add-hook hook (lambda () (flyspell-mode -1))))))
+;;; —————————————————————————————————— [end] ispell/flyspell
+
+;;; ——————————————————————————————————————————————————— jdee
+;; Java development environment for emacs
+;; (with-library jdee
+;;   (setq jdee-server-dir "~/.jdee-jars"))
+;;; ————————————————————————————————————————————— [end] jdee
+
+;; ————————————————————————————————————————————————————— avy
+;; Fast go to char/word/line/... in the current view
+(with-library avy
+  (setq avy-keys (quote (118 100 108 116 115 114)))
+  (global-set-key (kbd "M-s") 'avy-goto-char-2))
+;; ——————————————————————————————————————————————— [end] avy
+
+;;; —————————————————————————————————————————————— undo tree
+(with-library undo-tree
+  (setq undo-tree-visualizer-diff t)
+  (setq undo-tree-visualizer-timestamps t)
+  (global-undo-tree-mode))
+;;; ———————————————————————————————————————— [end] undo tree
+
+;;; ————————————————————————————————————————————— projectile
+(with-library projectile
+  (projectile-mode)
+
+  (with-library helm-projectile
+    (define-key projectile-mode-map (kbd "C-c p p") 'helm-projectile-switch-project)
+    (define-key projectile-mode-map (kbd "C-c p r") 'helm-projectile-recentf)
+    (define-key projectile-mode-map (kbd "C-c p f") 'helm-projectile-find-file)
+    (define-key projectile-mode-map (kbd "C-c p F") 'helm-projectile-find-file-dwim)
+    (define-key projectile-mode-map (kbd "C-c p a") 'helm-projectile-ag)
+    (define-key projectile-mode-map (kbd "C-c p d") 'helm-projectile-find-dir)
+    (define-key projectile-mode-map (kbd "C-c p k") 'projectile-kill-buffers)))
+;;; ——————————————————————————————————————— [end] projectile
+
+;;; —————————————————————————————————————————————— meghanada
+(with-library meghanada
+  (setq meghanada-mode-key-prefix "C-c C-c")
+  (add-hook 'java-mode-hook 'meghanada-mode)
+
+  (define-key meghanada-mode-map (kbd "C-c C-c C-c") 'meghanada-compile-project)
+  (define-key meghanada-mode-map (kbd "C-c C-c C-f") 'meghanada-compile)
+  (define-key meghanada-mode-map (kbd "C-c C-c C-r") 'meghanada-run-task)
+  (define-key meghanada-mode-map (kbd "C-c C-c C-j") 'meghanada-run-junit-class)
+  (define-key meghanada-mode-map (kbd "C-c C-c C-i") 'meghanada-import-all)
+  (define-key meghanada-mode-map (kbd "C-c C-c C-o") 'meghanada-optimize-import)
+  (define-key meghanada-mode-map (kbd "C-c C-c C-b") 'meghanada-code-beautify)
+
+  (define-key meghanada-mode-map (kbd "C-c C-m C-s") (lambda () (interactive) (meghanada-run-task "dependency:sources")))
+  (define-key meghanada-mode-map (kbd "C-c C-m C-d") (lambda () (interactive) (meghanada-run-task "dependency:resolve")))
+  (define-key meghanada-mode-map (kbd "C-c C-m C-c") (lambda () (interactive) (meghanada-run-task "clean")))
+  (define-key meghanada-mode-map (kbd "C-c C-m C-p") (lambda () (interactive) (meghanada-run-task "package")))
+  (define-key meghanada-mode-map (kbd "C-c C-m C-m") (lambda () (interactive) (meghanada-run-task "compile")))
+  (define-key meghanada-mode-map (kbd "C-c C-m C-i") (lambda () (interactive) (meghanada-run-task "install"))))
+;;; ———————————————————————————————————————— [end] meghanada
+
+;;; ********************************************************
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (helm-gtags meghanada java-snippets company-jedi
+     company-anaconda anaconda-mode python-mode undo-tree
+     projectile helm-projectile avy helm-flyspell
+     visual-regexp-steroids visual-regexp whitespace-cleanup-mode
+     helm-ag expand-region helm-dash helm-flycheck rainbow-mode
+     flycheck helm-swoop popwin drag-stuff helm company-bibtex
+     company-quickhelp company-auctex company systemd vimish-fold
+     smartparens auctex))))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
