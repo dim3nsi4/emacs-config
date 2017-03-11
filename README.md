@@ -1,8 +1,10 @@
 # emacs-config
-Another GNU Emacs Configuration
+Yet Another GNU Emacs Configuration.
 
 The whole configuration is contained into the dotemacs file (that's
-the .emacs file). This file uses the following packages if available:
+the .emacs file). It also uses a custom theme named clearview-light
+(which can be modified using M-x custom-visit-theme). 
+This file uses the following packages, if they are available:
 
 - helm (and helm-gtags, helm-projectile, helm-flyspell, helm-ag, helm-dash)
 - company (and company-jedi, company-anaconda, company-bibtex, company-quickhelp, company-aucompany-auctex)
@@ -26,4 +28,4 @@ the .emacs file). This file uses the following packages if available:
 - visual-regexp-steroids
 - systemd (and company-systemd)
 
-It also uses a custom theme named clearview-light (which can be modified using M-x custom-visit-theme).
+
