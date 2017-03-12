@@ -173,8 +173,8 @@
 (global-set-key (kbd "RET") 'newline-and-indent)
 
 (global-set-key (kbd "C-z")     'undo)
-(global-set-key (kbd "C-x C-k")         'kill-this-buffer)
-(global-set-key (kbd "C-x C-b")         'ibuffer)
+(global-set-key (kbd "C-x C-k") 'kill-this-buffer)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 (global-set-key (kbd "<f4>")    'eshell)
 (global-set-key (kbd "<f5>")    'query-replace)
@@ -188,7 +188,7 @@
 (global-set-key (kbd "<f12>")   'list-packages)
 
 (global-set-key (kbd "<backtab>") (lambda () (interactive) (switch-to-buffer (other-buffer))))
-(global-set-key (kbd "<C-tab>")           'next-buffer)
+(global-set-key (kbd "<C-tab>") 'next-buffer)
 
 (global-set-key (kbd "M-SPC") 'dabbrev-expand) ; swaped with just-one-space "M-/"
 (global-set-key (kbd "M-/")   'just-one-space) ; swaped with dabbrev-expand "M-SPC"
@@ -698,14 +698,21 @@ If AGAIN is true, use the same mode as the last call."
 (with-library projectile
   (projectile-mode)
 
+  (define-key projectile-mode-map (kbd "C-c p p") 'projectile-switch-project)
+  (define-key projectile-mode-map (kbd "C-c p r") 'projectile-recentf)
+  (define-key projectile-mode-map (kbd "C-c p f") 'projectile-find-file)
+  (define-key projectile-mode-map (kbd "C-c p F") 'projectile-find-file-dwim)
+  (define-key projectile-mode-map (kbd "C-c p a") 'projectile-ag)
+  (define-key projectile-mode-map (kbd "C-c p d") 'projectile-find-dir)
+  (define-key projectile-mode-map (kbd "C-c p k") 'projectile-kill-buffers)
+
   (with-library helm-projectile
     (define-key projectile-mode-map (kbd "C-c p p") 'helm-projectile-switch-project)
     (define-key projectile-mode-map (kbd "C-c p r") 'helm-projectile-recentf)
     (define-key projectile-mode-map (kbd "C-c p f") 'helm-projectile-find-file)
     (define-key projectile-mode-map (kbd "C-c p F") 'helm-projectile-find-file-dwim)
     (define-key projectile-mode-map (kbd "C-c p a") 'helm-projectile-ag)
-    (define-key projectile-mode-map (kbd "C-c p d") 'helm-projectile-find-dir)
-    (define-key projectile-mode-map (kbd "C-c p k") 'projectile-kill-buffers)))
+    (define-key projectile-mode-map (kbd "C-c p d") 'helm-projectile-find-dir)))
 ;;; ——————————————————————————————————————— [end] projectile
 
 ;;; —————————————————————————————————————————————— meghanada
@@ -729,7 +736,7 @@ If AGAIN is true, use the same mode as the last call."
   (define-key meghanada-mode-map (kbd "C-c C-m C-i") (lambda () (interactive) (meghanada-run-task "install"))))
 ;;; ———————————————————————————————————————— [end] meghanada
 
-;;; ********************************************************
+;; *********************************************************
 
 
 (custom-set-variables
