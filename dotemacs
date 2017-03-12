@@ -460,9 +460,9 @@ If AGAIN is true, use the same mode as the last call."
   (helm-mode 1)
 
   (helm-autoresize-mode 1)
-  (setq helm-autoresize-max-height 60
-        helm-autoresize-min-height 60
-        helm-split-window-in-side-p 1)
+  (setq helm-autoresize-max-height 50
+        helm-autoresize-min-height 50
+        helm-split-window-in-side-p nil)
 
   ;; '(helm-full-frame t)
   ;; '(helm-reuse-last-window-split-state t)
@@ -489,11 +489,11 @@ If AGAIN is true, use the same mode as the last call."
     ;; Save buffer when helm-multi-swoop-edit complete
     (setq helm-multi-swoop-edit-save t)
     ;; If this value is t, split window inside the current window
-    (setq helm-swoop-split-with-multiple-windows t)
+    (setq helm-swoop-split-with-multiple-windows nil)
     ;; Split direction. 'split-window-vertically or 'split-window-horizontally
-    (setq helm-swoop-split-direction 'split-window-horizontally)
+    (setq helm-swoop-split-direction 'split-window-vertically)
     ;; If nil, you can slightly boost invoke speed in exchange for text color
-    (setq helm-swoop-speed-or-color t)
+    (setq helm-swoop-speed-or-color nil)
     ;; Go to the opposite side of line from the end or beginning of line
     (setq helm-swoop-move-to-line-cycle t)
 
@@ -517,7 +517,6 @@ If AGAIN is true, use the same mode as the last call."
     (add-hook 'c-mode-hook 'helm-gtags-mode)
     (add-hook 'c++-mode-hook 'helm-gtags-mode)
     (add-hook 'java-mode-hook 'helm-gtags-mode)
-    (add-hook 'python-mode-hook 'helm-gtags-mode)
 
     (define-key helm-gtags-mode-map (kbd "<f3>") 'helm-gtags-dwim)
     (define-key helm-gtags-mode-map (kbd "<S-f3>") 'helm-gtags-find-rtag)
@@ -593,6 +592,11 @@ If AGAIN is true, use the same mode as the last call."
   (global-set-key (kbd "C-c y") 'nil)
   (global-set-key (kbd "M-n") 'yas-insert-snippet)
   (global-set-key (kbd "C-c y y") 'yas-insert-snippet)
+  (global-set-key (kbd "C-c y n") 'yas-new-snippet)
+
+  (define-key yas-keymap (kbd "M-«") 'yas-prev-field)
+  (define-key yas-keymap (kbd "M-»") 'yas-next-field)
+
   (global-set-key (kbd "C-c y u") 'company-yasnippet)
 
   (yas-global-mode 1)
