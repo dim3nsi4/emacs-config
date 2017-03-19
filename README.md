@@ -7,3 +7,5 @@ the `.emacs` file). Several packages are activated if they are detected
 named `clearview-light` (which can be modified using `M-x custom-visit-theme`).
 
 See the wiki for more details (under construction).
+
+![alt tag](screenshot-emacs.png)
