@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-06-01 21:28:09 seimandp>
+;;; Time-stamp: <2017-06-10 13:10:41 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -193,6 +193,20 @@
 ;; Set ESC as an escape key in isearch mode
 (define-key isearch-mode-map (kbd "<escape>") 'isearch-abort)
 ;;; ——————————————————————————————— [end] general keybindings
+
+;;; ———————————————————————————————————————————————— paradox
+(use-package paradox
+  :demand
+
+  :bind
+  (("<f12>" . paradox-list-packages))
+
+  :config
+  (paradox-enable)
+  (setq paradox-github-token "ed3d6985b01470faf1231c471cfe1ac820c171d6"
+        paradox-execute-asynchronously t
+        paradox-automatically-star nil))
+;;; —————————————————————————————————————————— [end] paradox
 
 ;;; ————————————————————————————————————————————————— eshell
 ;; Allows to completely clear the eshell buffer using C-l
@@ -617,13 +631,14 @@ If AGAIN is true, use the same mode as the last call."
 
 ;; (use-package ivy-rich
 ;;   :after ivy
+;;   :demand
 
 ;;   :config
 ;;   (setq ivy-virtual-abbreviate 'full
 ;;         ivy-rich-abbreviate-paths t
-;;         ivy-rich-switch-buffer-name-max-length 40
-;;         ivy-rich-switch-buffer-project-max-length 20
-;;         ivy-rich-switch-buffer-mode-max-length 20
+;;         ivy-rich-switch-buffer-name-max-length 55
+;;         ivy-rich-switch-buffer-project-max-length 15
+;;         ivy-rich-switch-buffer-mode-max-length 25
 ;;         ivy-rich-switch-buffer-align-virtual-buffer t)
 
 ;;   (add-hook 'minibuffer-setup-hook (lambda () (setq show-trailing-whitespace nil)))
@@ -1063,11 +1078,69 @@ If AGAIN is true, use the same mode as the last call."
    ("S-<mouse-1>" . mc/add-cursor-on-click)))
 ;;; ————————————————————————————————— [end] multiple-cursors
 
-;;; —————————————————————————————————————————————— powerline
-(use-package powerline
+;;; —————————————————————————————————————————— all-the-icons
+(use-package all-the-icons)
+
+(use-package all-the-icons-dired
+  :after all-the-icon
+  :after dired
+
   :config
-  (powerline-default-theme))
+  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
+;;; ———————————————————————————————————— [end] all-the-icons
+
+;;; —————————————————————————————————————————————— powerline
+;; (use-package powerline
+;;   :config
+;;   (powerline-default-theme))
 ;;; ———————————————————————————————————————— [end] powerline
+
+;;; —————————————————————————————————————————————— spaceline
+;; (use-package spaceline-config
+;;   :config
+;;   (spaceline-spacemacs-theme))
+
+(use-package spaceline-all-the-icons
+  :after spaceline
+  :demand
+
+  :config
+  (spaceline-all-the-icons-theme)
+
+  (spaceline-all-the-icons--setup-package-updates)
+  (spaceline-all-the-icons--setup-git-ahead)
+  (spaceline-all-the-icons--setup-neotree)
+
+  (spaceline-toggle-all-the-icons-git-status-on)
+  (spaceline-toggle-all-the-icons-git-ahead-on)
+  (spaceline-toggle-all-the-icons-hud-on)
+  (spaceline-toggle-all-the-icons-buffer-position-off)
+  (spaceline-toggle-all-the-icons-buffer-id-on)
+  (spaceline-toggle-all-the-icons-buffer-path-off)
+  (spaceline-toggle-all-the-icons-region-info-off)
+  (spaceline-toggle-all-the-icons-bookmark-on)
+  (spaceline-toggle-all-the-icons-dedicated-on)
+  (spaceline-toggle-all-the-icons-process-off)
+  (spaceline-toggle-all-the-icons-projectile-on)
+  (spaceline-toggle-all-the-icons-time-off)
+  (spaceline-toggle-all-the-icons-vc-icon-on)
+  (spaceline-toggle-all-the-icons-window-number-off)
+  (spaceline-toggle-all-the-icons-separator-right-active-1-off)
+  (spaceline-toggle-all-the-icons-separator-right-active-2-off)
+  (spaceline-toggle-all-the-icons-separator-right-inactive-off)
+  (spaceline-toggle-all-the-icons-separator-left-active-3-off)
+
+  (setq spaceline-all-the-icons-secondary-separator "."
+        spaceline-all-the-icons-file-name-highlight t
+        spaceline-all-the-icons-hide-long-buffer-path nil
+        spaceline-all-the-icons-separator-type 'arrow
+        spaceline-all-the-icons-slim-render nil
+        spaceline-all-the-icons-flycheck-alternate nil
+        spaceline-all-the-icons-icon-set-flycheck-slim 'dots
+        spaceline-all-the-icons-window-number-always-visible nil
+        ;; spaceline-all-the-icons-icon-set-vc-icon-git 'github
+        spaceline-all-the-icons-icon-set-window-numbering 'circle))
+;;; ———————————————————————————————————————— [end] spaceline
 
 ;;; ———————————————————————————————————————————————— neotree
 (use-package neotree
@@ -1081,8 +1154,9 @@ If AGAIN is true, use the same mode as the last call."
         neo-window-position 'left
         neo-confirm-delete-directory-recursively 'off-p
         neo-confirm-change-root 'off-p
+        neo-window-width 35
         neo-confirm-kill-buffers-for-files-in-directory 'off-p
-        neo-theme 'ascii)
+        neo-theme 'icons)
 
   (use-package hl-anything
     :config
@@ -1423,6 +1497,29 @@ Flycheck: [_b_] check buffer     [_l_] list-errors              [_s_] select-che
   (add-hook 'c-mode-common-hook 'google-set-c-style))
 ;;; ——————————————————————————————————— [end] google-c-style
 
+;;; ———————————————————————————————————————————————— origami
+(use-package origami
+  :bind
+  (("M-p"     . origami-recursively-toggle-node)
+   ("C-c o t" . origami-toggle-node)
+   ("C-c o o" . origami-open-node)
+   ("C-c o O" . origami-open-node-recursively)
+   ("C-c o c" . origami-close-node)
+   ("C-c o C" . origami-close-node-recursively)
+   ("C-c o t" . origami-toggle-node)
+   ("C-c o T" . origami-forward-toggle-node)
+   ("C-c o n" . origami-forward-fold)
+   ("C-c o p" . origami-previous-fold)
+   ("C-c o R" . origami-reset))
+
+  :config
+  (add-hook 'java-mode-hook 'origami-mode)
+  (add-hook 'python-mode-hook 'origami-mode)
+  (add-hook 'c-mode-common-hook 'origami-mode)
+  (add-hook 'emacs-lisp-mode-hook 'origami-mode))
+;;; —————————————————————————————————————————— [end] origami
+
+
 ;;; ********************************************************
 
 (custom-set-variables
@@ -1432,16 +1529,17 @@ Flycheck: [_b_] check buffer     [_l_] list-errors              [_s_] select-che
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (google-c-style zzz-to-char matlab-mode ivy-hydra
-     counsel-gtags hydra use-package ivy-rich smex flx
-     counsel-projectile counsel ivy neotree dired-subtree
-     diminish perspeen multiple-cursors hl-anything
-     volatile-highlights crux whitespace-cleanup-mode vimish-fold
-     undo-tree systemd sqlup-mode smartparens rainbow-mode popwin
-     meghanada markdown-mode magithub lua-mode java-snippets
-     helm-projectile helm-gtags helm-ag flyspell-correct-helm
-     expand-region drag-stuff company-quickhelp company-jedi
-     company-bibtex company-auctex avy))))
+    (paradox spaceline-all-the-icons spaceline
+     all-the-icons-dired all-the-icons origami google-c-style
+     zzz-to-char matlab-mode ivy-hydra counsel-gtags hydra
+     use-package ivy-rich smex flx counsel-projectile counsel ivy
+     neotree dired-subtree diminish perspeen multiple-cursors
+     hl-anything volatile-highlights crux whitespace-cleanup-mode
+     vimish-fold undo-tree systemd sqlup-mode smartparens
+     rainbow-mode popwin meghanada markdown-mode magithub
+     lua-mode java-snippets expand-region drag-stuff
+     company-quickhelp company-jedi company-bibtex company-auctex
+     avy))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
