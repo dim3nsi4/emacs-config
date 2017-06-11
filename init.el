@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-06-11 21:41:01 seimandp>
+;;; Time-stamp: <2017-06-11 21:45:22 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -206,7 +206,6 @@
 
   :config
   (paradox-enable)
-  (setq paradox-github-token "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
   (setq paradox-execute-asynchronously t
         paradox-automatically-star nil))
 ;;; —————————————————————————————————————————— [end] paradox
