@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-06-10 13:10:41 seimandp>
+;;; Time-stamp: <2017-06-11 21:41:01 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -143,6 +143,9 @@
 
 ;; Disable blinking cursor
 (blink-cursor-mode 0)
+
+;; Which-function
+(which-function-mode 1)
 ;;; ————————————————————————————————— [end] startup settings
 
 ;;; ———————————————————————————————————— general keybindings
@@ -203,8 +206,8 @@
 
   :config
   (paradox-enable)
-  (setq paradox-github-token "ed3d6985b01470faf1231c471cfe1ac820c171d6"
-        paradox-execute-asynchronously t
+  (setq paradox-github-token "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+  (setq paradox-execute-asynchronously t
         paradox-automatically-star nil))
 ;;; —————————————————————————————————————————— [end] paradox
 
@@ -1110,6 +1113,7 @@ If AGAIN is true, use the same mode as the last call."
   (spaceline-all-the-icons--setup-package-updates)
   (spaceline-all-the-icons--setup-git-ahead)
   (spaceline-all-the-icons--setup-neotree)
+  (spaceline-all-the-icons--setup-paradox)
 
   (spaceline-toggle-all-the-icons-git-status-on)
   (spaceline-toggle-all-the-icons-git-ahead-on)
@@ -1120,7 +1124,8 @@ If AGAIN is true, use the same mode as the last call."
   (spaceline-toggle-all-the-icons-region-info-off)
   (spaceline-toggle-all-the-icons-bookmark-on)
   (spaceline-toggle-all-the-icons-dedicated-on)
-  (spaceline-toggle-all-the-icons-process-off)
+  (spaceline-toggle-all-the-icons-process-on)
+  (spaceline-toggle-all-the-icons-which-function-on)
   (spaceline-toggle-all-the-icons-projectile-on)
   (spaceline-toggle-all-the-icons-time-off)
   (spaceline-toggle-all-the-icons-vc-icon-on)
@@ -1129,16 +1134,19 @@ If AGAIN is true, use the same mode as the last call."
   (spaceline-toggle-all-the-icons-separator-right-active-2-off)
   (spaceline-toggle-all-the-icons-separator-right-inactive-off)
   (spaceline-toggle-all-the-icons-separator-left-active-3-off)
+  (spaceline-toggle-all-the-icons-package-updates-on)
 
   (setq spaceline-all-the-icons-secondary-separator "."
         spaceline-all-the-icons-file-name-highlight t
         spaceline-all-the-icons-hide-long-buffer-path nil
-        spaceline-all-the-icons-separator-type 'arrow
+        spaceline-all-the-icons-separator-type 'slant
+        spaceline-all-the-icons-separators-invert-direction t
         spaceline-all-the-icons-slim-render nil
-        spaceline-all-the-icons-flycheck-alternate nil
-        spaceline-all-the-icons-icon-set-flycheck-slim 'dots
+        spaceline-all-the-icons-flycheck-alternate t
+        spaceline-all-the-icons-icon-set-flycheck-slim 'outline
         spaceline-all-the-icons-window-number-always-visible nil
-        ;; spaceline-all-the-icons-icon-set-vc-icon-git 'github
+        spaceline-all-the-icons-icon-set-vc-icon-git 'github-logo
+        spaceline-all-the-icons-icon-set-git-ahead 'commit
         spaceline-all-the-icons-icon-set-window-numbering 'circle))
 ;;; ———————————————————————————————————————— [end] spaceline
 
@@ -1519,6 +1527,12 @@ Flycheck: [_b_] check buffer     [_l_] list-errors              [_s_] select-che
   (add-hook 'emacs-lisp-mode-hook 'origami-mode))
 ;;; —————————————————————————————————————————— [end] origami
 
+;;; —————————————————————————————————————————————— eyebrowse
+(use-package eyebrowse
+  :diminish
+  :config
+  (eyebrowse-mode t))
+;;; ———————————————————————————————————————— [end] eyebrowse
 
 ;;; ********************************************************
 
@@ -1529,17 +1543,7 @@ Flycheck: [_b_] check buffer     [_l_] list-errors              [_s_] select-che
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (paradox spaceline-all-the-icons spaceline
-     all-the-icons-dired all-the-icons origami google-c-style
-     zzz-to-char matlab-mode ivy-hydra counsel-gtags hydra
-     use-package ivy-rich smex flx counsel-projectile counsel ivy
-     neotree dired-subtree diminish perspeen multiple-cursors
-     hl-anything volatile-highlights crux whitespace-cleanup-mode
-     vimish-fold undo-tree systemd sqlup-mode smartparens
-     rainbow-mode popwin meghanada markdown-mode magithub
-     lua-mode java-snippets expand-region drag-stuff
-     company-quickhelp company-jedi company-bibtex company-auctex
-     avy))))
+    (eyebrowse paradox spaceline-all-the-icons spaceline all-the-icons-dired all-the-icons origami google-c-style zzz-to-char matlab-mode ivy-hydra counsel-gtags hydra use-package ivy-rich smex flx counsel-projectile counsel ivy neotree dired-subtree diminish perspeen multiple-cursors hl-anything volatile-highlights crux whitespace-cleanup-mode vimish-fold undo-tree systemd sqlup-mode smartparens rainbow-mode popwin meghanada markdown-mode magithub lua-mode java-snippets expand-region drag-stuff company-quickhelp company-jedi company-bibtex company-auctex avy))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
