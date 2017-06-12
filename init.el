@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-06-12 08:15:29 arc>
+;;; Time-stamp: <2017-06-12 18:49:24 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -1565,7 +1565,7 @@ Flycheck: [_b_] check buffer     [_l_] list-errors              [_s_] select-che
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (eyebrowse paradox spaceline-all-the-icons spaceline all-the-icons-dired all-the-icons origami google-c-style zzz-to-char matlab-mode ivy-hydra counsel-gtags hydra use-package ivy-rich smex flx counsel-projectile counsel ivy neotree dired-subtree diminish perspeen multiple-cursors hl-anything volatile-highlights crux whitespace-cleanup-mode vimish-fold undo-tree systemd sqlup-mode smartparens rainbow-mode popwin meghanada markdown-mode magithub lua-mode java-snippets expand-region drag-stuff company-quickhelp company-jedi company-bibtex company-auctex avy))))
+    (diff-hl eyebrowse paradox spaceline-all-the-icons spaceline all-the-icons-dired all-the-icons origami google-c-style zzz-to-char matlab-mode ivy-hydra counsel-gtags hydra use-package ivy-rich smex flx counsel-projectile counsel ivy neotree dired-subtree diminish perspeen multiple-cursors hl-anything volatile-highlights crux whitespace-cleanup-mode vimish-fold undo-tree systemd sqlup-mode smartparens rainbow-mode popwin meghanada markdown-mode magithub lua-mode java-snippets expand-region drag-stuff company-quickhelp company-jedi company-bibtex company-auctex avy))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
