@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-06-11 21:45:22 seimandp>
+;;; Time-stamp: <2017-06-12 08:11:54 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -1114,26 +1114,40 @@ If AGAIN is true, use the same mode as the last call."
   (spaceline-all-the-icons--setup-neotree)
   (spaceline-all-the-icons--setup-paradox)
 
-  (spaceline-toggle-all-the-icons-git-status-on)
-  (spaceline-toggle-all-the-icons-git-ahead-on)
-  (spaceline-toggle-all-the-icons-hud-on)
-  (spaceline-toggle-all-the-icons-buffer-position-off)
+  (spaceline-toggle-all-the-icons-bookmark-on)
   (spaceline-toggle-all-the-icons-buffer-id-on)
   (spaceline-toggle-all-the-icons-buffer-path-off)
-  (spaceline-toggle-all-the-icons-region-info-off)
-  (spaceline-toggle-all-the-icons-bookmark-on)
+  (spaceline-toggle-all-the-icons-buffer-position-off)
   (spaceline-toggle-all-the-icons-dedicated-on)
+  (spaceline-toggle-all-the-icons-git-ahead-on)
+  (spaceline-toggle-all-the-icons-git-status-on)
+  (spaceline-toggle-all-the-icons-hud-on)
+  (spaceline-toggle-all-the-icons-neotree-close-bracket-off)
+  (spaceline-toggle-all-the-icons-neotree-context-off)
+  (spaceline-toggle-all-the-icons-neotree-dirs-on)
+  (spaceline-toggle-all-the-icons-neotree-files-on)
+  (spaceline-toggle-all-the-icons-neotree-index-on)
+  (spaceline-toggle-all-the-icons-neotree-open-bracket-off)
+  (spaceline-toggle-all-the-icons-package-updates-on)
+  (spaceline-toggle-all-the-icons-paradox-filter-on)
+  (spaceline-toggle-all-the-icons-paradox-line-count-on)
+  (spaceline-toggle-all-the-icons-paradox-status-installed-on)
+  (spaceline-toggle-all-the-icons-paradox-status-new-on)
+  (spaceline-toggle-all-the-icons-paradox-status-upgrade-on)
+  (spaceline-toggle-all-the-icons-paradox-total-on)
   (spaceline-toggle-all-the-icons-process-on)
-  (spaceline-toggle-all-the-icons-which-function-on)
   (spaceline-toggle-all-the-icons-projectile-on)
-  (spaceline-toggle-all-the-icons-time-off)
-  (spaceline-toggle-all-the-icons-vc-icon-on)
-  (spaceline-toggle-all-the-icons-window-number-off)
+  (spaceline-toggle-all-the-icons-region-info-off)
+  (spaceline-toggle-all-the-icons-separator-left-active-3-off)
+  (spaceline-toggle-all-the-icons-separator-left-inactive-on)
   (spaceline-toggle-all-the-icons-separator-right-active-1-off)
   (spaceline-toggle-all-the-icons-separator-right-active-2-off)
-  (spaceline-toggle-all-the-icons-separator-right-inactive-off)
-  (spaceline-toggle-all-the-icons-separator-left-active-3-off)
-  (spaceline-toggle-all-the-icons-package-updates-on)
+  (spaceline-toggle-all-the-icons-separator-right-inactive-on)
+  (spaceline-toggle-all-the-icons-text-scale-on)
+  (spaceline-toggle-all-the-icons-time-off)
+  (spaceline-toggle-all-the-icons-vc-icon-on)
+  (spaceline-toggle-all-the-icons-which-function-on)
+  (spaceline-toggle-all-the-icons-window-number-off)
 
   (setq spaceline-all-the-icons-secondary-separator "."
         spaceline-all-the-icons-file-name-highlight t
