@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-06-12 08:11:54 seimandp>
+;;; Time-stamp: <2017-06-12 08:15:29 arc>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -1187,21 +1187,30 @@ If AGAIN is true, use the same mode as the last call."
     :bind
     (("<S-f10>" . neotree-toggle)
      :map projectile-mode-map
-     ("<f10>" . my/neotree-project-dir))
+     ("<f10>" . my/neotree-project-dir-toggle))
 
     :config
-    (defun my/neotree-project-dir ()
-      "Open NeoTree using the git root."
+    (defun my/neotree-project-dir-toggle ()
+      "Open NeoTree using the project root, using find-file-in-project,
+or the current buffer directory."
       (interactive)
-      (let ((project-dir (projectile-project-root))
-            (file-name (buffer-file-name)))
-        (neotree-toggle)
-        (if project-dir
-            (if (neo-global--window-exists-p)
-                (progn
-                  (neotree-dir project-dir)
-                  (neotree-find file-name)))
-          (message "Could not find git project root."))))))
+      (let ((project-dir
+             (ignore-errors
+               ;; Pick one: projectile or find-file-in-project
+               (projectile-project-root)
+               ;; (ffip-project-root)
+               ))
+            (file-name (buffer-file-name))
+            (neo-smart-open t))
+        (if (and (fboundp 'neo-global--window-exists-p)
+                 (neo-global--window-exists-p))
+            (neotree-hide)
+          (progn
+            (neotree-show)
+            (if project-dir
+                (neotree-dir project-dir))
+            (if file-name
+                (neotree-find file-name))))))))
 ;;; —————————————————————————————————————————— [end] neotree
 
 ;;; ——————————————————————————————————————————————— diminish
