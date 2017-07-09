@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-06-13 22:37:03 seimandp>
+;;; Time-stamp: <2017-07-09 23:36:41 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -17,9 +17,10 @@
 (package-initialize)
 ;;; ———————————————————————————————— [end] packages archives
 
-;;; ———————————————————————————————————————————— use-package
+;;; ————————————————————————————————————————— use/req-package
 (require 'use-package)
-;;; —————————————————————————————————————— [end] use-package
+(require 'req-package)
+;;; ——————————————————————————————————— [end] use/req-package
 
 ;;; ——————————————— utility function: byte-compile-this-file
 (defun my/byte-compile-this-file ()
@@ -141,9 +142,6 @@
 ;; Enable minibuffer call in minibuffer
 (setq enable-recursive-minibuffers t)
 
-;; Disable blinking cursor
-(blink-cursor-mode 0)
-
 ;; Which-function
 (which-function-mode 1)
 ;;; ————————————————————————————————— [end] startup settings
@@ -198,6 +196,27 @@
 ;; Set ESC as an escape key in isearch mode
 (define-key isearch-mode-map (kbd "<escape>") 'isearch-abort)
 ;;; ——————————————————————————————— [end] general keybindings
+
+;;; ————————————————————————————————————————————————— cursor
+;; Disable blinking cursor
+(blink-cursor-mode 0)
+
+;; Change cursor color according to mode
+(defvar my/set-cursor-color-color "")
+(defvar my/set-cursor-color-buffer "")
+
+(defun my/set-cursor-color-according-to-mode ()
+  "Change cursor color according to some minor modes."
+  (let ((color (cond (buffer-read-only "DodgerBlue2")
+                     (overwrite-mode "red2")
+                     (t "gray25"))))
+    (unless (and (string= color my/set-cursor-color-color)
+                 (string= (buffer-name) my/set-cursor-color-buffer))
+      (set-cursor-color (setq my/set-cursor-color-color color))
+      (setq my/set-cursor-color-buffer (buffer-name)))))
+
+(add-hook 'post-command-hook #'my/set-cursor-color-according-to-mode)
+;;; ——————————————————————————————————————————— [end] cursor
 
 ;;; ———————————————————————————————————————————————— paradox
 (use-package paradox
@@ -438,7 +457,7 @@ If AGAIN is true, use the same mode as the last call."
 
 ;; Cleanup whitespace if the file was originally clean
 (use-package whitespace-cleanup-mode
-  :defer t
+  :demand
   :diminish whitespace-cleanup-mode
 
   :config
@@ -447,7 +466,7 @@ If AGAIN is true, use the same mode as the last call."
 
 ;;; ———————————————————————————————————————————— vimish-fold
 (use-package vimish-fold
-  :demand
+  :defer t
 
   :bind
   (("M-RET"   . vimish-fold-toggle)
@@ -497,9 +516,10 @@ If AGAIN is true, use the same mode as the last call."
 ;;; —————————————————————————————————————— [end] vimish-fold
 
 ;;; —————————————————————————————————————— hydra vimish-fold
-(use-package hydra
-  :after vimish-fold
+(req-package hydra
   :defer t
+  :after vimish-fold
+  :require vimish-fold
 
   :bind
   (:map global-map
@@ -546,7 +566,7 @@ Vimish fold
 
 ;;; ———————————————————————————————————————————— smartparens
 (use-package smartparens-config
-  :defer t
+  :demand
   :diminish smartparens-mode
 
   :config
@@ -579,9 +599,10 @@ Vimish fold
 ;;; ————————————————————————————————————————— [end] perspeen
 
 ;;; ————————————————————————————————————————— hydra perspeen
-(use-package hydra
-  :after perspeen
+(req-package hydra
   :defer t
+  :after perspeen
+  :require perspeen
 
   :bind
   (:map perspeen-mode-map
@@ -628,9 +649,9 @@ Perspeen
 ;;; ——————————————————————————————————————— [end] projectile
 
 ;;; ——————————————————————————————————————— hydra projectile
-(use-package hydra
-  :after projectile
+(req-package hydra
   :defer t
+  :after projectile
 
   :bind
   (:map projectile-mode-map
@@ -727,9 +748,11 @@ Projects: [_p_]  switch-project            Files: [_d_]  find-dir               
 
 ;;; —————————————————————————————————————————————— meghanada
 (use-package meghanada
-  :demand
+  :defer t
+
   :init
   (setq meghanada-mode-key-prefix (kbd "C-c c"))
+  (add-hook 'java-mode-hook #'meghanada-mode)
 
   :bind
   (:map meghanada-mode-map
@@ -740,9 +763,10 @@ Projects: [_p_]  switch-project            Files: [_d_]  find-dir               
 ;;; ———————————————————————————————————————— [end] meghanada
 
 ;;; ———————————————————————————————————————— hydra meghanada
-(use-package hydra
-  :after meghanada
+(req-package hydra
   :defer t
+  :after meghanada
+  :require meghanada
 
   :bind
   (:map meghanada-mode-map
@@ -808,41 +832,44 @@ Meghanada
         ivy-fixed-height-minibuffer t
         ivy-wrap t
         ivy-action-wrap t
-        ivy-use-virtual-buffers nil
+        ivy-use-virtual-buffers t
         ivy-format-function 'ivy-format-function-line
         ivy-count-format ""
         ivy-extra-directories nil
-        ;; ivy-initial-inputs-alist nil
+        ivy-ignore-buffers '("\\` " "\\*.*\\*")
+        ivy-initial-inputs-alist nil
         ivy-re-builders-alist '((t . ivy--regex-ignore-order))))
 
-(use-package ivy
-  :after magit
+(req-package magit
   :defer t
-  :diminish ivy-mode
+  :after ivy
+  :require ivy
 
   :config
   (setq magit-completing-read-function 'ivy-completing-read))
 
-;; (use-package ivy-rich
-;;   :after ivy
-;;   :defer t
+(req-package ivy-rich
+  :defer t
+  :after ivy
+  :require ivy
 
-;;   :config
-;;   (setq ivy-virtual-abbreviate 'full
-;;         ivy-rich-abbreviate-paths t
-;;         ivy-rich-switch-buffer-name-max-length 55
-;;         ivy-rich-switch-buffer-project-max-length 15
-;;         ivy-rich-switch-buffer-mode-max-length 25
-;;         ivy-rich-switch-buffer-align-virtual-buffer t)
+  :config
+  (setq ivy-virtual-abbreviate 'full
+        ivy-rich-abbreviate-paths t
+        ivy-rich-switch-buffer-name-max-length 55
+        ivy-rich-switch-buffer-project-max-length 15
+        ivy-rich-switch-buffer-mode-max-length 25
+        ivy-rich-switch-buffer-align-virtual-buffer t)
 
-;;   (add-hook 'minibuffer-setup-hook (lambda () (setq show-trailing-whitespace nil)))
-;;   (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich-switch-buffer-transformer))
+  (add-hook 'minibuffer-setup-hook (lambda () (setq show-trailing-whitespace nil)))
+  (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich-switch-buffer-transformer))
 ;;; —————————————————————————————————————————————— [end] ivy
 
 ;;; —————————————————————————————————————————————— hydra ivy
-(use-package hydra
-  :after ivy
+(req-package hydra
   :defer t
+  :after ivy
+  :require ivy
 
   :bind
   (:map ivy-minibuffer-map
@@ -881,8 +908,9 @@ Meghanada
 ;;; ——————————————————————————————————————— [end] hydra ivy
 
 ;;; ————————————————————————————————————————————————— swiper
-(use-package swiper
-  :after (ivy counsel)
+(req-package swiper
+  :after counsel
+  :require counsel
   :defer t
 
   :bind
@@ -890,9 +918,10 @@ Meghanada
 ;;; ——————————————————————————————————————————— [end] swiper
 
 ;;; ———————————————————————————————————————————————— counsel
-(use-package counsel
-  :after ivy
+(req-package counsel
   :defer t
+  :after ivy
+  :require ivy
   :diminish counsel-mode
 
   :bind
@@ -925,15 +954,16 @@ Meghanada
   :defer t
   :diminish counsel-gtags-mode
 
+  :init
+  (add-hook 'c-mode-hook    #'counsel-gtags-mode)
+  (add-hook 'c++-mode-hook  #'counsel-gtags-mode)
+  (add-hook 'java-mode-hook #'counsel-gtags-mode)
+
   :bind
   (:map counsel-gtags-mode-map
         ("<f2>" . counsel-gtags-dwim))
 
   :config
-  (add-hook 'c-mode-hook    'counsel-gtags-mode)
-  (add-hook 'c++-mode-hook  'counsel-gtags-mode)
-  (add-hook 'java-mode-hook 'counsel-gtags-mode)
-
   (setq counsel-gtags-path-style 'relative
         counsel-gtags-ignore-case t
         counsel-gtags-auto-update t))
@@ -966,9 +996,10 @@ Meghanada
 ;; —————————————————————————————————————————————— [end] avy
 
 ;;; ———————————————————————————————————————————— zzz-to-char
-(use-package zzz-to-char
-  :after avy
+(req-package zzz-to-char
   :defer t
+  :after avy
+  :require avy
 
   :bind
   (("M-z" . zzz-up-to-char))
@@ -999,9 +1030,10 @@ Meghanada
 
 ;; --
 
-(use-package company-quickhelp
-  :after company
+(req-package company-quickhelp
   :defer t
+  :after company
+  :require company
 
   :bind
   (:map company-active-map
@@ -1011,14 +1043,15 @@ Meghanada
   ;; Activate quickhelp
   (company-quickhelp-mode 1)
 
-    ;; delay before displaying the help
+  ;; delay before displaying the help
   (setq company-quickhelp-delay 0.))
 
 ;; --
 
-(use-package company-jedi
-  :after company
+(req-package company-jedi
   :defer t
+  :after company
+  :require company
 
   :config
   (defun my/python-mode-hook ()
@@ -1027,9 +1060,10 @@ Meghanada
 
 ;; --
 
-(use-package company-auctex
-  :after company
+(req-package company-auctex
   :defer t
+  :after company
+  :require company
 
   :config
   (company-auctex-init))
@@ -1065,9 +1099,10 @@ Meghanada
   :config
   (yas-global-mode 1))
 
-(use-package company
-  :after yasnippet
+(req-package company
   :defer t
+  :after yasnippet
+  :require yasnippet
 
   :bind
   ("C-c C-y C-u" . company-yasnippet)
@@ -1105,6 +1140,16 @@ Meghanada
   :bind
   (:map flyspell-mode-map
         ("C-c C-v C-b" . flyspell-buffer))
+
+  :init
+  (add-hook 'org-mode-hook        (lambda () (flyspell-mode)))
+  (add-hook 'c++-mode-hook        (lambda () (flyspell-prog-mode)))
+  (add-hook 'c-mode-hook          (lambda () (flyspell-prog-mode)))
+  (add-hook 'java-mode-hook       (lambda () (flyspell-prog-mode)))
+  (add-hook 'python-mode-hook     (lambda () (flyspell-prog-mode)))
+  (add-hook 'emacs-lisp-mode-hook (lambda () (flyspell-prog-mode)))
+  (add-hook 'latex-mode-hook      (lambda () (flyspell-mode)))
+
   :config
   ;; Avoid printing messages for every word (it can be very slow)
   (setq flyspell-issue-message-flag nil)
@@ -1115,15 +1160,7 @@ Meghanada
 
   ;; Flyspell deactivated for log edit
   (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
-    (add-hook hook (lambda () (flyspell-mode -1))))
-
-  (add-hook 'org-mode-hook (lambda () (flyspell-mode)))
-  (add-hook 'c++-mode-hook (lambda () (flyspell-prog-mode)))
-  (add-hook 'c-mode-hook (lambda () (flyspell-prog-mode)))
-  (add-hook 'java-mode-hook (lambda () (flyspell-prog-mode)))
-  (add-hook 'python-mode-hook (lambda () (flyspell-prog-mode)))
-  (add-hook 'emacs-lisp-mode-hook (lambda () (flyspell-prog-mode)))
-  (add-hook 'latex-mode-hook (lambda () (flyspell-mode))))
+    (add-hook hook (lambda () (flyspell-mode -1)))))
 ;;; ————————————————————————————————————————— [end] flyspell
 
 ;;; ——————————————————————————————————————————————— flycheck
@@ -1138,9 +1175,10 @@ Meghanada
 ;;; ————————————————————————————————————————— [end] flycheck
 
 ;;; ————————————————————————————————————————— hydra flycheck
-(use-package hydra
-  :after flycheck
+(req-package hydra
   :defer t
+  :after flycheck
+  :require flycheck
 
   :bind
   (:map flycheck-mode-map
@@ -1278,6 +1316,12 @@ Flycheck
         org-support-shift-select t
         org-log-done t)
 
+  (setq org-latex-to-pdf-process
+        '("pdflatex -interaction nonstopmode %b"
+          "bibtex %b"
+          "pdflatex -interaction nonstopmode %b"
+          "pdflatex -interaction nonstopmode %b"))
+
   (setq org-emphasis-alist (quote (("*" bold "<b>" "</b>")
                                    ("/" italic "<i>" "</i>")
                                    ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
@@ -1300,16 +1344,21 @@ Flycheck
   ;; auto refresh dired when file changes
   (add-hook 'dired-mode-hook 'auto-revert-mode))
 
+;; --
+
 (use-package dired-x
   :defer t
   :config
   (setq-default dired-omit-files-p t))
 
+;; --
+
 ;; Credits to Mads Hartmann
 ;; http://mads-hartmann.com/2016/05/12/emacs-tree-view.html
-(use-package dired-subtree
-  :after dired
+(req-package dired-subtree
   :defer t
+  :after dired
+  :require dired
 
   :bind
   (:map dired-mode-map
@@ -1379,17 +1428,17 @@ Flycheck
 (use-package all-the-icons
   :defer t)
 
-(use-package all-the-icons-dired
-  :after (all-the-icon dired)
+(req-package all-the-icons-dired
   :defer t
+  :after dired
+  :require all-the-icon
 
   :config
   (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
 ;;; ———————————————————————————————————— [end] all-the-icons
 
-;;; —————————————————————————————————————————————— spaceline
+;;; ———————————————————————————————— spaceline-all-the-icons
 (use-package spaceline-all-the-icons
-  :after spaceline
   :demand
 
   :config
@@ -1398,6 +1447,7 @@ Flycheck
   (spaceline-all-the-icons--setup-git-ahead)
   (spaceline-all-the-icons--setup-neotree)
   (spaceline-all-the-icons--setup-paradox)
+  (spaceline-all-the-icons--setup-anzu)
 
   (spaceline-toggle-all-the-icons-bookmark-on)
   (spaceline-toggle-all-the-icons-buffer-id-on)
@@ -1446,7 +1496,7 @@ Flycheck
         spaceline-all-the-icons-icon-set-vc-icon-git 'github-logo
         spaceline-all-the-icons-icon-set-git-ahead 'commit
         spaceline-all-the-icons-icon-set-window-numbering 'circle))
-;;; ———————————————————————————————————————— [end] spaceline
+;;; —————————————————————————— [end] spaceline-all-the-icons
 
 ;;; ———————————————————————————————————————————————— neotree
 (use-package neotree
@@ -1457,49 +1507,54 @@ Flycheck
   :config
   (setq neo-smart-open t
         neo-autorefresh nil
-        neo-window-fixed-size nil
+        neo-window-fixed-size t
         neo-window-position 'left
         neo-confirm-delete-directory-recursively 'off-p
         neo-confirm-change-root 'off-p
-        neo-window-width 35
+        neo-window-width 30
         neo-confirm-kill-buffers-for-files-in-directory 'off-p
-        neo-theme 'icons)
+        neo-theme 'icons))
 
-  (use-package hl-anything
-    :defer t
-    :config
-    (add-hook 'neotree-mode-hook 'hl-line-mode))
+(req-package hl-anything
+  :defer t
+  :after neotree
+  :require neotree
 
-  (use-package projectile
-    :defer t
+  :init
+  (add-hook 'neotree-mode-hook #'hl-line-mode))
 
-    :bind
-    (("<S-f10>" . neotree-toggle)
-     :map projectile-mode-map
-     ("<f10>" . my/neotree-project-dir-toggle))
+(req-package projectile
+  :defer t
+  :after neotree
+  :require projectile
 
-    :config
-    (defun my/neotree-project-dir-toggle ()
-      "Open NeoTree using the project root, using find-file-in-project,
+  :bind
+  (("<S-f10>" . neotree-toggle)
+   :map projectile-mode-map
+   ("<f10>" . my/neotree-project-dir-toggle))
+
+  :config
+  (defun my/neotree-project-dir-toggle ()
+    "Open NeoTree using the project root, using find-file-in-project,
 or the current buffer directory."
-      (interactive)
-      (let ((project-dir
-             (ignore-errors
-               ;; Pick one: projectile or find-file-in-project
-               (projectile-project-root)
-               ;; (ffip-project-root)
-               ))
-            (file-name (buffer-file-name))
-            (neo-smart-open t))
-        (if (and (fboundp 'neo-global--window-exists-p)
-                 (neo-global--window-exists-p))
-            (neotree-hide)
-          (progn
-            (neotree-show)
-            (if project-dir
-                (neotree-dir project-dir))
-            (if file-name
-                (neotree-find file-name))))))))
+    (interactive)
+    (let ((project-dir
+           (ignore-errors
+             ;; Pick one: projectile or find-file-in-project
+             (projectile-project-root)
+             ;; (ffip-project-root)
+             ))
+          (file-name (buffer-file-name))
+          (neo-smart-open t))
+      (if (and (fboundp 'neo-global--window-exists-p)
+               (neo-global--window-exists-p))
+          (neotree-hide)
+        (progn
+          (neotree-show)
+          (if project-dir
+              (neotree-dir project-dir))
+          (if file-name
+              (neotree-find file-name)))))))
 ;;; —————————————————————————————————————————— [end] neotree
 
 ;;; ——————————————————————————————————————————————— diminish
@@ -1525,8 +1580,8 @@ or the current buffer directory."
 (use-package google-c-style
   :defer t
 
-  :config
-  (add-hook 'java-mode-hook 'google-set-c-style)
+  :init
+  (add-hook 'java-mode-hook     'google-set-c-style)
   (add-hook 'c-mode-common-hook 'google-set-c-style))
 ;;; ——————————————————————————————————— [end] google-c-style
 
@@ -1547,10 +1602,10 @@ or the current buffer directory."
    ("C-c o p" . origami-previous-fold)
    ("C-c o R" . origami-reset))
 
-  :config
-  (add-hook 'java-mode-hook 'origami-mode)
-  (add-hook 'python-mode-hook 'origami-mode)
-  (add-hook 'c-mode-common-hook 'origami-mode)
+  :init
+  (add-hook 'java-mode-hook       'origami-mode)
+  (add-hook 'python-mode-hook     'origami-mode)
+  (add-hook 'c-mode-common-hook   'origami-mode)
   (add-hook 'emacs-lisp-mode-hook 'origami-mode))
 ;;; —————————————————————————————————————————— [end] origami
 
@@ -1562,6 +1617,27 @@ or the current buffer directory."
   (eyebrowse-mode t))
 ;;; ———————————————————————————————————————— [end] eyebrowse
 
+;;; ——————————————————————————————————————————————————— anzu
+(use-package anzu
+  :demand
+
+  :bind
+  (("<f5>"   . anzu-query-replace)
+   ("<S-f5>" . anzu-query-replace-regexp))
+
+  :config
+  (global-anzu-mode 1))
+;;; ————————————————————————————————————————————— [end] anzu
+
+;;; ———————————————————————————————————————————————— docview
+(use-package doc-view
+  :defer t
+  :config
+  (setq doc-view-continuous t))
+;;; —————————————————————————————————————————— [end] docview
+
+(req-package-finish)
+
 ;;; ********************************************************
 
 (custom-set-variables
@@ -1571,17 +1647,17 @@ or the current buffer directory."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (diff-hl eyebrowse paradox spaceline-all-the-icons spaceline
-     all-the-icons-dired all-the-icons origami google-c-style
-     zzz-to-char matlab-mode ivy-hydra counsel-gtags hydra
-     use-package ivy-rich smex flx counsel-projectile counsel ivy
-     neotree dired-subtree diminish perspeen multiple-cursors
-     hl-anything volatile-highlights crux whitespace-cleanup-mode
-     vimish-fold undo-tree systemd sqlup-mode smartparens
-     rainbow-mode popwin meghanada markdown-mode magithub
-     lua-mode java-snippets expand-region drag-stuff
-     company-quickhelp company-jedi company-bibtex company-auctex
-     avy))))
+    (req-package anzu diff-hl eyebrowse paradox
+     spaceline-all-the-icons spaceline all-the-icons-dired
+     all-the-icons origami google-c-style zzz-to-char matlab-mode
+     ivy-hydra counsel-gtags hydra use-package ivy-rich smex flx
+     counsel-projectile counsel ivy neotree dired-subtree
+     diminish perspeen multiple-cursors hl-anything
+     volatile-highlights crux whitespace-cleanup-mode vimish-fold
+     undo-tree systemd sqlup-mode smartparens rainbow-mode popwin
+     meghanada markdown-mode magithub lua-mode java-snippets
+     expand-region drag-stuff company-quickhelp company-jedi
+     company-bibtex company-auctex avy))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
