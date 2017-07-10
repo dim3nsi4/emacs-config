@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-07-09 23:36:41 seimandp>
+;;; Time-stamp: <2017-07-10 08:23:32 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -836,7 +836,7 @@ Meghanada
         ivy-format-function 'ivy-format-function-line
         ivy-count-format ""
         ivy-extra-directories nil
-        ivy-ignore-buffers '("\\` " "\\*.*\\*")
+        ivy-ignore-buffers '("\\` " "\\*.+")
         ivy-initial-inputs-alist nil
         ivy-re-builders-alist '((t . ivy--regex-ignore-order))))
 
@@ -856,9 +856,9 @@ Meghanada
   :config
   (setq ivy-virtual-abbreviate 'full
         ivy-rich-abbreviate-paths t
-        ivy-rich-switch-buffer-name-max-length 55
+        ivy-rich-switch-buffer-name-max-length 40
         ivy-rich-switch-buffer-project-max-length 15
-        ivy-rich-switch-buffer-mode-max-length 25
+        ivy-rich-switch-buffer-mode-max-length 20
         ivy-rich-switch-buffer-align-virtual-buffer t)
 
   (add-hook 'minibuffer-setup-hook (lambda () (setq show-trailing-whitespace nil)))
