@@ -3,9 +3,10 @@ Yet Another GNU Emacs Configuration.
 
 The whole configuration is contained in the `init.el` file, which
 should be placed under `.emacs.d/` in your home directory. It relies
-on [use-package](https://github.com/jwiegley/use-package) to manage
-the loading of the packages and their configuration. Make sure you
-have it installed before trying to run this configuration.
+on [use-package](https://github.com/jwiegley/use-package)
+and [req-package](https://github.com/edvorg/req-package) to manage the
+loading of the packages and their configuration. Make sure you have
+these installed before trying to run this configuration.
 
 Several packages are activated if they are detected
 (e.g. [ivy](https://github.com/abo-abo/swiper),
