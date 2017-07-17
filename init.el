@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-07-10 08:23:32 seimandp>
+;;; Time-stamp: <2017-07-17 21:38:27 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -183,8 +183,8 @@
 (global-set-key (kbd "<S-mouse-1>") 'ignore)
 
 (global-set-key (kbd "C-c") 'nil)
-(global-set-key (kbd "C-c C-t C-m") 'menu-bar-mode)
-(global-set-key (kbd "C-c C-t C-t") 'tool-bar-mode)
+;; (global-set-key (kbd "C-c C-t C-m") 'menu-bar-mode)
+;; (global-set-key (kbd "C-c C-t C-t") 'tool-bar-mode)
 
 ;; switch comment-dwim and xref-pop-marker-stack
 (global-set-key (kbd "M-;") 'xref-pop-marker-stack)
@@ -582,20 +582,20 @@ Vimish fold
 ;; ———————————————————————————————— [end] rainbow delimiters
 
 ;;; ——————————————————————————————————————————————— perspeen
-(use-package perspeen
-  :demand
+;; (use-package perspeen
+;;   :demand
 
-  :init
-  (setq perspeen-keymap-prefix (kbd "C-c t"))
+;;   :init
+;;   (setq perspeen-keymap-prefix (kbd "C-c t"))
 
-  :bind
-  (:map perspeen-mode-map
-        ("<C-tab>" . perspeen-tab-next)
-        ("C-c t q" . perspeen-tab-del))
+;;   :bind
+;;   (:map perspeen-mode-map
+;;         ("<C-tab>" . perspeen-tab-next)
+;;         ("C-c t q" . perspeen-tab-del))
 
-  :config
-  (setq perspeen-use-tab t)
-  (perspeen-mode))
+;;   :config
+;;   (setq perspeen-use-tab t)
+;;   (perspeen-mode))
 ;;; ————————————————————————————————————————— [end] perspeen
 
 ;;; ————————————————————————————————————————— hydra perspeen
@@ -1019,7 +1019,7 @@ Meghanada
         ("<escape>" . company-abort))
 
   :config
-  (setq company-idle-delay 0.           ; delay before displaying auto completion choices
+  (setq company-idle-delay 0.5          ; delay before displaying auto completion choices
         company-minimum-prefix-length 2 ; number of characters needed before auto completion popup
         company-show-numbers nil)       ; show/hide the quick access numbers
 
@@ -1330,7 +1330,11 @@ Flycheck
 
   ;; Activate support for languages for org-babel
   (org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t)
-                                                           (sqlite . t))))
+                                                           (gnuplot    . t)
+                                                           (python     . t)
+                                                           (latex      . t)
+                                                           (sh         . t)
+                                                           (sqlite     . t))))
 ;;; ————————————————————————————————————————— [end] org-mode
 
 ;;; —————————————————————————————————————————————————— dired
@@ -1438,8 +1442,10 @@ Flycheck
 ;;; ———————————————————————————————————— [end] all-the-icons
 
 ;;; ———————————————————————————————— spaceline-all-the-icons
-(use-package spaceline-all-the-icons
+(req-package spaceline-all-the-icons
   :demand
+  :after spaceline
+  :require spaceline
 
   :config
   (spaceline-all-the-icons-theme)
@@ -1456,7 +1462,8 @@ Flycheck
   (spaceline-toggle-all-the-icons-dedicated-on)
   (spaceline-toggle-all-the-icons-git-ahead-on)
   (spaceline-toggle-all-the-icons-git-status-on)
-  (spaceline-toggle-all-the-icons-hud-on)
+  (spaceline-toggle-all-the-icons-hud-off)
+  (spaceline-toggle-all-the-icons-minor-modes-off)
   (spaceline-toggle-all-the-icons-neotree-close-bracket-off)
   (spaceline-toggle-all-the-icons-neotree-context-off)
   (spaceline-toggle-all-the-icons-neotree-dirs-on)
@@ -1479,7 +1486,7 @@ Flycheck
   (spaceline-toggle-all-the-icons-separator-right-active-2-off)
   (spaceline-toggle-all-the-icons-separator-right-inactive-on)
   (spaceline-toggle-all-the-icons-text-scale-on)
-  (spaceline-toggle-all-the-icons-time-off)
+  (spaceline-toggle-all-the-icons-time-on)
   (spaceline-toggle-all-the-icons-vc-icon-on)
   (spaceline-toggle-all-the-icons-which-function-on)
   (spaceline-toggle-all-the-icons-window-number-off)
@@ -1613,8 +1620,32 @@ or the current buffer directory."
 (use-package eyebrowse
   :defer t
   :diminish
+
+  :bind
+  (("<C-tab>"   . eyebrowse-next-window-config)
+   ("<backtab>" . eyebrowse-prev-window-config)
+   ("C-c t t"   . eyebrowse-create-window-config)
+   ("C-c t c"   . eyebrowse-close-window-config)
+   ("C-c t n"   . eyebrowse-next-window-config)
+   ("C-c t p"   . eyebrowse-prev-window-config))
+
+  :init
+  (setq eyebrowse-keymap-prefix (kbd "C-c t"))
+
   :config
+  (setq eyebrowse-wrap-around t
+        eyebrowse-switch-back-and-forth t
+        eyebrowse-mode-line-style 'always)
   (eyebrowse-mode t))
+
+(req-package eyebrowse
+  :defer t
+  :diminish
+  :require neotree
+
+  :init
+  ;; Fix for neotree/eyebrowse compatibility
+  (add-hook 'eyebrowse-post-window-switch-hook 'neo-global--attach))
 ;;; ———————————————————————————————————————— [end] eyebrowse
 
 ;;; ——————————————————————————————————————————————————— anzu
@@ -1636,6 +1667,19 @@ or the current buffer directory."
   (setq doc-view-continuous t))
 ;;; —————————————————————————————————————————— [end] docview
 
+;;; ———————————————————————————————————————————————— cdlatex
+(use-package cdlatex
+  :defer t
+
+  :init
+  ;; with AUCTeX LaTeX mode
+  (add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)
+  ;; with Emacs latex mode
+  (add-hook 'latex-mode-hook 'turn-on-cdlatex)
+  ;; activate cdlatex in org mode
+  (add-hook 'org-mode-hook 'turn-on-org-cdlatex))
+;;; —————————————————————————————————————————— [end] cdlatex
+
 (req-package-finish)
 
 ;;; ********************************************************
@@ -1647,17 +1691,18 @@ or the current buffer directory."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (req-package anzu diff-hl eyebrowse paradox
-     spaceline-all-the-icons spaceline all-the-icons-dired
-     all-the-icons origami google-c-style zzz-to-char matlab-mode
-     ivy-hydra counsel-gtags hydra use-package ivy-rich smex flx
-     counsel-projectile counsel ivy neotree dired-subtree
-     diminish perspeen multiple-cursors hl-anything
-     volatile-highlights crux whitespace-cleanup-mode vimish-fold
-     undo-tree systemd sqlup-mode smartparens rainbow-mode popwin
-     meghanada markdown-mode magithub lua-mode java-snippets
-     expand-region drag-stuff company-quickhelp company-jedi
-     company-bibtex company-auctex avy))))
+    (cdlatex gnuplot pdf-tools req-package anzu diff-hl eyebrowse
+     paradox spaceline-all-the-icons spaceline
+     all-the-icons-dired all-the-icons origami google-c-style
+     zzz-to-char matlab-mode ivy-hydra counsel-gtags hydra
+     use-package ivy-rich smex flx counsel-projectile counsel ivy
+     neotree dired-subtree diminish perspeen multiple-cursors
+     hl-anything volatile-highlights crux whitespace-cleanup-mode
+     vimish-fold undo-tree systemd sqlup-mode smartparens
+     rainbow-mode popwin meghanada markdown-mode magithub
+     lua-mode java-snippets expand-region drag-stuff
+     company-quickhelp company-jedi company-bibtex company-auctex
+     avy))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
