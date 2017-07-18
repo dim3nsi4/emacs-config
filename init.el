@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-07-17 21:38:27 seimandp>
+;;; Time-stamp: <2017-07-18 07:11:59 arc>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -1021,7 +1021,8 @@ Meghanada
   :config
   (setq company-idle-delay 0.5          ; delay before displaying auto completion choices
         company-minimum-prefix-length 2 ; number of characters needed before auto completion popup
-        company-show-numbers nil)       ; show/hide the quick access numbers
+        company-show-numbers nil        ; show/hide the quick access numbers
+        company-dabbrev-downcase nil)   ; whether dabbrev candidates are case sensitive or not
 
   ;; Activate company globally
   (add-hook 'after-init-hook 'global-company-mode)
@@ -1063,7 +1064,7 @@ Meghanada
 (req-package company-auctex
   :defer t
   :after company
-  :require company
+  :require (company auctex)
 
   :config
   (company-auctex-init))
@@ -1091,6 +1092,10 @@ Meghanada
    ("M-n"         . yas-insert-snippet)
    ("C-c C-y C-y" . yas-insert-snippet)
    ("C-c C-y C-n" . yas-new-snippet)
+
+   :map yas-minor-mode-map
+   ("TAB" . nil)
+   ("<tab>" . nil)
 
    :map yas-keymap
    ("M-«" . yas-prev-field)
@@ -1278,6 +1283,14 @@ Flycheck
   (("C-x g" . magit-status)))
 ;;; ———————————————————————————————————————————— [end] magit
 
+;;; ———————————————————————————————————————————————— diff-hl
+(use-package diff-hl
+  :after magit
+
+  :config
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+;;; —————————————————————————————————————————— [end] diff-hl
+
 ;;; ———————————————————————————————————————————————————— sql
 (add-to-list 'same-window-buffer-names "*SQL*")
 
@@ -1310,17 +1323,54 @@ Flycheck
 
   :config
   (setq org-directory "~/.org-mode.d"
-        org-agenda-files (list "calendar-work.org"
-                               "calendar-home.org")
+        org-agenda-files (list "~/.org-mode.d/agenda/")
+        org-agenda-restore-windows-after-quit t
+        org-agenda-window-setup 'current-window
         org-default-notes-file "notes.org"
         org-support-shift-select t
+        org-src-fontify-natively t
+        org-image-actual-width nil
+        org-highlight-latex-and-related '(latex script entities)
+        org-export-with-sub-superscripts (quote {})
         org-log-done t)
 
-  (setq org-latex-to-pdf-process
-        '("pdflatex -interaction nonstopmode %b"
+  (setq org-link-frame-setup '((vm      . vm-visit-folder-other-frame)
+                               (vm-imap . vm-visit-imap-folder-other-frame)
+                               (gnus    . org-gnus-no-new-news)
+                               (file    . find-file)
+                               (wl      . wl-other-frame)))
+
+  ;; Change the way footnote are defined
+  (setq org-footnote-definition-re "^\\[fn:[-_[:word:]]+\\]"
+        org-footnote-re            (concat "\\[\\(?:fn:\\([-_[:word:]]+\\)?:"
+                                           "\\|"
+                                           "\\(fn:[-_[:word:]]+\\)\\)"))
+
+  ;; Command for latex compilation
+  (setq org-latex-pdf-process
+        '("pdflatex -interaction nonstopmode -output-directory %o %f"
           "bibtex %b"
-          "pdflatex -interaction nonstopmode %b"
-          "pdflatex -interaction nonstopmode %b"))
+          "pdflatex -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -interaction nonstopmode -output-directory %o %f"))
+
+  ;; Remove textcomp from the default packages
+  ;; (it is in conflict with newtx fonts)
+  (setq org-latex-default-packages-alist '(("AUTO" "inputenc" t)
+                                           ("T1" "fontenc" t)
+                                           ("" "fixltx2e" nil)
+                                           ("" "graphicx" t)
+                                           ("" "longtable" nil)
+                                           ("" "float" nil)
+                                           ("" "wrapfig" nil)
+                                           ("" "rotating" nil)
+                                           ("normalem" "ulem" t)
+                                           ("" "amsmath" t)
+                                           ;; ("" "textcomp" t)
+                                           ("" "marvosym" t)
+                                           ("" "wasysym" t)
+                                           ("" "amssymb" t)
+                                           ("" "hyperref" nil)
+                                           "\\tolerance=1000"))
 
   (setq org-emphasis-alist (quote (("*" bold "<b>" "</b>")
                                    ("/" italic "<i>" "</i>")
@@ -1336,6 +1386,26 @@ Flycheck
                                                            (sh         . t)
                                                            (sqlite     . t))))
 ;;; ————————————————————————————————————————— [end] org-mode
+
+;;; ———————————————————————————————————————————————— org-ref
+(use-package org-ref
+  :after org
+  :defer t
+
+  :init
+  (setq org-ref-completion-library 'org-ref-ivy-cite)
+
+  :config
+  (setq reftex-default-bibliography '("~/DATA/90_BIBLIOGRAPHY/references.bib"))
+
+  (setq org-ref-bibliography-notes     "~/DATA/90_BIBLIOGRAPHY/notes.org"
+        org-ref-default-bibliography '("~/DATA/90_BIBLIOGRAPHY/references.bib")
+        org-ref-pdf-directory          "~/DATA/90_BIBLIOGRAPHY/bibtex-pdfs/")
+
+  (setq bibtex-completion-pdf-open-function
+        (lambda (fpath)
+          (start-process "open" "*open*" "open" fpath))))
+;;; —————————————————————————————————————————— [end] org-ref
 
 ;;; —————————————————————————————————————————————————— dired
 (use-package dired
@@ -1435,17 +1505,15 @@ Flycheck
 (req-package all-the-icons-dired
   :defer t
   :after dired
-  :require all-the-icon
+  :require all-the-icons
 
   :config
   (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
 ;;; ———————————————————————————————————— [end] all-the-icons
 
 ;;; ———————————————————————————————— spaceline-all-the-icons
-(req-package spaceline-all-the-icons
+(use-package spaceline-all-the-icons
   :demand
-  :after spaceline
-  :require spaceline
 
   :config
   (spaceline-all-the-icons-theme)
@@ -1660,12 +1728,92 @@ or the current buffer directory."
   (global-anzu-mode 1))
 ;;; ————————————————————————————————————————————— [end] anzu
 
+;;; ————————————————————————————————————————————————— image+
+(req-package image+
+  :defer t
+  :after image
+  :require image
+
+  :bind
+  (:map image-mode-map
+        ("+"   . imagex-sticky-zoom-in)
+        ("-"   . imagex-sticky-zoom-out)
+        ("r"   . imagex-sticky-rotate-right)
+        ("l"   . imagex-sticky-rotate-left)
+        ("m"   . imagex-sticky-maximize)
+        ("o"   . imagex-sticky-restore-original)
+        ("w"   . image-transform-fit-to-width)
+        ("h"   . image-transform-fit-to-height)
+        ("s"   . imagex-sticky-save-image)
+        ("p"   . image-previous-file)
+        ("n"   . image-next-file))
+
+  :config
+  (imagex-auto-adjust-mode))
+;;; ——————————————————————————————————————————— [end] image+
+
+;;; ——————————————————————————————————————————— hydra image+
+(req-package hydra
+  :defer t
+  :after image
+  :require (image image+)
+
+  :bind
+  (:map image-mode-map
+        ("C-o" . my/hydra-image+/body))
+
+  :config
+  (defhydra my/hydra-image+ (:color pink :hint nil)
+    "
+Image+
+
+[_+_] zoom in        [_m_] maximize            [_s_] save image            [_q_] quit
+[_-_] zoom out       [_o_] restore original    [_p_] previous-file
+[_l_] rotate left    [_w_] fit to width        [_n_] next-file
+[_r_] rotate right   [_h_] fit to height
+    "
+    ("<escape>" nil :exit t)
+    ("q"        nil :exit t)
+    ("C-o"      nil :exit t)
+    ("C-g"      nil :exit t)
+
+    ("+" imagex-sticky-zoom-in)
+    ("-" imagex-sticky-zoom-out)
+    ("r" imagex-sticky-rotate-right)
+    ("l" imagex-sticky-rotate-left)
+    ("m" imagex-sticky-maximize)
+    ("o" imagex-sticky-restore-original)
+    ("w" image-transform-fit-to-width)
+    ("h" image-transform-fit-to-height)
+    ("s" imagex-sticky-save-image)
+    ("p" image-previous-file)
+    ("n" image-next-file)))
+;;; ————————————————————————————————————— [end] hydra image+
+
 ;;; ———————————————————————————————————————————————— docview
 (use-package doc-view
   :defer t
   :config
   (setq doc-view-continuous t))
 ;;; —————————————————————————————————————————— [end] docview
+
+;;; ————————————————————————————————————————————————— auctex
+(use-package auctex
+  :defer t
+
+  :init
+  (add-hook 'LaTeX-mode-hook 'visual-line-mode)
+  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+
+  :config
+  (setq TeX-auto-save t
+        TeX-parse-self t
+        reftex-plug-into-AUCTeX t)
+
+  (setq-default TeX-master nil))
+;;; ——————————————————————————————————————————— [end] auctex
 
 ;;; ———————————————————————————————————————————————— cdlatex
 (use-package cdlatex
@@ -1680,6 +1828,10 @@ or the current buffer directory."
   (add-hook 'org-mode-hook 'turn-on-org-cdlatex))
 ;;; —————————————————————————————————————————— [end] cdlatex
 
+;;; —————————————————————————————————————————————— help-fns+
+(use-package help-fns+)
+;;; ———————————————————————————————————————— [end] help-fns+
+
 (req-package-finish)
 
 ;;; ********************************************************
@@ -1691,18 +1843,18 @@ or the current buffer directory."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (cdlatex gnuplot pdf-tools req-package anzu diff-hl eyebrowse
-     paradox spaceline-all-the-icons spaceline
-     all-the-icons-dired all-the-icons origami google-c-style
-     zzz-to-char matlab-mode ivy-hydra counsel-gtags hydra
-     use-package ivy-rich smex flx counsel-projectile counsel ivy
-     neotree dired-subtree diminish perspeen multiple-cursors
-     hl-anything volatile-highlights crux whitespace-cleanup-mode
-     vimish-fold undo-tree systemd sqlup-mode smartparens
-     rainbow-mode popwin meghanada markdown-mode magithub
-     lua-mode java-snippets expand-region drag-stuff
-     company-quickhelp company-jedi company-bibtex company-auctex
-     avy))))
+    (all-the-icons anzu avy cdlatex company-auctex company-bibtex
+     company-jedi company-quickhelp counsel counsel-gtags
+     counsel-projectile crux diff-hl diminish dired-subtree
+     drag-stuff expand-region eyebrowse flx gnuplot gnuplot-mode
+     google-c-style help-fns+ hl-anything hydra image+ ivy
+     ivy-hydra ivy-rich java-snippets lua-mode magithub
+     markdown-mode matlab-mode meghanada multiple-cursors neotree
+     org-ref origami paradox pdf-tools perspeen popwin
+     rainbow-mode req-package smartparens smex spaceline
+     all-the-icons-dired spaceline-all-the-icons sqlup-mode
+     undo-tree use-package vimish-fold volatile-highlights
+     whitespace-cleanup-mode zzz-to-char))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
