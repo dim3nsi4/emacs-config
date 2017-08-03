@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-07-18 07:11:59 arc>
+;;; Time-stamp: <2017-08-03 19:51:03 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -16,6 +16,10 @@
 (add-to-list 'package-archives '("gnu"   . "http://elpa.gnu.org/packages/"))
 (package-initialize)
 ;;; ———————————————————————————————— [end] packages archives
+
+;;; —————————————————————————————————————————————— load-path
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+;;; ———————————————————————————————————————— [end] load-path
 
 ;;; ————————————————————————————————————————— use/req-package
 (require 'use-package)
@@ -1125,16 +1129,27 @@ Meghanada
 ;;; ———————————————————————————————————————— [end] yasnippet
 
 ;;; ————————————————————————————————————————————————— ispell
-;; ispell
 (use-package ispell
   :defer t
 
-  :config
-  (setq ispell-program-name "hunspell" ; use hunspell to correct mistakes
-        ispell-dictionary   "en_US")   ; default dictionary to use
+  :bind
+  (("C-c C-s s" . my/cycle-ispell-languages))
 
-  ;; Set $DICPATH for Hunspell
-  (setenv "DICPATH" "/usr/share/hunspell"()))
+  :config
+  (setq ispell-program-name "hunspell"  ; use hunspell to correct mistakes
+        ispell-dictionary   "american") ; default dictionary to use
+
+  ;; Cycle between a dictionary list session-wide
+  (let ((langs '("francais" "american")))
+    (setq lang-ring (make-ring (length langs)))
+    (dolist (elem langs) (ring-insert lang-ring elem)))
+
+  (defun my/cycle-ispell-languages ()
+    (interactive)
+    (let ((lang (ring-ref lang-ring -1)))
+      (ring-insert lang-ring lang)
+      (ispell-change-dictionary lang)
+      (setq ispell-dictionary lang))))
 ;;; ——————————————————————————————————————————— [end] ispell
 
 ;;; ——————————————————————————————————————————————— flyspell
@@ -1144,7 +1159,7 @@ Meghanada
 
   :bind
   (:map flyspell-mode-map
-        ("C-c C-v C-b" . flyspell-buffer))
+        ("C-c C-s b" . flyspell-buffer))
 
   :init
   (add-hook 'org-mode-hook        (lambda () (flyspell-mode)))
@@ -1167,6 +1182,48 @@ Meghanada
   (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
     (add-hook hook (lambda () (flyspell-mode -1)))))
 ;;; ————————————————————————————————————————— [end] flyspell
+
+;;; ——————————————————————————————————— flyspell-correct-ivy
+(use-package flyspell-correct-ivy
+  :defer t
+
+  :bind
+  (:map flyspell-mode-map
+        ("C-x x" . flyspell-correct-previous-word-generic)))
+;;; ————————————————————————————— [end] flyspell-correct-ivy
+
+;;; ————————————————————————————————————————— hydra flyspell
+(req-package hydra
+  :defer t
+  :after flyspell
+  :require flyspell
+
+  :bind
+  (:map flyspell-mode-map
+        ("C-c C-s" . my/hydra-flyspell/body))
+
+  :config
+  (defhydra my/hydra-flyspell (:color teal :hint nil :idle 0.25)
+    "
+Flyspell
+
+[_b_] check buffer            [_c_] cycle dictionaries     [_v_] version
+[_p_] correct previous error  [_d_] change dictionary      [_x_] disable flyspell
+[_n_] correct next error
+    "
+    ("<escape>" nil :exit t)
+    ("C-o"      nil :exit t)
+    ("C-g"      nil :exit t)
+    ("q"        nil :exit t)
+
+    ("b" flyspell-buffer)
+    ("p" flyspell-correct-previous-word-generic)
+    ("n" flyspell-correct-next-word-generic)
+    ("c" my/cycle-ispell-languages)
+    ("d" ispell-change-dictionary)
+    ("v" ispell-check-version)
+    ("x" flyspell-mode-off)))
+;;; ——————————————————————————————————— [end] hydra flyspell
 
 ;;; ——————————————————————————————————————————————— flycheck
 (use-package flycheck
@@ -1194,13 +1251,15 @@ Meghanada
     "
 Flycheck
 
-[_b_] check buffer      [_l_] list-errors               [_s_] select-checker      [_v_] verify-setup
+[_b_] check buffer      [_l_] list-errors               [_s_] select checker      [_v_] verify-setup
 [_c_] clear buffer      [_h_] display error at point    [_x_] disable checker     [_V_] version
 [_p_] previous error    [_e_] explain error at point    [_?_] describe checker    [_i_] manual
 [_n_] next error
-
     "
     ("<escape>" nil :exit t)
+    ("C-o"      nil :exit t)
+    ("C-g"      nil :exit t)
+    ("q"        nil :exit t)
 
     ("b" flycheck-buffer)
     ("c" flycheck-clear)
@@ -1353,6 +1412,11 @@ Flycheck
           "pdflatex -interaction nonstopmode -output-directory %o %f"
           "pdflatex -interaction nonstopmode -output-directory %o %f"))
 
+  ;; Fontify broken links
+  (org-link-set-parameters
+   "file"
+   :face (lambda (path) (if (file-exists-p path) 'org-link 'org-warning)))
+
   ;; Remove textcomp from the default packages
   ;; (it is in conflict with newtx fonts)
   (setq org-latex-default-packages-alist '(("AUTO" "inputenc" t)
@@ -1406,6 +1470,12 @@ Flycheck
         (lambda (fpath)
           (start-process "open" "*open*" "open" fpath))))
 ;;; —————————————————————————————————————————— [end] org-ref
+
+;;; ———————————————————————————————————————————————— org-wiki
+(use-package org-wiki
+  :config
+  (setq org-wiki-location "~/.org-mode.d/wiki/"))
+;;; —————————————————————————————————————————— [end] org-wiki
 
 ;;; —————————————————————————————————————————————————— dired
 (use-package dired
@@ -1832,6 +1902,31 @@ Image+
 (use-package help-fns+)
 ;;; ———————————————————————————————————————— [end] help-fns+
 
+;;; ——————————————————————————————————————————————————— helm
+(use-package helm
+  :defer t
+
+  ;; :bind
+  ;; (("M-x"     . helm-M-x)
+  ;;  ("M-SPC"   . helm-dabbrev)
+  ;;  ("C-x C-b" . helm-buffers-list)
+  ;;  ("C-x b"   . helm-mini)
+  ;;  ("C-x C-f" . helm-find-files)
+  ;;  ("C-x f"   . helm-recentf)
+  ;;  ("C-S-h"   . helm-apropos)
+  ;;  ("<f9>"    . helm-imenu)
+  ;;  ("<S-f9>"  . helm-imenu-in-all-buffers)
+  ;;  ("<f12>"   . helm-list-elisp-packages))
+
+  :config
+  ;; (helm-mode 1)
+
+  (helm-autoresize-mode 1)
+  (setq helm-autoresize-max-height 30
+        helm-autoresize-min-height 30
+        helm-split-window-in-side-p nil))
+;;; ————————————————————————————————————————————— [end] helm
+
 (req-package-finish)
 
 ;;; ********************************************************
@@ -1843,18 +1938,19 @@ Image+
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (all-the-icons anzu avy cdlatex company-auctex company-bibtex
-     company-jedi company-quickhelp counsel counsel-gtags
-     counsel-projectile crux diff-hl diminish dired-subtree
-     drag-stuff expand-region eyebrowse flx gnuplot gnuplot-mode
-     google-c-style help-fns+ hl-anything hydra image+ ivy
-     ivy-hydra ivy-rich java-snippets lua-mode magithub
-     markdown-mode matlab-mode meghanada multiple-cursors neotree
-     org-ref origami paradox pdf-tools perspeen popwin
-     rainbow-mode req-package smartparens smex spaceline
-     all-the-icons-dired spaceline-all-the-icons sqlup-mode
-     undo-tree use-package vimish-fold volatile-highlights
-     whitespace-cleanup-mode zzz-to-char))))
+    (flyspell-correct-ivy org helm all-the-icons anzu avy cdlatex
+     company-auctex company-bibtex company-jedi company-quickhelp
+     counsel counsel-gtags counsel-projectile crux diff-hl
+     diminish dired-subtree drag-stuff expand-region eyebrowse
+     flx gnuplot gnuplot-mode google-c-style help-fns+
+     hl-anything hydra image+ ivy ivy-hydra ivy-rich
+     java-snippets lua-mode magithub markdown-mode matlab-mode
+     meghanada multiple-cursors neotree org-ref origami paradox
+     pdf-tools perspeen popwin rainbow-mode req-package
+     smartparens smex spaceline all-the-icons-dired
+     spaceline-all-the-icons sqlup-mode undo-tree use-package
+     vimish-fold volatile-highlights whitespace-cleanup-mode
+     zzz-to-char))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
