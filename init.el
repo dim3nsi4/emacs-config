@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-08-03 19:51:03 seimandp>
+;;; Time-stamp: <2017-08-04 07:00:44 arc>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -890,7 +890,7 @@ Meghanada
         (funcall
          (eval
           `(defhydra my/hydra-ivy-read-action (:color teal :hint nil)
-             "\naction %s(ivy-action-name)\n"
+             "\nAction %s(ivy-action-name)\n"
 
              ,@(mapcar (lambda (x) (list (nth 0 x) `(progn (ivy-set-action ',(nth 1 x)) (ivy-done)) (nth 2 x))) (cdr actions))
 
@@ -1136,8 +1136,8 @@ Meghanada
   (("C-c C-s s" . my/cycle-ispell-languages))
 
   :config
-  (setq ispell-program-name "hunspell"  ; use hunspell to correct mistakes
-        ispell-dictionary   "american") ; default dictionary to use
+  (setq ispell-program-name "hunspell"
+        ispell-dictionary   "american")
 
   ;; Cycle between a dictionary list session-wide
   (let ((langs '("francais" "american")))
@@ -1233,6 +1233,7 @@ Flyspell
   (setq flycheck-keymap-prefix (kbd "C-c s"))
 
   :config
+  (setq flycheck-temp-prefix "/tmp/.flycheck")
   (global-flycheck-mode t))
 ;;; ————————————————————————————————————————— [end] flycheck
 
@@ -1388,6 +1389,7 @@ Flycheck
         org-default-notes-file "notes.org"
         org-support-shift-select t
         org-src-fontify-natively t
+        org-startup-folded nil
         org-image-actual-width nil
         org-highlight-latex-and-related '(latex script entities)
         org-export-with-sub-superscripts (quote {})
@@ -1462,6 +1464,8 @@ Flycheck
   :config
   (setq reftex-default-bibliography '("~/DATA/90_BIBLIOGRAPHY/references.bib"))
 
+  (setq org-latex-prefer-user-labels t)
+
   (setq org-ref-bibliography-notes     "~/DATA/90_BIBLIOGRAPHY/notes.org"
         org-ref-default-bibliography '("~/DATA/90_BIBLIOGRAPHY/references.bib")
         org-ref-pdf-directory          "~/DATA/90_BIBLIOGRAPHY/bibtex-pdfs/")
@@ -1471,11 +1475,15 @@ Flycheck
           (start-process "open" "*open*" "open" fpath))))
 ;;; —————————————————————————————————————————— [end] org-ref
 
-;;; ———————————————————————————————————————————————— org-wiki
+;;; ——————————————————————————————————————————————— org-wiki
 (use-package org-wiki
   :config
   (setq org-wiki-location "~/.org-mode.d/wiki/"))
-;;; —————————————————————————————————————————— [end] org-wiki
+;;; ————————————————————————————————————————— [end] org-wiki
+
+;;; —————————————————————————————————————————————————— ox-wk
+(use-package ox-wk)
+;;; ———————————————————————————————————————————— [end] ox-wk
 
 ;;; —————————————————————————————————————————————————— dired
 (use-package dired
@@ -1902,13 +1910,16 @@ Image+
 (use-package help-fns+)
 ;;; ———————————————————————————————————————— [end] help-fns+
 
+;;; ——————————————————————————————————————————————— dokuwiki
+(use-package dokuwiki)
+;;; ————————————————————————————————————————— [end] dokuwiki
+
 ;;; ——————————————————————————————————————————————————— helm
 (use-package helm
   :defer t
 
   ;; :bind
   ;; (("M-x"     . helm-M-x)
-  ;;  ("M-SPC"   . helm-dabbrev)
   ;;  ("C-x C-b" . helm-buffers-list)
   ;;  ("C-x b"   . helm-mini)
   ;;  ("C-x C-f" . helm-find-files)
@@ -1920,7 +1931,6 @@ Image+
 
   :config
   ;; (helm-mode 1)
-
   (helm-autoresize-mode 1)
   (setq helm-autoresize-max-height 30
         helm-autoresize-min-height 30
@@ -1938,19 +1948,19 @@ Image+
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (flyspell-correct-ivy org helm all-the-icons anzu avy cdlatex
-     company-auctex company-bibtex company-jedi company-quickhelp
-     counsel counsel-gtags counsel-projectile crux diff-hl
-     diminish dired-subtree drag-stuff expand-region eyebrowse
-     flx gnuplot gnuplot-mode google-c-style help-fns+
-     hl-anything hydra image+ ivy ivy-hydra ivy-rich
-     java-snippets lua-mode magithub markdown-mode matlab-mode
-     meghanada multiple-cursors neotree org-ref origami paradox
-     pdf-tools perspeen popwin rainbow-mode req-package
-     smartparens smex spaceline all-the-icons-dired
-     spaceline-all-the-icons sqlup-mode undo-tree use-package
-     vimish-fold volatile-highlights whitespace-cleanup-mode
-     zzz-to-char))))
+    (flyspell-correct-ivy org helm dokuwiki-mode dokuwiki mmm-mode
+     all-the-icons anzu avy cdlatex company-auctex company-bibtex
+     company-jedi company-quickhelp counsel counsel-gtags
+     counsel-projectile crux diff-hl diminish dired-subtree
+     drag-stuff expand-region eyebrowse flx gnuplot gnuplot-mode
+     google-c-style help-fns+ hl-anything hydra image+ ivy
+     ivy-hydra ivy-rich java-snippets lua-mode magithub
+     markdown-mode matlab-mode meghanada multiple-cursors neotree
+     org-ref origami paradox pdf-tools perspeen popwin
+     rainbow-mode req-package smartparens smex spaceline
+     all-the-icons-dired spaceline-all-the-icons sqlup-mode
+     undo-tree use-package vimish-fold volatile-highlights
+     whitespace-cleanup-mode zzz-to-char))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
