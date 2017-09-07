@@ -5,10 +5,12 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-08-04 07:00:44 arc>
+;;; Time-stamp: <2017-09-07 21:40:32 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
+
+;;* require -*- lexical-binding: t -*-
 
 ;;; —————————————————————————————————————— packages archives
 (require 'package)
@@ -24,6 +26,12 @@
 ;;; ————————————————————————————————————————— use/req-package
 (require 'use-package)
 (require 'req-package)
+
+(use-package use-package-chords
+  :config
+  (key-chord-mode 1)
+  (setq key-chord-one-key-delay 0.2
+        key-chord-two-keys-delay 0.1))
 ;;; ——————————————————————————————————— [end] use/req-package
 
 ;;; ——————————————— utility function: byte-compile-this-file
@@ -152,6 +160,8 @@
 
 ;;; ———————————————————————————————————— general keybindings
 (global-set-key (kbd "RET") 'newline-and-indent)
+
+(global-set-key (kbd "C-.") 'repeat)
 
 (global-set-key (kbd "C-z") 'undo)
 (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
@@ -535,9 +545,10 @@ If AGAIN is true, use the same mode as the last call."
 Vimish fold
 
 [_f_] create fold         [_t_] toggle fold    [_b_] fold next block
-[_d_] delete fold         [_o_] unfold-all
+[_d_] delete fold         [_o_] unfold-all     [_q_] quit
 [_D_] delete all folds    [_c_] refold-all
     "
+    ("q" nil :exit t)
     ("<escape>" nil :exit t)
     ("RET" vimish-fold-toggle)
 
@@ -577,13 +588,6 @@ Vimish fold
   (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
   (show-smartparens-global-mode +1))
 ;;; —————————————————————————————————————— [end] smartparens
-
-;;; ————————————————————————————————————— rainbow delimiters
-(use-package rainbow-delimiters
-  :defer t
-  :config
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
-;; ———————————————————————————————— [end] rainbow delimiters
 
 ;;; ——————————————————————————————————————————————— perspeen
 ;; (use-package perspeen
@@ -840,7 +844,7 @@ Meghanada
         ivy-format-function 'ivy-format-function-line
         ivy-count-format ""
         ivy-extra-directories nil
-        ivy-ignore-buffers '("\\` " "\\*.+")
+        ivy-ignore-buffers '("\\` " "\\*.+" "^\\:.+$")
         ivy-initial-inputs-alist nil
         ivy-re-builders-alist '((t . ivy--regex-ignore-order))))
 
@@ -1159,6 +1163,8 @@ Meghanada
 
   :bind
   (:map flyspell-mode-map
+        ("C-." . repeat)
+        ("C-c C-s" . nil)
         ("C-c C-s b" . flyspell-buffer))
 
   :init
@@ -1401,30 +1407,36 @@ Flycheck
                                (file    . find-file)
                                (wl      . wl-other-frame)))
 
+  ;; Org clock
+  (setq org-clock-persist 'history)
+  (org-clock-persistence-insinuate)
+
   ;; Change the way footnote are defined
   (setq org-footnote-definition-re "^\\[fn:[-_[:word:]]+\\]"
         org-footnote-re            (concat "\\[\\(?:fn:\\([-_[:word:]]+\\)?:"
                                            "\\|"
                                            "\\(fn:[-_[:word:]]+\\)\\)"))
 
+  ;; Default LaTeX compiler
+  (setq org-latex-compiler "lualatex")
+
   ;; Command for latex compilation
   (setq org-latex-pdf-process
-        '("pdflatex -interaction nonstopmode -output-directory %o %f"
+        '("%latex -interaction nonstopmode -output-directory %o %f"
           "bibtex %b"
-          "pdflatex -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -interaction nonstopmode -output-directory %o %f"))
+          "%latex -interaction nonstopmode -output-directory %o %f"
+          "%latex -interaction nonstopmode -output-directory %o %f"))
 
   ;; Fontify broken links
   (org-link-set-parameters
    "file"
    :face (lambda (path) (if (file-exists-p path) 'org-link 'org-warning)))
 
-  ;; Remove textcomp from the default packages
-  ;; (it is in conflict with newtx fonts)
-  (setq org-latex-default-packages-alist '(("AUTO" "inputenc" t)
-                                           ("T1" "fontenc" t)
-                                           ("" "fixltx2e" nil)
-                                           ("" "graphicx" t)
+  ;; Default packages
+  (setq org-latex-default-packages-alist '(("" "graphicx" t)
+                                           ;; ("AUTO" "inputenc" t)
+                                           ;; ("T1" "fontenc" t)
+                                           ;; ("" "fixltx2e" nil)
                                            ("" "longtable" nil)
                                            ("" "float" nil)
                                            ("" "wrapfig" nil)
@@ -1486,22 +1498,76 @@ Flycheck
 ;;; ———————————————————————————————————————————— [end] ox-wk
 
 ;;; —————————————————————————————————————————————————— dired
+(defun my/dired-ediff-files ()
+  (interactive)
+  (let ((files (dired-get-marked-files))
+        (wnd (current-window-configuration)))
+    (if (<= (length files) 2)
+        (let ((file1 (car files))
+              (file2 (if (cdr files)
+                         (cadr files)
+                       (read-file-name "file: "
+                                       (dired-dwim-target-directory)))))
+          (if (file-newer-than-file-p file1 file2)
+              (ediff-files file2 file1)
+            (ediff-files file1 file2))
+          (add-hook 'ediff-after-quit-hook-internal
+                    (lambda ()
+                      (setq ediff-after-quit-hook-internal nil)
+                      (set-window-configuration wnd))))
+      (error "No more than 2 files should be marked"))))
+
 (use-package dired
   :defer t
+  :bind
+  (:map dired-mode-map
+        ("°" . dired-diff)
+        ("=" . my/dired-ediff-files))
   :config
-    ;; Human readable size
-  (setq dired-listing-switches "-alXGh --group-directories-first")
-  ;; allows to edit permissions in dired (when using C-x C-q)
+  (setq dired-listing-switches "-AlXh --group-directories-first")
   (setq wdired-allow-to-change-permissions t)
-  ;; auto refresh dired when file changes
+  (setq directory-free-space-args "-Pmh")
+  (setq dired-recursive-copies 'always)
+  (setq dired-recursive-deletes 'always)
+
   (add-hook 'dired-mode-hook 'auto-revert-mode))
 
 ;; --
 
 (use-package dired-x
   :defer t
+  :after dired
+  :bind
+  (:map dired-mode-map
+        ("z" . dired-omit-mode))
   :config
-  (setq-default dired-omit-files-p t))
+
+  (setq-default dired-omit-files-p t)
+  (setq dired-omit-verbose nil)
+  (setq dired-omit-files
+        (format "\\(?:\\.%s\\'\\)\\|%s\\|\\`\\.[^.]"
+                (regexp-opt
+                 '("pickle"))
+                (regexp-opt
+                 '("__pycache__")))))
+
+;; --
+
+(use-package dired-narrow
+  :defer t
+  :after dired
+  :bind
+  (:map dired-mode-map
+        ("/" . dired-narrow-fuzzy)))
+
+;; --
+
+(use-package dired-collapse
+  :defer t
+  :after dired
+  :commands (dired-collapse-mode)
+  :init
+  (add-hook 'dired-mode-hook #'dired-collapse-mode))
 
 ;; --
 
@@ -1517,10 +1583,10 @@ Flycheck
         ("<enter>"        . my/dwim-toggle-or-open)
         ("<return>"       . my/dwim-toggle-or-open)
         ("<tab>"          . my/dwim-toggle-or-open)
-        ("<down-mouse-1>" . my/mouse-dwim-to-toggle-or-open))
+        ("<down-mouse-1>" . my/mouse-dwim-toggle-or-open))
 
   :config
-    ;; Function to customize the line prefixes (I simply indent the lines a bit)
+  ;; Function to customize the line prefixes (I simply indent the lines a bit)
   (setq dired-subtree-line-prefix (lambda (depth) (make-string (* 2 depth) ?\s)))
   (setq dired-subtree-use-backgrounds nil)
 
@@ -1533,7 +1599,7 @@ Flycheck
           (revert-buffer))
       (dired-find-file)))
 
-  (defun my/mouse-dwim-to-toggle-or-open (event)
+  (defun my/mouse-dwim-toggle-or-open (event)
     "Toggle subtree or the open file on mouse-click in dired."
     (interactive "e")
     (let* ((window (posn-window (event-end event)))
@@ -1543,6 +1609,25 @@ Flycheck
         (with-current-buffer buffer
           (goto-char pos)
           (my/dwim-toggle-or-open))))))
+
+;; --
+
+(use-package dired-sidebar
+  :defer t
+  :bind
+  (("<f10>" . dired-sidebar-toggle-sidebar))
+  :config
+  (add-to-list 'dired-sidebar-special-refresh-commands 'dired-subtree-toggle)
+  (setq dired-sidebar-disable-dired-collapse nil
+        dired-sidebar-width 30))
+
+(req-package hl-anything
+  :defer t
+  :after dired-sidebar
+  :require dired-sidebar
+
+  :init
+  (add-hook 'dired-sidebar-mode-hook #'hl-line-mode))
 ;;; ———————————————————————————————————————————— [end] dired
 
 ;;; ——————————————————————————————————————————————————— crux
@@ -1606,6 +1691,7 @@ Flycheck
   (spaceline-toggle-all-the-icons-buffer-path-off)
   (spaceline-toggle-all-the-icons-buffer-position-off)
   (spaceline-toggle-all-the-icons-dedicated-on)
+  (spaceline-toggle-all-the-icons-eyebrowse-workspace-on)
   (spaceline-toggle-all-the-icons-git-ahead-on)
   (spaceline-toggle-all-the-icons-git-status-on)
   (spaceline-toggle-all-the-icons-hud-off)
@@ -1635,7 +1721,7 @@ Flycheck
   (spaceline-toggle-all-the-icons-time-on)
   (spaceline-toggle-all-the-icons-vc-icon-on)
   (spaceline-toggle-all-the-icons-which-function-on)
-  (spaceline-toggle-all-the-icons-window-number-off)
+  (spaceline-toggle-all-the-icons-window-number-on)
 
   (setq spaceline-all-the-icons-secondary-separator "."
         spaceline-all-the-icons-file-name-highlight t
@@ -1646,7 +1732,9 @@ Flycheck
         spaceline-all-the-icons-flycheck-alternate t
         spaceline-all-the-icons-icon-set-flycheck-slim 'outline
         spaceline-all-the-icons-window-number-always-visible nil
-        spaceline-all-the-icons-icon-set-vc-icon-git 'github-logo
+        spaceline-all-the-icons-icon-set-modified 'toggle
+        spaceline-all-the-icons-icon-set-vc-icon-git 'gitlab
+        spaceline-all-the-icons-icon-set-eyebrowse-slot 'solid
         spaceline-all-the-icons-icon-set-git-ahead 'commit
         spaceline-all-the-icons-icon-set-window-numbering 'circle))
 ;;; —————————————————————————— [end] spaceline-all-the-icons
@@ -1655,7 +1743,7 @@ Flycheck
 (use-package neotree
   :defer t
   :bind
-  (("<f10>" . neotree-toggle))
+  (("<S-f10>" . neotree-toggle))
 
   :config
   (setq neo-smart-open t
@@ -1682,9 +1770,8 @@ Flycheck
   :require projectile
 
   :bind
-  (("<S-f10>" . neotree-toggle)
-   :map projectile-mode-map
-   ("<f10>" . my/neotree-project-dir-toggle))
+  (:map projectile-mode-map
+        ("<S-f10>" . my/neotree-project-dir-toggle))
 
   :config
   (defun my/neotree-project-dir-toggle ()
@@ -1730,12 +1817,12 @@ or the current buffer directory."
 ;;; —————————————————————————————————————— [end] matlab-mode
 
 ;;; ————————————————————————————————————————— google-c-style
-(use-package google-c-style
-  :defer t
+;; (use-package google-c-style
+;;   :defer t
 
-  :init
-  (add-hook 'java-mode-hook     'google-set-c-style)
-  (add-hook 'c-mode-common-hook 'google-set-c-style))
+;;   :init
+;;   (add-hook 'java-mode-hook     'google-set-c-style)
+;;   (add-hook 'c-mode-common-hook 'google-set-c-style))
 ;;; ——————————————————————————————————— [end] google-c-style
 
 ;;; ———————————————————————————————————————————————— origami
@@ -1937,6 +2024,73 @@ Image+
         helm-split-window-in-side-p nil))
 ;;; ————————————————————————————————————————————— [end] helm
 
+;;; ———————————————————————————————————————————————— modalka
+(req-package modalka
+  :defer t
+  :require key-chord
+
+  :chords
+  ("xx" . modalka-mode)
+
+  :bind
+  (:map modalka-mode-map
+   ("q"   . modalka-mode)
+   ("SPC" . cua-set-mark)
+   ("1"   . delete-other-windows)
+   ("2"   . split-window-vertically)
+   ("3"   . split-window-horizontally)
+   ("d"   . delete-char)
+   ("z"   . undo)
+   ("%"   . er/contract-region)
+   ("="   . er/expand-region)
+   ("w"   . kill-ring-save)
+   ("k"   . kill-line)
+   ("«"   . mc/mark-previous-like-this)
+   ("»"   . mc/mark-next-like-this)
+   ("<"   . mc/unmark-previous-like-this)
+   (">"   . mc/unmark-next-like-this)
+   ("-"   . drag-stuff-down)
+   ("+"   . drag-stuff-up)
+   ("y"   . cua-paste)
+   ("."   . repeat)
+   ("p"   . my/hydra-projectile/body)
+   ("f"   . my/hydra-vimish-fold/body))
+
+  :config
+  (setq modalka-cursor-type 'hollow)
+
+  ;; Change powerline background color according to mode
+  (defvar my/set-powerline-color-color "")
+  (defvar my/set-powerline-color-buffer "")
+
+  (defun my/set-powerline-color-according-to-mode ()
+    "Change powerline color according to some minor modes."
+    (let ((color (cond (modalka-mode "LightGoldenrod1")
+                       (t "gray95"))))
+      (unless (and (string= color my/set-powerline-color-color)
+                   (string= (buffer-name) my/set-powerline-color-buffer))
+        (setq my/set-powerline-color-color color)
+        (set-face-background 'spaceline-highlight-face color)
+        (set-face-background 'mode-line color)
+        ;; (set-face-background 'powerline-active1 color)
+        ;; (set-face-background 'powerline-active2 color)
+        (setq my/set-powerline-color-buffer (buffer-name)))))
+
+  (add-hook 'post-command-hook #'my/set-powerline-color-according-to-mode)
+
+  (add-to-list 'modalka-excluded-modes 'magit-status-mode))
+;;; —————————————————————————————————————————— [end] modalka
+
+;;; ————————————————————————————————————————————————— beacon
+(use-package beacon
+  :config
+  (setq beacon-color "LightSteelBlue3"
+        beacon-size 15
+        beacon-blink-delay 0.5
+        beacon-blink-duration 0.1)
+  (beacon-mode 1))
+;;; ——————————————————————————————————————————— [end] beacon
+
 (req-package-finish)
 
 ;;; ********************************************************
@@ -1948,17 +2102,18 @@ Image+
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (flyspell-correct-ivy org helm dokuwiki-mode dokuwiki mmm-mode
-     all-the-icons anzu avy cdlatex company-auctex company-bibtex
-     company-jedi company-quickhelp counsel counsel-gtags
-     counsel-projectile crux diff-hl diminish dired-subtree
-     drag-stuff expand-region eyebrowse flx gnuplot gnuplot-mode
-     google-c-style help-fns+ hl-anything hydra image+ ivy
-     ivy-hydra ivy-rich java-snippets lua-mode magithub
-     markdown-mode matlab-mode meghanada multiple-cursors neotree
-     org-ref origami paradox pdf-tools perspeen popwin
-     rainbow-mode req-package smartparens smex spaceline
-     all-the-icons-dired spaceline-all-the-icons sqlup-mode
+    (dired-narrow dired-collapse dired-sidebar beacon
+     use-package-chords modalka flyspell-correct-ivy org helm
+     dokuwiki-mode dokuwiki mmm-mode all-the-icons anzu avy
+     cdlatex company-auctex company-bibtex company-jedi
+     company-quickhelp counsel counsel-gtags counsel-projectile
+     crux diff-hl diminish dired-subtree drag-stuff expand-region
+     eyebrowse flx gnuplot gnuplot-mode google-c-style help-fns+
+     hl-anything hydra image+ ivy ivy-hydra ivy-rich
+     java-snippets lua-mode magithub markdown-mode matlab-mode
+     meghanada multiple-cursors neotree org-ref origami paradox
+     pdf-tools perspeen popwin rainbow-mode req-package
+     smartparens smex spaceline all-the-icons-dired sqlup-mode
      undo-tree use-package vimish-fold volatile-highlights
      whitespace-cleanup-mode zzz-to-char))))
 
