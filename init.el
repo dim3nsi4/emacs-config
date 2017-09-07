@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-09-07 21:40:32 seimandp>
+;;; Time-stamp: <2017-09-07 22:42:58 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -1498,32 +1498,33 @@ Flycheck
 ;;; ———————————————————————————————————————————— [end] ox-wk
 
 ;;; —————————————————————————————————————————————————— dired
-(defun my/dired-ediff-files ()
-  (interactive)
-  (let ((files (dired-get-marked-files))
-        (wnd (current-window-configuration)))
-    (if (<= (length files) 2)
-        (let ((file1 (car files))
-              (file2 (if (cdr files)
-                         (cadr files)
-                       (read-file-name "file: "
-                                       (dired-dwim-target-directory)))))
-          (if (file-newer-than-file-p file1 file2)
-              (ediff-files file2 file1)
-            (ediff-files file1 file2))
-          (add-hook 'ediff-after-quit-hook-internal
-                    (lambda ()
-                      (setq ediff-after-quit-hook-internal nil)
-                      (set-window-configuration wnd))))
-      (error "No more than 2 files should be marked"))))
-
 (use-package dired
   :defer t
   :bind
   (:map dired-mode-map
         ("°" . dired-diff)
         ("=" . my/dired-ediff-files))
+
   :config
+  (defun my/dired-ediff-files ()
+    (interactive)
+    (let ((files (dired-get-marked-files))
+          (wnd (current-window-configuration)))
+      (if (<= (length files) 2)
+          (let ((file1 (car files))
+                (file2 (if (cdr files)
+                           (cadr files)
+                         (read-file-name "file: "
+                                         (dired-dwim-target-directory)))))
+            (if (file-newer-than-file-p file1 file2)
+                (ediff-files file2 file1)
+              (ediff-files file1 file2))
+            (add-hook 'ediff-after-quit-hook-internal
+                      (lambda ()
+                        (setq ediff-after-quit-hook-internal nil)
+                        (set-window-configuration wnd))))
+        (error "No more than 2 files should be marked"))))
+
   (setq dired-listing-switches "-AlXh --group-directories-first")
   (setq wdired-allow-to-change-permissions t)
   (setq directory-free-space-args "-Pmh")
@@ -1582,13 +1583,11 @@ Flycheck
   (:map dired-mode-map
         ("<enter>"        . my/dwim-toggle-or-open)
         ("<return>"       . my/dwim-toggle-or-open)
-        ("<tab>"          . my/dwim-toggle-or-open)
-        ("<down-mouse-1>" . my/mouse-dwim-toggle-or-open))
+        ("<tab>"          . my/dwim-toggle-or-open))
 
   :config
-  ;; Function to customize the line prefixes (I simply indent the lines a bit)
-  (setq dired-subtree-line-prefix (lambda (depth) (make-string (* 2 depth) ?\s)))
   (setq dired-subtree-use-backgrounds nil)
+  (setq dired-subtree-line-prefix (lambda (depth) (make-string (* 2 depth) ?\s)))
 
   (defun my/dwim-toggle-or-open ()
     "Toggle subtree or open the file."
@@ -1597,18 +1596,7 @@ Flycheck
         (progn
           (dired-subtree-toggle)
           (revert-buffer))
-      (dired-find-file)))
-
-  (defun my/mouse-dwim-toggle-or-open (event)
-    "Toggle subtree or the open file on mouse-click in dired."
-    (interactive "e")
-    (let* ((window (posn-window (event-end event)))
-           (buffer (window-buffer window))
-           (pos (posn-point (event-end event))))
-      (progn
-        (with-current-buffer buffer
-          (goto-char pos)
-          (my/dwim-toggle-or-open))))))
+      (dired-find-file))))
 
 ;; --
 
@@ -1617,9 +1605,9 @@ Flycheck
   :bind
   (("<f10>" . dired-sidebar-toggle-sidebar))
   :config
-  (add-to-list 'dired-sidebar-special-refresh-commands 'dired-subtree-toggle)
-  (setq dired-sidebar-disable-dired-collapse nil
-        dired-sidebar-width 30))
+  (setq dired-sidebar-width 30)
+  (add-to-list 'dired-sidebar-special-refresh-commands 'dired-subtree-cycle)
+  (add-to-list 'dired-sidebar-special-refresh-commands 'dired-subtree-toggle))
 
 (req-package hl-anything
   :defer t
