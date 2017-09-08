@@ -110,6 +110,7 @@
  '(org-block-end-line ((t (:inherit (org-meta-line)))))
  '(org-table ((t (:foreground "gray20"))))
  '(org-level-2 ((t (:inherit outline-2 :foreground "OrangeRed3" :weight bold))))
+ '(org-warning ((t (:inherit font-lock-warning-face :underline t :weight normal))))
  '(paradox-mode-line-face ((t (:inherit mode-line-buffer-id))))
  '(paradox-star-face ((t (:inherit (font-lock-string-face)))))
  '(paradox-starred-face ((t (:inherit font-lock-constant-face :weight bold))))

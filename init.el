@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-09-07 22:42:58 seimandp>
+;;; Time-stamp: <2017-09-08 07:13:45 arc>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -267,8 +267,8 @@
   :defer t
 
   :config
-  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-  (setq ediff-split-window-function 'split-window-horizontally)
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain
+        ediff-split-window-function 'split-window-horizontally)
 
   ;; Restore window configuration after ediff
   (defvar my/ediff-bwin-config nil "Window configuration before ediff.")
@@ -586,6 +586,7 @@ Vimish fold
 
   :config
   (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
+  (add-hook 'python-mode-hook     'smartparens-mode)
   (show-smartparens-global-mode +1))
 ;;; —————————————————————————————————————— [end] smartparens
 
@@ -1699,7 +1700,7 @@ Flycheck
   (spaceline-toggle-all-the-icons-paradox-total-on)
   (spaceline-toggle-all-the-icons-process-on)
   (spaceline-toggle-all-the-icons-projectile-on)
-  (spaceline-toggle-all-the-icons-region-info-off)
+  (spaceline-toggle-all-the-icons-region-info-on)
   (spaceline-toggle-all-the-icons-separator-left-active-3-off)
   (spaceline-toggle-all-the-icons-separator-left-inactive-on)
   (spaceline-toggle-all-the-icons-separator-right-active-1-off)
@@ -1711,18 +1712,19 @@ Flycheck
   (spaceline-toggle-all-the-icons-which-function-on)
   (spaceline-toggle-all-the-icons-window-number-on)
 
-  (setq spaceline-all-the-icons-secondary-separator "."
+  (setq spaceline-all-the-icons-primary-separator "|"
+        spaceline-all-the-icons-secondary-separator ""
         spaceline-all-the-icons-file-name-highlight t
         spaceline-all-the-icons-hide-long-buffer-path nil
         spaceline-all-the-icons-separator-type 'slant
+        spaceline-all-the-icons-icon-set-eyebrowse-slot 'solid
         spaceline-all-the-icons-separators-invert-direction t
         spaceline-all-the-icons-slim-render nil
         spaceline-all-the-icons-flycheck-alternate t
         spaceline-all-the-icons-icon-set-flycheck-slim 'outline
-        spaceline-all-the-icons-window-number-always-visible nil
+        spaceline-all-the-icons-window-number-always-visible t
         spaceline-all-the-icons-icon-set-modified 'toggle
         spaceline-all-the-icons-icon-set-vc-icon-git 'gitlab
-        spaceline-all-the-icons-icon-set-eyebrowse-slot 'solid
         spaceline-all-the-icons-icon-set-git-ahead 'commit
         spaceline-all-the-icons-icon-set-window-numbering 'circle))
 ;;; —————————————————————————— [end] spaceline-all-the-icons
@@ -1738,9 +1740,9 @@ Flycheck
         neo-autorefresh nil
         neo-window-fixed-size t
         neo-window-position 'left
-        neo-confirm-delete-directory-recursively 'off-p
         neo-confirm-change-root 'off-p
-        neo-window-width 30
+        neo-window-width 35
+        neo-confirm-delete-directory-recursively 'off-p
         neo-confirm-kill-buffers-for-files-in-directory 'off-p
         neo-theme 'icons))
 
@@ -1947,7 +1949,8 @@ Image+
 (use-package doc-view
   :defer t
   :config
-  (setq doc-view-continuous t))
+  (setq doc-view-resolution 200
+        doc-view-continuous t))
 ;;; —————————————————————————————————————————— [end] docview
 
 ;;; ————————————————————————————————————————————————— auctex
