@@ -1,28 +1,25 @@
 # emacs-config
 Yet Another GNU Emacs Configuration.
 
-The whole configuration is contained in the `init.el` file, which
+The main configuration file is `init.el` file, which
 should be placed under `.emacs.d/` in your home directory. It relies
 on [use-package](https://github.com/jwiegley/use-package)
 and [req-package](https://github.com/edvorg/req-package) to manage the
-loading of the packages and their configuration. Make sure you have
-these installed before trying to run this configuration.
+loading of the packages and their configuration.
 
 Several packages are activated if they are detected
 (e.g. [ivy](https://github.com/abo-abo/swiper),
 [projectile](https://github.com/bbatsov/projectile),
-[company](https://github.com/company-mode/company-mode), ...). It also
-uses a custom theme named `clearview-light`, which must also be placed
-under `.emacs.d/` in your home directory. This theme can easily be
-customized using `M-x custom-visit-theme`.
+[company](https://github.com/company-mode/company-mode), ...). The
+configuration of these packages is done in the files located under
+`.emacs.d/config/modes`.
 
-To manage this configuration file more easily, you can
-download [vimish-fold](https://github.com/mrkkrp/vimish-fold). Once
-installed, you can fold the different part of the file using the
-custom function `my/vimish-fold-next-block`. To fold every block in
-one command, you can execute `C-u 100 C-c f b`.
+This configuration also uses a custom theme named `clearview-light`,
+which must also be placed under `.emacs.d/` in your home
+directory. This theme can easily be customized using
+`M-x custom-visit-theme`.
 
 For more details, see the [wiki](../../wiki) (under construction at
-the moment).
+the moment, may be outdated).
 
 ![alt tag](screenshot-emacs.png)
