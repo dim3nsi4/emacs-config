@@ -1,5 +1,5 @@
 (deftheme clearview-light
-  "Created 2017-06-11.")
+  "Created 2017-06-17.")
 
 (custom-theme-set-faces
  'clearview-light
