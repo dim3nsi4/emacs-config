@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-09-09 16:10:20 seimandp>
+;;; Time-stamp: <2017-09-10 11:59:29 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -39,7 +39,7 @@
                         (set-window-configuration wnd))))
         (error "No more than 2 files should be marked"))))
 
-  (setq dired-listing-switches "-AlXh --group-directories-first")
+  (setq dired-listing-switches "-Alvh1 --group-directories-first")
   (setq wdired-allow-to-change-permissions t)
   (setq directory-free-space-args "-Pmh")
   (setq dired-recursive-copies 'always)

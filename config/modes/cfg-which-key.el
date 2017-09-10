@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-09-09 19:18:17 seimandp>
+;;; Time-stamp: <2017-09-10 12:01:33 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -13,7 +13,7 @@
 (use-package which-key
   :demand
   :config
-  (which-key-setup-minibuffer)
+  (which-key-setup-side-window-bottom)
   (which-key-mode))
 
 (provide 'cfg-which-key)

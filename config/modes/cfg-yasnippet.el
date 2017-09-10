@@ -5,13 +5,13 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-09-09 15:59:01 seimandp>
+;;; Time-stamp: <2017-09-10 12:00:49 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
 
 (use-package yasnippet
-  :defer t
+  :demand
   :diminish yas-minor-mode
 
   :bind

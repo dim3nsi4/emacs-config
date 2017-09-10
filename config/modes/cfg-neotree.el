@@ -5,7 +5,7 @@
 ;;; Copyright (c) 2016 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
 ;;;
-;;; Time-stamp: <2017-09-09 20:34:53 seimandp>
+;;; Time-stamp: <2017-09-10 12:00:31 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
@@ -22,7 +22,7 @@
         neo-window-position 'left
         neo-confirm-delete-directory-recursively 'off-p
         neo-confirm-change-root 'off-p
-        neo-window-width 35
+        neo-window-width 30
         neo-confirm-kill-buffers-for-files-in-directory 'off-p
         neo-theme 'icons))
 
