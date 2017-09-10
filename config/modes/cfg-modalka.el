@@ -48,16 +48,20 @@
 
   (defun my/set-powerline-color-according-to-mode ()
     "Change powerline color according to some minor modes."
-    (let ((color (cond (modalka-mode "gray70")
-                       (t "gray95"))))
-      (unless (and (string= color my/set-powerline-color-color)
+    (let ((bg-color (cond (modalka-mode "tomato2") (t "gray95")))
+          (fg-color (cond (modalka-mode "white") (t "black"))))
+
+      (unless (and (string= bg-color my/set-powerline-color-bg-color)
                    (string= (buffer-name) my/set-powerline-color-buffer))
-        (setq my/set-powerline-color-color color)
-        (set-face-background 'spaceline-highlight-face color)
-        (set-face-background 'mode-line color)
-        ;; (set-face-background 'powerline-active1 color)
-        ;; (set-face-background 'powerline-active2 color)
-        (setq my/set-powerline-color-buffer (buffer-name)))))
+
+        (setq my/set-powerline-color-fg-color fg-color)
+        (setq my/set-powerline-color-bg-color bg-color)
+        (setq my/set-powerline-color-buffer (buffer-name))
+
+        (set-face-foreground 'spaceline-highlight-face fg-color)
+        (set-face-background 'spaceline-highlight-face bg-color)
+        (set-face-foreground 'mode-line fg-color)
+        (set-face-background 'mode-line bg-color))))
 
   (add-hook 'post-command-hook #'my/set-powerline-color-according-to-mode)
 
