@@ -26,8 +26,13 @@
    ("M-«" . yas-prev-field)
    ("M-»" . yas-next-field))
 
+  :init
+  (progn
+    (add-hook 'prog-mode-hook #'yas-minor-mode))
+
   :config
-  (yas-global-mode 1))
+  (progn
+    (yas-reload-all)))
 
 (req-package company
   :defer t

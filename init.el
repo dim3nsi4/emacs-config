@@ -86,6 +86,7 @@
 (require 'cfg-wgrep)
 (require 'cfg-all-the-icons)
 (require 'cfg-spaceline-all-the-icons)
+(require 'cfg-yasnippet)
 
 (use-package help-fns+)
 
