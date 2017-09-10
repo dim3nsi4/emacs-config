@@ -49,7 +49,7 @@
 
   (defun my/set-powerline-color-according-to-mode ()
     "Change powerline color according to some minor modes."
-    (let ((bg-color (cond (modalka-mode "tomato2") (t "gray95")))
+    (let ((bg-color (cond (modalka-mode "azure4") (t "gray95")))
           (fg-color (cond (modalka-mode "white") (t "black"))))
 
       (unless (and (string= bg-color my/set-powerline-color-bg-color)
