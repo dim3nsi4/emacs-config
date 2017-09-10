@@ -37,6 +37,13 @@
                         (set-window-configuration wnd))))
         (error "No more than 2 files should be marked"))))
 
+  (defun dired-do-eshell-command (command)
+  "Run an Eshell COMMAND on the marked files."
+  (interactive "sEshell command: ")
+  (let ((files (dired-get-marked-files t)))
+    (eshell-command
+     (format "%s %s" command (mapconcat #'identity files " ")))))
+
   (setq dired-listing-switches "-Alvh1 --group-directories-first")
   (setq wdired-allow-to-change-permissions t)
   (setq directory-free-space-args "-Pmh")
