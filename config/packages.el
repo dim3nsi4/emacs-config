@@ -58,6 +58,8 @@
     spaceline-all-the-icons
     spaceline-all-the-icons-dired
     swiper
+    wgrep
+    ztree
     use-package
     use-package-chords
     vimish-fold

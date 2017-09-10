@@ -9,7 +9,7 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package yasnippet
-  :demand
+  :defer t
   :diminish yas-minor-mode
 
   :bind
