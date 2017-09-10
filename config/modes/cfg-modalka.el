@@ -43,7 +43,8 @@
   (setq modalka-cursor-type 'hollow)
 
   ;; Change powerline background color according to mode
-  (defvar my/set-powerline-color-color "")
+  (defvar my/set-powerline-color-bg-color "")
+  (defvar my/set-powerline-color-fg-color "")
   (defvar my/set-powerline-color-buffer "")
 
   (defun my/set-powerline-color-according-to-mode ()
