@@ -2,10 +2,8 @@
 ;;; auto-compile configuration.
 ;;;
 ;;; Commentary:
-;;; Copyright (c) 2016 Pierre Seimandi
+;;; Copyright (c) 2016-2017 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
-;;;
-;;; Time-stamp: <2017-09-09 17:05:22 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————

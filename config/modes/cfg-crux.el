@@ -2,10 +2,8 @@
 ;;; crux configuration.
 ;;;
 ;;; Commentary:
-;;; Copyright (c) 2016 Pierre Seimandi
+;;; Copyright (c) 2016-2017 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
-;;;
-;;; Time-stamp: <2017-09-09 16:33:47 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————

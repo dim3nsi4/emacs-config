@@ -2,10 +2,8 @@
 ;;; Emacs custom variables and faces (modified automatically by emacs).
 ;;;
 ;;; Commentary:
-;;; Copyright (c) 2016 Pierre Seimandi
+;;; Copyright (c) 2016-2017 Pierre Seimandi
 ;;; Under GPL License v3.0 and after.
-;;;
-;;; Time-stamp: <2017-09-10 10:10:49 seimandp>
 ;;;
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
