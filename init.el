@@ -87,6 +87,7 @@
 (require 'cfg-all-the-icons)
 (require 'cfg-spaceline-all-the-icons)
 (require 'cfg-yasnippet)
+(require 'cfg-ztree)
 
 (use-package help-fns+)
 
