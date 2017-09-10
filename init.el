@@ -83,6 +83,7 @@
 (require 'cfg-volatile-highlights)
 (require 'cfg-sql)
 (require 'cfg-latex)
+(require 'cfg-wgrep)
 (require 'cfg-all-the-icons)
 (require 'cfg-spaceline-all-the-icons)
 
