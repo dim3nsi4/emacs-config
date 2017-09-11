@@ -10,6 +10,7 @@
 
 (use-package helm
   :defer t
+  :commands (helm-autoresize-mode)
 
   ;; :bind
   ;; (("M-x"     . helm-M-x)

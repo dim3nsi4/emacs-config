@@ -10,6 +10,7 @@
 
 (use-package org
   :defer t
+  :commands (org-link-set-parameters)
 
   :config
   (setq org-directory "~/.org-mode.d"
