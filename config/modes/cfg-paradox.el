@@ -14,9 +14,12 @@
   :bind
   (("<f12>" . paradox-list-packages))
   :config
-  (paradox-enable)
+  ;; The "paradox-token" file is supposed to contain this line:
+  ;; (setq paradox-github-token "<YOUR_TOKEN>")
+  (load (locate-user-emacs-file "paradox-token") :noerror :nomessage)
   (setq paradox-execute-asynchronously t
-        paradox-automatically-star nil))
+        paradox-automatically-star nil)
+  (paradox-enable))
 
 (provide 'cfg-paradox)
 
