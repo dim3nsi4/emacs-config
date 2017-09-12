@@ -14,6 +14,27 @@
   (setq projectile-keymap-prefix (kbd "C-c p"))
 
   :config
+
+  (dolist (item '(".meghanad" "__pycache__"))
+    (add-to-list 'projectile-globally-ignored-directories item))
+  (dolist (item '("GTAGS" "GRTAGS" "GPATH" "*.elc" "*.class"))
+    (add-to-list 'projectile-globally-ignored-files item))
+
+  (defvar projectile-ag-command
+    (concat "\\ag"                ; used unaliased version of `ag': \ag
+            " -i"                 ; case insensitive
+            " -f"                 ; follow symbolic links
+            " --skip-vcs-ignores" ; Ignore files/dirs ONLY from `.ignore',
+            " -0"                 ; output null separated results
+            " -g ''")             ; get file names matching the regex ''
+    "Ag command to be used by projectile to generate file cache.")
+
+  (when (executable-find "ag")
+    (defun projectile-get-ext-command ()
+      "Override the projectile-defined function so that `ag' is
+      always used for getting a list of all files in a project."
+      projectile-ag-command))
+
   (projectile-mode))
 
 ;; ——
