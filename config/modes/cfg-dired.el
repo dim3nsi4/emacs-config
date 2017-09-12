@@ -11,11 +11,15 @@
 (req-package dired
   :defer t
   :require ediff
+  :commands (dired-dwim-target-directory)
+
   :bind
   (:map dired-mode-map
         ("°" . dired-diff)
         ("=" . my/dired-ediff-files))
-  :commands (dired-dwim-target-directory)
+
+  :init
+  (add-hook 'dired-mode-hook #'my/rename-dired-buffer-name)
 
   :config
   (defun my/dired-ediff-files ()
@@ -37,7 +41,15 @@
                         (set-window-configuration wnd))))
         (error "No more than 2 files should be marked"))))
 
-  (defun dired-do-eshell-command (command)
+  (defun my/rename-dired-buffer-name ()
+    "Rename the dired buffer name to distinguish it from file buffers.
+     It adds extra strings at the front and back of the default
+     dired buffer name."
+    (let ((name (buffer-name)))
+      (if (not (string-match "/$" name))
+          (rename-buffer (concat "*Dired* " name "/") t))))
+
+  (defun my/dired-do-eshell-command (command)
   "Run an Eshell COMMAND on the marked files."
   (interactive "sEshell command: ")
   (let ((files (dired-get-marked-files t)))
