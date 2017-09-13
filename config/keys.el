@@ -18,6 +18,8 @@
 (global-set-key (kbd "C-x w") 'delete-frame)
 (global-set-key (kbd "M-g") 'goto-line)
 
+(global-set-key (kbd "<f3>") 'kmacro-start-macro-or-insert-counter)
+(global-set-key (kbd "<S-f3>") 'kmacro-end-macro)
 (global-set-key (kbd "<f4>") 'eshell)
 (global-set-key (kbd "<f5>") 'query-replace)
 (global-set-key (kbd "<S-f5>") 'query-replace-regexp)
