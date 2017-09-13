@@ -99,7 +99,7 @@
 
 (req-package-finish)
 
-(setq custom-file  (expand-file-name "config/customs.el" emacs-d))
+(setq custom-file (expand-file-name "config/customs.el" emacs-d))
 (load custom-file)
 
 (provide 'init)
