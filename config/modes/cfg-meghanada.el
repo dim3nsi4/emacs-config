@@ -12,7 +12,7 @@
   :defer t
 
   :init
-  (setq meghanada-mode-key-prefix (kbd "C-c c"))
+  (setq meghanada-mode-key-prefix (kbd "C-c C-c"))
   (add-hook 'java-mode-hook #'meghanada-mode)
 
   :bind
@@ -21,6 +21,15 @@
 
   :config
   (add-hook 'java-mode-hook 'meghanada-mode))
+
+;; ——
+
+(req-package meghanada
+  :require company
+  :init
+  (add-hook 'java-mode-hook
+            (lambda ()
+              (set (make-local-variable 'company-backends) '(company-meghanada)))))
 
 ;; ——
 
@@ -38,28 +47,32 @@
     "
 Meghanada
 
-[_c_] compile-file           [_i_] import-all         [_S_] server-start         [_R_] restart
-[_C_] compile-project        [_o_] optimize-import    [_K_] server-kill          [_U_] update-server
-[_m_] run-task               [_b_] code-beautify      [_D_] client-disconnect    [_I_] install-server
-[_t_] run-junit-test-case    [_l_] locate-variable    [_P_] ping                 [_?_] version
-[_T_] run-junit-class        [_s_] switch-testcase
+[_c_] compile-file       [_m_] run-task                [_S_] server-start         [_R_] restart
+[_C_] compile-project    [_t_] run-junit-test-case     [_K_] server-kill          [_U_] update-server
+[_i_] import-all         [_T_] run-junit-class         [_D_] client-disconnect    [_I_] install-server
+[_o_] optimize-import    [_s_] switch-testcase         [_P_] ping                 [_?_] version
+[_b_] code-beautify      [_k_] kill-running-process    [_l_] locate-variable
     "
     ("<escape>" nil :exit t)
 
     ("c" meghanada-compile-file)
     ("C" meghanada-compile-project)
+    ("i" meghanada-import-all)
+    ("o" meghanada-optimize-import)
+    ("b" meghanada-code-beautify)
+
     ("m" meghanada-run-task)
     ("t" meghanada-run-junit-test-case)
     ("T" meghanada-run-junit-class)
     ("s" meghanada-switch-testcase)
-    ("l" meghanada-local-variable)
-    ("b" meghanada-code-beautify)
-    ("i" meghanada-import-all)
-    ("o" meghanada-optimize-import)
+    ("k" meghanada-kill-running-process)
+
     ("S" meghanada-server-start)
     ("K" meghanada-server-kill)
     ("D" meghanada-client-disconnect)
     ("P" meghanada-ping)
+    ("l" meghanada-local-variable)
+
     ("R" meghanada-restart)
     ("U" meghanada-update-server)
     ("I" meghanada-install-server)
