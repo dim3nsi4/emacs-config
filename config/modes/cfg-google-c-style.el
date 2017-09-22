@@ -19,6 +19,7 @@
               (setq c-basic-offset 4)
               (c-set-offset 'inher-intro 0)
               (c-set-offset 'case-label 0)
+              (c-set-offset 'substatement-open '0)
               (c-set-offset 'func-decl-cont 0)))
 
   (add-hook 'java-mode-hook
@@ -29,6 +30,7 @@
               (setq c-basic-offset 4)
               (c-set-offset 'inher-intro 0)
               (c-set-offset 'case-label 0)
+              (c-set-offset 'substatement-open '0)
               (c-set-offset 'func-decl-cont 0))))
 
 (provide 'cfg-google-c-style)
