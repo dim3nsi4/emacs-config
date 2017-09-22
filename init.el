@@ -90,6 +90,7 @@
 (require 'cfg-ztree)
 (require 'cfg-google-c-style)
 (require 'cfg-diff-hl)
+(require 'cfg-highlight-symbol)
 
 (use-package help-fns+)
 
