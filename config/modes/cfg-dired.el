@@ -15,10 +15,11 @@
 
   :bind
   (:map dired-mode-map
-        ("<C-down>" . dired-find-alternate-file)
-        ("RET"      . dired-find-alternate-file)
-        ("°"        . dired-diff)
-        ("="        . my/dired-ediff-files))
+        ("<mouse-2>" . dired-find-alternate-file)
+        ("<C-down>"  . dired-find-alternate-file)
+        ("RET"       . dired-find-alternate-file)
+        ("°"         . dired-diff)
+        ("="         . my/dired-ediff-files))
 
   :init
   (add-hook 'dired-mode-hook #'my/rename-dired-buffer-name)
@@ -65,12 +66,14 @@
     (eshell-command
      (format "%s %s" command (mapconcat #'identity files " ")))))
 
-  (setq dired-listing-switches "-Alvh1 --group-directories-first")
+  (setq dired-listing-switches "-Alvh1 --group-directories-first --dereference")
   (setq wdired-allow-to-change-permissions t)
   (setq directory-free-space-args "-Pmh")
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
+  (setq dired-dwim-target t)
 
+  (add-hook 'dired-mode-hook 'dired-hide-details-mode)
   (add-hook 'dired-mode-hook 'auto-revert-mode))
 
 ;; ——
@@ -78,12 +81,11 @@
 (use-package dired-x
   :defer t
   :after dired
-  :bind
-  (:map dired-mode-map
-        ("z" . dired-omit-mode))
+  ;; :bind
+  ;; (:map dired-mode-map
+  ;;       ("z" . dired-omit-mode))
   :config
-
-  (setq-default dired-omit-files-p t)
+  ;; (setq-default dired-omit-files-p t)
   (setq dired-omit-verbose nil)
   (setq dired-omit-files
         (format "\\(?:\\.%s\\'\\)\\|%s\\|\\`\\.[^.]"
@@ -94,21 +96,30 @@
 
 ;; ——
 
+(use-package dired-filter
+  :defer t
+  :after dired
+  :init
+  (add-hook 'dired-mode-hook 'dired-filter-mode))
+
+;; ——
+
 (use-package dired-narrow
   :defer t
   :after dired
   :bind
   (:map dired-mode-map
-        ("/" . dired-narrow-fuzzy)))
+        ("@"   . dired-narrow-fuzzy)
+        ("/ @" . dired-narrow-fuzzy)))
 
 ;; ——
 
-(use-package dired-collapse
-  :defer t
-  :after dired
-  :commands (dired-collapse-mode)
-  :init
-  (add-hook 'dired-mode-hook #'dired-collapse-mode))
+;; (use-package dired-collapse
+;;   :defer t
+;;   :after dired
+;;   :commands (dired-collapse-mode)
+;;   :init
+;;   (add-hook 'dired-mode-hook #'dired-collapse-mode))
 
 ;; ——
 
@@ -119,9 +130,17 @@
 
   :bind
   (:map dired-mode-map
-        ("<tab>" . dired-subtree-toggle))
+        ("TAB" . my/dwim-toggle-or-open))
 
   :config
+  (defun my/dwim-toggle-or-open ()
+    "Toggle subtree or open the file."
+    (interactive)
+    (if (file-directory-p (dired-get-file-for-visit))
+        (progn
+          (dired-subtree-toggle)
+          (revert-buffer))
+      (dired-find-file)))
   (setq dired-subtree-use-backgrounds nil))
 
 ;; ——
