@@ -8,8 +8,7 @@
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
 
-(use-package all-the-icons
-  :defer t)
+(use-package all-the-icons)
 
 ;; ——
 
