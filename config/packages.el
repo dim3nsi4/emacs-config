@@ -70,11 +70,11 @@
 
 ;; (package-refresh-contents)
 
-;; install required
-(dolist (package my/packages)
-  (unless (package-installed-p package)
-    (ignore-errors
-      (package-install package))))
+;; ;; install required
+;; (dolist (package my/packages)
+;;   (unless (package-installed-p package)
+;;     (ignore-errors
+;;       (package-install package))))
 
 ;; ;; upgrade installed
 ;; (save-window-excursion
