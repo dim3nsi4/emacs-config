@@ -15,13 +15,22 @@
 
   :bind
   (:map dired-mode-map
-        ("°" . dired-diff)
-        ("=" . my/dired-ediff-files))
+        ("<C-down>" . dired-find-alternate-file)
+        ("RET"      . dired-find-alternate-file)
+        ("°"        . dired-diff)
+        ("="        . my/dired-ediff-files))
 
   :init
   (add-hook 'dired-mode-hook #'my/rename-dired-buffer-name)
+  (add-hook 'dired-mode-hook (lambda ()
+                               (define-key dired-mode-map (kbd "<C-up>")      (lambda () (interactive) (find-alternate-file "..")))
+                               (define-key dired-mode-map (kbd "<backspace>") (lambda () (interactive) (find-alternate-file "..")))
+                               (define-key dired-mode-map (kbd "^")           (lambda () (interactive) (find-alternate-file "..")))))
 
   :config
+  ;; enable dired-find-alternate-file command
+  (put 'dired-find-alternate-file 'disabled nil)
+
   (defun my/dired-ediff-files ()
     (interactive)
     (let ((files (dired-get-marked-files))
@@ -110,22 +119,17 @@
 
   :bind
   (:map dired-mode-map
-        ("<enter>"        . my/dwim-toggle-or-open)
-        ("<return>"       . my/dwim-toggle-or-open)
-        ("<tab>"          . my/dwim-toggle-or-open))
+        ("<tab>" . dired-subtree-toggle))
 
   :config
-  (setq dired-subtree-use-backgrounds nil)
-  (setq dired-subtree-line-prefix (lambda (depth) (make-string (* 2 depth) ?\s)))
+  (setq dired-subtree-use-backgrounds nil))
 
-  (defun my/dwim-toggle-or-open ()
-    "Toggle subtree or open the file."
-    (interactive)
-    (if (file-directory-p (dired-get-file-for-visit))
-        (progn
-          (dired-subtree-toggle)
-          (revert-buffer))
-      (dired-find-file))))
+;; ——
+
+(req-package dired-avfs
+  :defer t
+  :after dired
+  :require dired)
 
 ;; ——
 
@@ -133,10 +137,31 @@
   :defer t
   :bind
   (("<f10>" . dired-sidebar-toggle-sidebar))
+
+  :init
+  (add-hook 'dired-sidebar-mode-hook (lambda ()
+                                       (define-key dired-sidebar-mode-map (kbd "^")           'dired-sidebar-up-directory)
+                                       (define-key dired-sidebar-mode-map (kbd "<backspace>") 'dired-sidebar-up-directory)
+                                       (define-key dired-sidebar-mode-map (kbd "<C-up>")      'dired-sidebar-up-directory)
+                                       (define-key dired-sidebar-mode-map (kbd "<C-down>")    'dired-sidebar-find-file)
+                                       (define-key dired-sidebar-mode-map (kbd "RET")         'dired-sidebar-find-file)))
+
   :config
-  (setq dired-sidebar-width 30)
+  (setq dired-sidebar-width 35)
   (add-to-list 'dired-sidebar-special-refresh-commands 'dired-subtree-cycle)
   (add-to-list 'dired-sidebar-special-refresh-commands 'dired-subtree-toggle))
+
+;; ——
+
+(req-package dired-open
+  :defer t
+  :after dired
+  :require dired
+  :config
+  (setq dired-open-extensions '(("html" . "firefox")
+                                ( "mp4" . "smplayer")
+                                ( "mkv" . "smplayer")
+                                ( "avi" . "smplayer"))))
 
 ;; ——
 
