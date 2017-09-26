@@ -188,19 +188,6 @@
 
 ;; ——
 
-(req-package ivy-dired-history
-  :defer t
-  :after dired
-  :require ivy
-  :bind
-  (("," . dired))
-  :config
-  (require 'savehist)
-  (add-to-list 'savehist-additional-variables 'ivy-dired-history-variable)
-  (savehist-mode 1))
-
-;; ——
-
 (provide 'cfg-dired)
 
 ;;; ————————————————————————————————————————————————————————
