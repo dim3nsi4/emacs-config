@@ -11,6 +11,7 @@
 (use-package which-key
   :demand
   :config
+  (setq which-key-idle-delay 0.5)
   (which-key-setup-side-window-bottom)
   (which-key-mode))
 
