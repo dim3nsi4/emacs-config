@@ -17,7 +17,23 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (dired-filter ivy-purpose window-purpose dired-open dired-avfs groovy-mode gradle-mode highlight-symbol auto-compile ztree wgrep org-bullets which-key define-word dired-narrow dired-collapse dired-sidebar beacon use-package-chords modalka flyspell-correct-ivy org helm dokuwiki-mode dokuwiki mmm-mode all-the-icons anzu avy cdlatex company-auctex company-bibtex company-jedi company-quickhelp counsel counsel-gtags counsel-projectile crux diff-hl diminish dired-subtree drag-stuff expand-region eyebrowse flx gnuplot gnuplot-mode google-c-style help-fns+ hl-anything hydra image+ ivy ivy-hydra ivy-rich java-snippets lua-mode magithub markdown-mode matlab-mode meghanada multiple-cursors neotree org-ref origami paradox pdf-tools perspeen popwin rainbow-mode req-package smartparens smex spaceline all-the-icons-dired sqlup-mode undo-tree use-package vimish-fold volatile-highlights whitespace-cleanup-mode zzz-to-char))))
+    (all-the-icons all-the-icons-dired anzu auto-compile avy
+     beacon cdlatex company-auctex company-bibtex company-jedi
+     company-quickhelp counsel counsel-gtags counsel-projectile
+     crux define-word diff-hl diminish dired-avfs dired-collapse
+     dired-filter dired-narrow dired-open dired-ranger
+     dired-sidebar dired-subtree dokuwiki dokuwiki-mode
+     drag-stuff expand-region eyebrowse flx flyspell-correct-ivy
+     gnuplot gnuplot-mode google-c-style gradle-mode groovy-mode
+     helm help-fns+ highlight-symbol hl-anything hydra image+ ivy
+     ivy-hydra ivy-purpose ivy-rich java-snippets lua-mode
+     magithub markdown-mode matlab-mode meghanada mmm-mode
+     modalka multiple-cursors neotree org org-bullets org-ref
+     origami paradox pdf-tools perspeen popwin rainbow-mode
+     req-package smartparens smex spaceline sqlup-mode undo-tree
+     use-package use-package-chords vimish-fold
+     volatile-highlights wgrep which-key whitespace-cleanup-mode
+     window-purpose ztree zzz-to-char))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
