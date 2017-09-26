@@ -27,9 +27,9 @@
 (req-package meghanada
   :require company
   :init
-  (add-hook 'java-mode-hook
+  (add-hook 'meghanada-mode-hook
             (lambda ()
-              (set (make-local-variable 'company-backends) '(company-meghanada)))))
+              (add-to-list (make-local-variable 'company-backends) 'company-files))))
 
 ;; ——
 
