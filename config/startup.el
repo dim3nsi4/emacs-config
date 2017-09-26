@@ -54,7 +54,7 @@
 ;; To avoid dead circumflex issue
 (load-library "iso-transl")
 
-;; change all prompts to y or n
+;; Change all prompts to y or n
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Ignored extensions during completion
@@ -69,6 +69,10 @@
 
 ;; Update time-stamp on save
 (add-hook 'write-file-hooks 'time-stamp)
+
+;; Activate history saving
+(require 'savehist)
+(savehist-mode 1)
 
 (provide 'startup)
 
