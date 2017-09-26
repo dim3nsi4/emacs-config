@@ -43,7 +43,7 @@
 
 ;; Initial frame size and position
 (add-to-list 'default-frame-alist '(fullscreen . fullheight))
-(add-to-list 'default-frame-alist '(width  . 131))
+(add-to-list 'default-frame-alist '(width  . 156))
 (add-to-list 'default-frame-alist '(height . 81))
 (add-to-list 'default-frame-alist '(top    . 0))
 (add-to-list 'default-frame-alist '(left   . 0))
