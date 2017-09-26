@@ -77,14 +77,9 @@
         directory-free-space-args "-Pmh"
         dired-recursive-copies 'always
         dired-recursive-deletes 'always
-        dired-dwim-target t))
+        dired-dwim-target t)
 
-;; ——
-
-(use-package dired-x
-  :defer t
-  :after dired
-  :config
+  ;; dired-x
   (setq dired-omit-verbose nil)
   (setq dired-omit-files
         (format "\\(?:\\.%s\\'\\)\\|%s\\|\\`\\.[^.]"
@@ -176,6 +171,7 @@
   (setq dired-open-find-file-function 'dired-find-alternate-file)
   (setq dired-open-extensions '(("pdf"  . "evince")
                                 ("html" . "firefox")
+                                ( "mp3" . "smplayer")
                                 ( "mp4" . "smplayer")
                                 ( "mkv" . "smplayer")
                                 ( "avi" . "smplayer"))))
@@ -189,6 +185,19 @@
 
   :init
   (add-hook 'dired-sidebar-mode-hook #'hl-line-mode))
+
+;; ——
+
+(req-package ivy-dired-history
+  :defer t
+  :after dired
+  :require ivy
+  :bind
+  (("," . dired))
+  :config
+  (require 'savehist)
+  (add-to-list 'savehist-additional-variables 'ivy-dired-history-variable)
+  (savehist-mode 1))
 
 ;; ——
 
