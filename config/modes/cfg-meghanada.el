@@ -17,10 +17,7 @@
 
   :bind
   (:map meghanada-mode-map
-        ("M-," . comment-dwim))
-
-  :config
-  (add-hook 'java-mode-hook 'meghanada-mode))
+        ("M-," . comment-dwim)))
 
 ;; ——
 
@@ -29,7 +26,7 @@
   :init
   (add-hook 'meghanada-mode-hook
             (lambda ()
-              (add-to-list (make-local-variable 'company-backends) 'company-files))))
+              (add-to-list 'company-backends '(company-files)))))
 
 ;; ——
 
