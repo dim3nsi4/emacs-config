@@ -15,14 +15,14 @@
 
   :bind
   (:map dired-mode-map
-        ("<mouse-2>"    . dired-find-alternate-file)
-        ("<C-down>"     . dired-find-alternate-file)
-        ("RET"          . dired-find-alternate-file)
+        ("<mouse-2>"    . my/dired-find-file)
+        ("<C-down>"     . my/dired-find-file)
+        ("RET"          . my/dired-find-file)
         ("°"            . dired-diff)
         ("="            . my/dired-ediff-files)
         ("<C-up>"       . my/dired-up-directory)
         ("<backspace>>" . my/dired-up-directory)
-        ("<^>"          . my/dired-up-directory))
+        ("^"            . my/dired-up-directory))
 
   :init
   (add-hook 'dired-mode-hook #'dired-hide-details-mode)
@@ -37,6 +37,15 @@
     "Use find-alternate-file to open the parent directory."
     (interactive)
     (find-alternate-file ".."))
+
+  (defun my/dired-find-file ()
+    "Use dired-find-alternate-file if its a directory, otherwise use find-file."
+    (interactive)
+    (if (file-directory-p (dired-get-file-for-visit))
+        (progn
+          (dired-find-alternate-file)
+          (revert-buffer))
+      (dired-find-file)))
 
   (defun my/dired-ediff-files ()
     (interactive)
@@ -105,7 +114,10 @@
   :bind
   (:map dired-mode-map
         ("@"   . dired-narrow-fuzzy)
-        ("/ @" . dired-narrow-fuzzy)))
+        ("/ @" . dired-narrow-fuzzy)
+        ("/ l" . dired-narrow-fuzzy))
+  :config
+  (setq dired-narrow-exit-when-one-left t))
 
 ;; ——
 
@@ -157,7 +169,8 @@
   (add-to-list 'dired-sidebar-special-refresh-commands 'dired-subtree-cycle)
   (add-to-list 'dired-sidebar-special-refresh-commands 'dired-subtree-toggle)
   (define-key dired-sidebar-mode-map [remap dired-find-alternate-file] 'dired-sidebar-find-file)
-  (define-key dired-sidebar-mode-map [remap my/dired-up-directory] 'dired-sidebar-up-directory))
+  (define-key dired-sidebar-mode-map [remap my/dired-find-file]        'dired-sidebar-find-file)
+  (define-key dired-sidebar-mode-map [remap my/dired-up-directory]     'dired-sidebar-up-directory))
 
 ;; ——
 
@@ -166,10 +179,16 @@
   :after dired
   :require dired
   :config
-  (define-key dired-mode-map [remap dired-find-file] 'dired-open-file)
+  (define-key dired-mode-map [remap dired-find-file]           'dired-open-file)
   (define-key dired-mode-map [remap dired-find-alternate-file] 'dired-open-file)
-  (setq dired-open-find-file-function 'dired-find-alternate-file)
-  (setq dired-open-extensions '(("pdf"  . "evince")
+  (define-key dired-mode-map [remap my/dired-find-file]        'dired-open-file)
+  (setq dired-open-find-file-function 'my/dired-find-file)
+  (setq dired-open-extensions '(("png"  . "eog")
+                                ("jpg"  . "eog")
+                                ("jpeg" . "eog")
+                                ("tif"  . "eog")
+                                ("tiff" . "eog")
+                                ("pdf"  . "evince")
                                 ("html" . "firefox")
                                 ( "mp3" . "smplayer")
                                 ( "mp4" . "smplayer")
