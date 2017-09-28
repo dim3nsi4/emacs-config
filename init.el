@@ -91,7 +91,7 @@
 (require 'cfg-diff-hl)
 (require 'cfg-highlight-symbol)
 (require 'cfg-gradle)
-;; (require 'cfg-purpose)
+(require 'cfg-purpose)
 
 (use-package help-fns+)
 
