@@ -17,7 +17,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (all-the-icons all-the-icons-dired anzu auto-compile avy
+    (ag all-the-icons all-the-icons-dired anzu auto-compile avy
      beacon cdlatex company-auctex company-bibtex company-jedi
      company-quickhelp counsel counsel-gtags counsel-projectile
      crux define-word diff-hl diminish dired-avfs dired-collapse
