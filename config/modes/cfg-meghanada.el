@@ -44,11 +44,11 @@
     "
 Meghanada
 
-[_c_] compile-file       [_m_] run-task                [_S_] server-start         [_R_] restart
-[_C_] compile-project    [_t_] run-junit-test-case     [_K_] server-kill          [_U_] update-server
-[_i_] import-all         [_T_] run-junit-class         [_D_] client-disconnect    [_I_] install-server
-[_o_] optimize-import    [_s_] switch-testcase         [_P_] ping                 [_?_] version
-[_b_] code-beautify      [_k_] kill-running-process    [_l_] locate-variable
+[_c_] compile-file       [_x_] exec-main              [_k_] kill-running-process    [_S_] server-start         [_U_] update-server
+[_C_] compile-project    [_d_] debug-main             [_s_] switch-testcase         [_K_] server-kill          [_I_] install-server
+[_i_] import-all         [_t_] run-junit-test-case    [_l_] local-variable          [_R_] restart              [_C_] clear-cache
+[_o_] optimize-import    [_T_] run-junit-class        [_y_] type-info               [_D_] client-disconnect    [_?_] version
+[_b_] code-beautify      [_m_] run-task               [_r_] reference               [_P_] ping
     "
     ("<escape>" nil :exit t)
 
@@ -58,21 +58,27 @@ Meghanada
     ("o" meghanada-optimize-import)
     ("b" meghanada-code-beautify)
 
-    ("m" meghanada-run-task)
+    ("x" meghanada-exec-main)
+    ("d" meghanada-debug-main)
     ("t" meghanada-run-junit-test-case)
     ("T" meghanada-run-junit-class)
-    ("s" meghanada-switch-testcase)
+    ("m" meghanada-run-task)
+
     ("k" meghanada-kill-running-process)
+    ("s" meghanada-switch-testcase)
+    ("l" meghanada-local-variable)
+    ("y" meghanada-type-info)
+    ("r" meghanada-reference)
 
     ("S" meghanada-server-start)
     ("K" meghanada-server-kill)
+    ("R" meghanada-restart)
     ("D" meghanada-client-disconnect)
     ("P" meghanada-ping)
-    ("l" meghanada-local-variable)
 
-    ("R" meghanada-restart)
     ("U" meghanada-update-server)
     ("I" meghanada-install-server)
+    ("I" meghanada-clear-cache)
     ("?" meghanada-version)))
 
 ;; ——
