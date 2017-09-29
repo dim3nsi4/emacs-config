@@ -72,7 +72,7 @@
                                            ("" "marvosym" t)
                                            ("" "wasysym" t)
                                            ("" "amssymb" t)
-                                           ("" "hyperref" nil)
+                                           ("hidelinks" "hyperref" nil)
                                            "\\tolerance=1000"))
 
   (setq org-emphasis-alist (quote (("*" bold "<b>" "</b>")
