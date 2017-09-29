@@ -151,12 +151,12 @@
 
 ;; ——
 
-;; (use-package dired-collapse
-;;   :defer t
-;;   :after dired
-;;   :commands (dired-collapse-mode)
-;;   :init
-;;   (add-hook 'dired-mode-hook #'dired-collapse-mode))
+(use-package dired-collapse
+  :defer t
+  :after dired)
+  ;; :commands (dired-collapse-mode)
+  ;: init
+  ;; (add-hook 'dired-mode-hook #'dired-collapse-mode))
 
 ;; ——
 
