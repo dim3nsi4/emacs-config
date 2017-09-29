@@ -67,6 +67,7 @@
 
 (use-package flyspell-correct-ivy
   :defer t
+  :after flyspell
 
   :bind
   (:map flyspell-mode-map
