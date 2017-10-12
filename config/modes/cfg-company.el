@@ -18,15 +18,17 @@
         ("<escape>" . company-abort))
 
   :config
-  (setq company-idle-delay 0.5          ; delay before displaying auto completion choices
-        company-minimum-prefix-length 2 ; number of characters needed before auto completion popup
-        company-show-numbers nil        ; show/hide the quick access numbers
-        company-dabbrev-downcase nil)   ; whether dabbrev candidates are case sensitive or not
+  (setq company-idle-delay 0.
+        company-minimum-prefix-length 1
+        company-show-numbers nil
+        company-tooltip-margin 1
+        company-tooltip-align-annotations nil
+        company-dabbrev-downcase nil)
 
   ;; Activate company globally
   (add-hook 'after-init-hook 'global-company-mode)
   ;; Remove dabbrev from company's backends
-  (delete "company-dabbrev" company-backends))
+  (setq company-backends (delete 'company-dabbrev company-backends)))
 
 ;; ——
 
@@ -38,13 +40,12 @@
   :bind
   (:map company-active-map
         ("M-h" . company-quickhelp-manual-begin))
-
   :config
-  ;; Activate quickhelp
-  (company-quickhelp-mode 1)
-
   ;; delay before displaying the help
-  (setq company-quickhelp-delay 0.))
+  (setq company-quickhelp-delay 0.
+        company-quickhelp-max-lines 100)
+  ;; Activate quickhelp
+  (company-quickhelp-mode 1))
 
 ;; ——
 
@@ -52,7 +53,6 @@
   :defer t
   :after company
   :require company
-
   :config
   (defun my/python-mode-hook ()
     (add-to-list 'company-backends 'company-jedi))
@@ -64,7 +64,6 @@
   :defer t
   :after company
   :require (company auctex)
-
   :config
   (company-auctex-init))
 
