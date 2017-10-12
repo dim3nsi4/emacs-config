@@ -46,7 +46,7 @@ Meghanada
 
 [_c_] compile-file       [_x_] exec-main              [_k_] kill-running-process    [_S_] server-start         [_U_] update-server
 [_C_] compile-project    [_d_] debug-main             [_s_] switch-testcase         [_K_] server-kill          [_I_] install-server
-[_i_] import-all         [_t_] run-junit-test-case    [_l_] local-variable          [_R_] restart              [_C_] clear-cache
+[_i_] import-all         [_t_] run-junit-test-case    [_l_] local-variable          [_R_] restart              [_Z_] clear-cache
 [_o_] optimize-import    [_T_] run-junit-class        [_y_] type-info               [_D_] client-disconnect    [_?_] version
 [_b_] code-beautify      [_m_] run-task               [_r_] reference               [_P_] ping
     "
@@ -78,7 +78,7 @@ Meghanada
 
     ("U" meghanada-update-server)
     ("I" meghanada-install-server)
-    ("I" meghanada-clear-cache)
+    ("Z" meghanada-clear-cache)
     ("?" meghanada-version)))
 
 ;; ——
