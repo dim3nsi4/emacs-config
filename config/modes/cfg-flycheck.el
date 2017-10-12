@@ -64,6 +64,15 @@ Flycheck
 
 ;; ——
 
+(use-package flycheck-pos-tip
+  :defer t
+  :after flycheck
+  :config
+  (setq flycheck-pos-tip-timeout 10)
+  (flycheck-pos-tip-mode))
+
+;; ——
+
 (provide 'cfg-flycheck)
 
 ;;; ————————————————————————————————————————————————————————
