@@ -36,7 +36,7 @@
 
   :config
   (counsel-mode 1)
-  (setq counsel-find-file-ignore-regexp "^\\.\\|~$\\|^#\\|\\.elc\\|\\.pyc")
+  (setq counsel-find-file-ignore-regexp "^\\.\\|~$\\|^#\\|\\.elc\\|\\.pyc\\|__pycache__")
   (setq magit-completing-read-function 'ivy-completing-read))
 
 ;; ——
