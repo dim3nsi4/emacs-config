@@ -55,6 +55,10 @@
 (global-set-key (kbd "<C-down>") 'my/comment-line-and-go-down)
 (global-set-key (kbd "<C-up>")   'my/go-up-and-comment-line)
 
+;; Beginning and end of buffer
+(global-set-key (kbd "<C-prior>") 'beginning-of-buffer)
+(global-set-key (kbd "<C-next>")  'end-of-buffer)
+
 ;; Mode specific keybindings
 (define-key isearch-mode-map (kbd "<escape>") 'isearch-abort)
 (define-key emacs-lisp-mode-map (kbd "<f8>") 'my/byte-compile-this-file)
