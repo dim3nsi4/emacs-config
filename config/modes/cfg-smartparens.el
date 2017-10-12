@@ -15,6 +15,7 @@
   :config
   (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
   (add-hook 'python-mode-hook     'smartparens-mode)
+  (add-hook 'java-mode-hook       'smartparens-mode)
   (show-smartparens-global-mode +1))
 
 (provide 'cfg-smartparens)
