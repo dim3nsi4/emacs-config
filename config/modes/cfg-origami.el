@@ -28,7 +28,6 @@
    ("C-c o p" . origami-previous-fold)
    ("C-c o R" . origami-reset)))
 
-
 (provide 'cfg-origami)
 
 ;;; ————————————————————————————————————————————————————————

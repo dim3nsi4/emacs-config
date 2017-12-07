@@ -165,7 +165,7 @@
 (use-package dired-collapse
   :after dired)
   ;; :commands (dired-collapse-mode)
-  ;: init
+  ;; :init
   ;; (add-hook 'dired-mode-hook #'dired-collapse-mode))
 
 ;; ——
