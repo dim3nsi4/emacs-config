@@ -8,11 +8,7 @@
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
 
-(req-package swiper
-  :after counsel
-  :require counsel
-  :defer t
-
+(use-package swiper
   :bind
   (("M-i" . counsel-grep-or-swiper)))
 

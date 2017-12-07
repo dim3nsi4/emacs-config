@@ -13,6 +13,9 @@
   :demand
   :diminish whitespace-cleanup-mode
 
+  :commands
+  (global-whitespace-cleanup-mode)
+
   :config
   (global-whitespace-cleanup-mode))
 

@@ -10,10 +10,15 @@
 
 (use-package auto-compile
   :demand
-  :defines (auto-compile-display-buffer
-            auto-compile-mode-line-counter)
-  :commands (auto-compile-on-load-mode
-             auto-compile-on-save-mode)
+
+  :defines
+  (auto-compile-display-buffer
+   auto-compile-mode-line-counter)
+
+  :commands
+  (auto-compile-on-load-mode
+   auto-compile-on-save-mode)
+
   :config
   (setq auto-compile-display-buffer nil
         auto-compile-mode-line-counter t)

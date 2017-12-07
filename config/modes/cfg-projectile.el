@@ -10,12 +10,15 @@
 
 (use-package projectile
   :demand
+
+  :commands
+  (projectile-mode)
+
   :init
   (setq projectile-keymap-prefix (kbd "C-c p"))
 
   :config
-
-  (dolist (item '(".meghanad" "__pycache__"))
+  (dolist (item '(".meghanada" "__pycache__"))
     (add-to-list 'projectile-globally-ignored-directories item))
   (dolist (item '("GTAGS" "GRTAGS" "GPATH" "*.elc" "*.class"))
     (add-to-list 'projectile-globally-ignored-files item))
@@ -39,17 +42,62 @@
 
 ;; ——
 
-(req-package ivy
-  :after projectile
-  :require projectile
+(use-package ivy
+  :requires projectile
+
   :config
   (setq projectile-completion-system 'ivy))
 
 ;; ——
 
-(req-package hydra
-  :defer t
+(use-package hydra
   :after projectile
+  :requires projectile
+
+  :commands
+  (hydra--call-interactively-remap-maybe
+   hydra-default-pre
+   hydra-idle-message
+   hydra-keyboard-quit
+   hydra-set-transient-map
+   projectile-browse-dirty-projects
+   projectile-cache-current-file
+   projectile-commander
+   projectile-compile-project
+   projectile-dired
+   projectile-edit-dir-locals
+   projectile-find-dir-other-window
+   projectile-find-file-dwim
+   projectile-find-file-dwim-other-window
+   projectile-find-file-in-directory
+   projectile-find-file-in-known-projects
+   projectile-find-file-other-window
+   projectile-find-implementation-or-test-other-window
+   projectile-find-other-file
+   projectile-find-other-file-other-window
+   projectile-find-tag
+   projectile-find-test-file
+   projectile-grep
+   projectile-ibuffer
+   projectile-invalidate-cache
+   projectile-kill-buffers
+   projectile-multi-occur
+   projectile-recentf
+   projectile-regenerate-tags
+   projectile-remove-known-project
+   projectile-replace
+   projectile-run-async-shell-command-in-root
+   projectile-run-eshell
+   projectile-run-project
+   projectile-run-shell
+   projectile-run-shell-command-in-root
+   projectile-run-term projectile-display-buffer
+   projectile-save-project-buffers
+   projectile-switch-open-project
+   projectile-switch-to-buffer-other-window
+   projectile-test-project
+   projectile-toggle-between-implementation-and-test
+   projectile-vc)
 
   :bind
   (:map projectile-mode-map

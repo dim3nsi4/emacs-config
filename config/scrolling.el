@@ -19,7 +19,10 @@
 (global-set-key (kbd "<C-S-down>") (kbd "C-u 1 C-v"))
 
 (use-package view
-  :defer t
+  :commands
+  (View-scroll-half-page-forward
+   View-scroll-half-page-backward)
+
   :bind
   (("<next>"  . my/half-page-forward)
    ("<prior>" . my/half-page-backward))

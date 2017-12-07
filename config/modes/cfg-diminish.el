@@ -9,7 +9,9 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package diminish
-  :defer t
+  :commands
+  (diminish)
+
   :config
   (diminish 'abbrev-mode)
   (diminish 'eldoc-mode))

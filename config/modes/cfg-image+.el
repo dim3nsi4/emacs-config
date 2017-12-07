@@ -8,10 +8,14 @@
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
 
-(req-package image+
-  :defer t
-  :after image
-  :require image
+(use-package image+
+  :requires image
+
+  :defines
+  (image-mode-map)
+
+  :commands
+  (imagex-auto-adjust-mode)
 
   :bind
   (:map image-mode-map
@@ -32,10 +36,18 @@
 
 ;; ——
 
-(req-package hydra
-  :defer t
-  :after image
-  :require (image image+)
+(use-package hydra
+  :requires (image image+)
+
+  :defines
+  (image-mode-map)
+
+  :commands
+  (hydra--call-interactively-remap-maybe
+   hydra-default-pre
+   hydra-keyboard-quit
+   hydra-set-transient-map
+   hydra-show-hint)
 
   :bind
   (:map image-mode-map

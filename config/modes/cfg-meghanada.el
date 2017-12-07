@@ -9,31 +9,69 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package meghanada
-  :defer t
+  :hook
+  (java-mode . meghanada-mode)
 
   :init
   (setq meghanada-mode-key-prefix (kbd "C-c C-c"))
-  (add-hook 'java-mode-hook #'meghanada-mode)
 
   :bind
   (:map meghanada-mode-map
-        ("M-," . comment-dwim)))
+        ("M-,"   . comment-dwim)
+        ("C-S-j" . meghanada-import-all)
+        ("C-S-n" . meghanada-optimize-import)
+        ("C-S-f" . meghanada-code-beautify))
+
+  :config
+  (meghanada-eldoc-enable))
 
 ;; ——
 
-(req-package meghanada
-  :require company
-  :init
-  (add-hook 'meghanada-mode-hook
-            (lambda ()
-              (add-to-list 'company-backends '(company-files)))))
+(use-package meghanada
+  :requires company
+
+  :defines
+  (company-backends)
+
+  :hook
+  (meghanada-mode . my/meghanada-setup-company-backends)
+
+  :config
+  (defun my/meghanada-setup-company-backends ()
+    (add-to-list 'company-backends '(company-files))))
 
 ;; ——
 
-(req-package hydra
-  :defer t
-  :after meghanada
-  :require meghanada
+(use-package hydra
+  :requires meghanada
+
+  :commands
+  (hydra--call-interactively-remap-maybe
+   hydra-default-pre
+   hydra-idle-message
+   hydra-keyboard-quit
+   hydra-set-transient-map
+   meghanada-clear-cache
+   meghanada-client-disconnect
+   meghanada-compile-file
+   meghanada-compile-project
+   meghanada-debug-main
+   meghanada-exec-main
+   meghanada-install-server
+   meghanada-kill-running-process
+   meghanada-local-variable
+   meghanada-ping
+   meghanada-reference
+   meghanada-restart
+   meghanada-run-junit-class
+   meghanada-run-junit-test-case
+   meghanada-run-task
+   meghanada-server-kill
+   meghanada-server-start
+   meghanada-switch-testcase
+   meghanada-type-info
+   meghanada-update-server
+   meghanada-version)
 
   :bind
   (:map meghanada-mode-map

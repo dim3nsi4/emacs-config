@@ -8,11 +8,12 @@
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
 
-(req-package counsel
-  :defer t
+(use-package counsel
   :after ivy
-  :require ivy
   :diminish counsel-mode
+
+  :commands
+  (counsel-mode)
 
   :bind
   (("M-x"     . counsel-M-x)
@@ -32,28 +33,27 @@
    ("<f2> u"  . counsel-unicode-char)
    ("<f9>"    . counsel-imenu)
    :map read-expression-map
-   ("C-r" . counsel-expression-history))
+   ("C-r" . counsel-minibuffer-history))
 
   :config
   (counsel-mode 1)
-  (setq counsel-find-file-ignore-regexp "^\\.\\|~$\\|^#\\|\\.elc\\|\\.pyc\\|__pycache__")
-  (setq magit-completing-read-function 'ivy-completing-read))
+  (setq counsel-find-file-ignore-regexp "^\\.\\|~$\\|^#\\|\\.elc\\|\\.pyc\\|__pycache__"))
 
 ;; ——
 
 (use-package counsel-gtags
-  :after ivy
-  :defer t
+  :after counsel
   :diminish counsel-gtags-mode
 
-  :init
-  (add-hook 'c-mode-hook    #'counsel-gtags-mode)
-  (add-hook 'c++-mode-hook  #'counsel-gtags-mode)
-  (add-hook 'java-mode-hook #'counsel-gtags-mode)
+  :hook
+  ((c-mode    . counsel-gtags-mode)
+   (c++-mode  . counsel-gtags-mode)
+   (java-mode . counsel-gtags-mode))
 
   :bind
   (:map counsel-gtags-mode-map
-        ("<f2>" . counsel-gtags-dwim))
+        ("<f2>" . counsel-gtags-dwim)
+        ("<S-f2>" . counsel-gtags-go-backward))
 
   :config
   (setq counsel-gtags-path-style 'relative
@@ -63,8 +63,7 @@
 ;; ——
 
 (use-package counsel-projectile
-  :after (ivy projectile)
-  :defer t
+  :after (counsel projectile)
 
   :bind
   (:map projectile-mode-map

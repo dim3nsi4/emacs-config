@@ -10,7 +10,9 @@
 
 ;; Undo/Redo window configuration changes (C-c left, C-c right)
 (use-package winner
-  :defer t
+  :commands
+  (winner-mode)
+
   :config
   (winner-mode t))
 

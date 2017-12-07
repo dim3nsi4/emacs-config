@@ -9,7 +9,8 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package vimish-fold
-  :defer t
+  :commands
+  (vimish-fold-global-mode)
 
   :bind
   (("M-RET"   . vimish-fold-toggle)
@@ -59,10 +60,15 @@
 
 ;; ——
 
-(req-package hydra
-  :defer t
-  :after vimish-fold
-  :require vimish-fold
+(use-package hydra
+  :requires vimish-fold
+
+  :commands
+  (hydra--call-interactively-remap-maybe
+   hydra-default-pre
+   hydra-idle-message
+   hydra-keyboard-quit
+   hydra-set-transient-map)
 
   :bind
   (:map global-map
@@ -88,48 +94,6 @@ Vimish fold
     ("c" vimish-fold-refold-all)
     ("b" my/vimish-fold-next-block)
     ("D" vimish-fold-delete-all)))
-
-;; ——
-
-(req-package hydra
-  :defer t
-  :after ivy
-  :require ivy
-
-  :bind
-  (:map ivy-minibuffer-map
-        ("C-o" . my/hydra-ivy))
-
-  :config
-  (defun my/hydra-ivy ()
-    "Select one of the available actions and call `ivy-done'."
-    (interactive)
-    (let* ((actions (ivy-state-action ivy-last)))
-
-      (if (null (ivy--actionp actions))
-          (ivy-done)
-        (funcall
-         (eval
-          `(defhydra my/hydra-ivy-read-action (:color teal :hint nil)
-             "\nAction %s(ivy-action-name)\n"
-
-             ,@(mapcar (lambda (x) (list (nth 0 x) `(progn (ivy-set-action ',(nth 1 x)) (ivy-done)) (nth 2 x))) (cdr actions))
-
-             ("<left>"     ivy-prev-action         :exit nil)
-             ("<right>"    ivy-next-action         :exit nil)
-             ("<prior>"    ivy-scroll-down-command :exit nil)
-             ("<next>"     ivy-scroll-up-command   :exit nil)
-             ("<C-prior>"  ivy-beginning-of-buffer :exit nil)
-             ("<C-next>"   ivy-end-of-buffer       :exit nil)
-             ("<return>"   ivy-done                :exit t)
-             ("<M-return>" ivy-call                :exit nil)
-             ("C-j"        ivy-alt-done            :exit nil)
-             ("C-M-j"      ivy-immediate-done      :exit nil)
-             ("<up>"       ivy-previous-line       :exit nil)
-             ("<down>"     ivy-next-line           :exit nil)
-             ("C-o"        nil                     :exit t)
-             ("<escape>"   nil                     :exit t)
-             ("C-g"        nil                     :exit t))))))))
 
 ;; ——
 

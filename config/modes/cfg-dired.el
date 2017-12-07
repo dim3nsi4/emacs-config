@@ -8,13 +8,23 @@
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
 
-(req-package dired
-  :defer t
-  :require ediff
-  :commands (dired-dwim-target-directory)
+(use-package dired
+  :commands
+  (dired-dwim-target-directory
+   dired-get-file-for-visit
+   dired-find-alternate-file
+   dired-find-file
+   dired-get-marked-files)
+
+  :hook
+  ((dired-mode . dired-hide-details-mode)
+   (dired-mode . auto-revert-mode)
+   (dired-mode . my/rename-dired-buffer-name))
 
   :bind
-  (:map dired-mode-map
+  (("<f7>"   . my/dired-default-directory)
+   ("<S-f7>" . dired)
+   :map dired-mode-map
         ("<mouse-2>"    . my/dired-find-file)
         ("<C-down>"     . my/dired-find-file)
         ("RET"          . my/dired-find-file)
@@ -25,14 +35,14 @@
         ("^"            . my/dired-up-directory)
         ("J"            . my/dired-rsync))
 
-  :init
-  (add-hook 'dired-mode-hook #'dired-hide-details-mode)
-  (add-hook 'dired-mode-hook #'auto-revert-mode)
-  (add-hook 'dired-mode-hook #'my/rename-dired-buffer-name)
-
   :config
   ;; enable dired-find-alternate-file command
   (put 'dired-find-alternate-file 'disabled nil)
+
+  (defun my/dired-default-directory ()
+    "Run dired on the default directory."
+    (interactive)
+    (dired default-directory))
 
   (defun my/dired-up-directory ()
     "Use find-alternate-file to open the parent directory."
@@ -130,8 +140,8 @@
 ;; ——
 
 (use-package dired-filter
-  :defer t
   :after dired
+
   :config
   (setq dired-filter-inherit-filter-stack t)
   (add-hook 'dired-mode-hook 'dired-filter-mode))
@@ -139,20 +149,20 @@
 ;; ——
 
 (use-package dired-narrow
-  :defer t
   :after dired
+
   :bind
   (:map dired-mode-map
         ("@"   . dired-narrow-fuzzy)
         ("/ @" . dired-narrow-fuzzy)
         ("/ l" . dired-narrow-fuzzy))
+
   :config
   (setq dired-narrow-exit-when-one-left t))
 
 ;; ——
 
 (use-package dired-collapse
-  :defer t
   :after dired)
   ;; :commands (dired-collapse-mode)
   ;: init
@@ -160,10 +170,11 @@
 
 ;; ——
 
-(req-package dired-subtree
-  :defer t
-  :after dired
-  :require dired
+(use-package dired-subtree
+  :after (:any dired dired-sidebar)
+
+  :commands
+  (dired-subtree-toggle)
 
   :bind
   (:map dired-mode-map
@@ -182,36 +193,35 @@
 
 ;; ——
 
-(req-package dired-avfs
-  :defer t
-  :after dired
-  :require dired)
+(use-package dired-avfs
+  :after dired)
 
 ;; ——
 
 (use-package dired-sidebar
-  :defer t
   :bind
   (("<f10>" . dired-sidebar-toggle-sidebar))
 
   :config
   (setq dired-sidebar-width 35)
+
   (add-to-list 'dired-sidebar-special-refresh-commands 'dired-subtree-cycle)
   (add-to-list 'dired-sidebar-special-refresh-commands 'dired-subtree-toggle)
+
   (define-key dired-sidebar-mode-map [remap dired-find-alternate-file] 'dired-sidebar-find-file)
   (define-key dired-sidebar-mode-map [remap my/dired-find-file]        'dired-sidebar-find-file)
   (define-key dired-sidebar-mode-map [remap my/dired-up-directory]     'dired-sidebar-up-directory))
 
 ;; ——
 
-(req-package dired-open
-  :defer t
+(use-package dired-open
   :after dired
-  :require dired
+
   :config
   (define-key dired-mode-map [remap dired-find-file]           'dired-open-file)
   (define-key dired-mode-map [remap dired-find-alternate-file] 'dired-open-file)
   (define-key dired-mode-map [remap my/dired-find-file]        'dired-open-file)
+
   (setq dired-open-find-file-function 'my/dired-find-file)
   (setq dired-open-extensions '(("png"  . "eog")
                                 ("jpg"  . "eog")
@@ -227,13 +237,12 @@
 
 ;; ——
 
-(req-package hl-anything
-  :defer t
+(use-package hl-anything
   :after dired-sidebar
-  :require dired-sidebar
+  :requires dired-sidebar
 
-  :init
-  (add-hook 'dired-sidebar-mode-hook #'hl-line-mode))
+  :hook
+  (dired-sidebar-mode . hl-line-mode))
 
 ;; ——
 

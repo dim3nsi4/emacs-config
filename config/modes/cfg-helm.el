@@ -28,7 +28,7 @@
   (helm-autoresize-mode 1)
   (setq helm-autoresize-max-height 30
         helm-autoresize-min-height 30
-        helm-split-window-in-side-p nil))
+        helm-split-window-inside-p nil))
 
 (provide 'cfg-helm)
 

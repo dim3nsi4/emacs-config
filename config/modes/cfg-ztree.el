@@ -9,7 +9,6 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package ztree-diff
-  :defer t
   :init
   (add-hook 'ztree-mode-hook '(lambda() (setq show-trailing-whitespace nil)))
 
@@ -18,7 +17,6 @@
   (setq-default ztree-diff-filter-list (cons "^.*\\.elc" ztree-diff-filter-list)))
 
 (use-package ztree-dir
-  :defer t
   :init
   (add-hook 'ztree-mode-hook '(lambda() (setq show-trailing-whitespace nil)))
 

@@ -9,10 +9,11 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package matlab-mode
-  :defer t
   :mode "\\.m$"
-  :defines (matlab-indent-function
-            matlab-shell-command)
+
+  :defines
+  (matlab-indent-function
+   matlab-shell-command)
 
   :config
   (autoload 'matlab-mode "matlab" "Matlab Editing Mode" t)

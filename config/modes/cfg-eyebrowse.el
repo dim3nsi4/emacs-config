@@ -9,16 +9,20 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package eyebrowse
-  :defer t
+  :demand
   :diminish
 
+  :commands
+  (eyebrowse-mode)
+
   :bind
-  (("<C-tab>"   . eyebrowse-next-window-config)
-   ("<backtab>" . eyebrowse-prev-window-config)
-   ("C-c t t"   . eyebrowse-create-window-config)
-   ("C-c t c"   . eyebrowse-close-window-config)
-   ("C-c t n"   . eyebrowse-next-window-config)
-   ("C-c t p"   . eyebrowse-prev-window-config))
+  (:map eyebrowse-mode-map
+        ("<C-tab>"   . eyebrowse-next-window-config)
+        ("<backtab>" . eyebrowse-prev-window-config)
+        ("C-c t t"   . eyebrowse-create-window-config)
+        ("C-c t c"   . eyebrowse-close-window-config)
+        ("C-c t n"   . eyebrowse-next-window-config)
+        ("C-c t p"   . eyebrowse-prev-window-config))
 
   :init
   (setq eyebrowse-keymap-prefix (kbd "C-c t"))
@@ -28,19 +32,6 @@
         eyebrowse-switch-back-and-forth t
         eyebrowse-mode-line-style 'always)
   (eyebrowse-mode t))
-
-;; ——
-
-(req-package eyebrowse
-  :defer t
-  :diminish
-  :require neotree
-
-  :init
-  ;; Fix for neotree/eyebrowse compatibility
-  (add-hook 'eyebrowse-post-window-switch-hook 'neo-global--attach))
-
-;; ——
 
 (provide 'cfg-eyebrowse)
 

@@ -11,20 +11,41 @@
 (use-package flycheck
   :demand
 
+  :commands
+  (global-flycheck-mode)
+
   :init
   (setq flycheck-keymap-prefix (kbd "C-c s"))
 
   :config
-  (setq flycheck-temp-prefix "/tmp/.flycheck")
+  ;; (setq flycheck-temp-prefix "/tmp/.flycheck")
   (setq flycheck-emacs-lisp-load-path 'inherit)
   (global-flycheck-mode t))
 
 ;; ——
 
-(req-package hydra
-  :defer t
-  :after flycheck
-  :require flycheck
+(use-package hydra
+  :requires flycheck
+
+  :commands
+  (flycheck-buffer
+   flycheck-clear
+   flycheck-previous-error
+   flycheck-next-error
+   flycheck-list-errors
+   flycheck-explain-error-at-point
+   flycheck-display-error-at-point
+   flycheck-select-checker
+   flycheck-disable-checker
+   flycheck-describe-checker
+   flycheck-verify-setup
+   flycheck-version
+   flycheck-manual
+   hydra-default-pre
+   hydra-keyboard-quit
+   hydra--call-interactively-remap-maybe
+   hydra-idle-message
+   hydra-set-transient-map)
 
   :bind
   (:map flycheck-mode-map
@@ -65,8 +86,11 @@ Flycheck
 ;; ——
 
 (use-package flycheck-pos-tip
-  :defer t
   :after flycheck
+
+  :commands
+  (flycheck-pos-tip-mode)
+
   :config
   (setq flycheck-pos-tip-timeout 10)
   (flycheck-pos-tip-mode))

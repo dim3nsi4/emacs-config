@@ -9,18 +9,16 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package magit
-  :defer t
   :bind
   (("C-x g" . magit-status))
+
   :config
   (setq magit-item-highlight-face 'bold))
 
 ;; ——
 
-(req-package ivy
-  :defer t
-  :after magit
-  :require magit
+(use-package ivy
+  :requires magit
 
   :config
   (setq magit-completing-read-function 'ivy-completing-read))
@@ -28,7 +26,7 @@
 ;; ——
 
 (use-package diff-hl
-  :after magit
+  :requires magit
 
   :config
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))

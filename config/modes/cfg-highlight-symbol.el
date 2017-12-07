@@ -9,11 +9,10 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package highlight-symbol
-  :defer t
-  :init
-  (add-hook 'java-mode-hook 'highlight-symbol-mode)
-  (add-hook 'emacs-lisp-mode-hook 'highlight-symbol-mode)
-  (add-hook 'python-mode-hook 'highlight-symbol-mode)
+  :hook
+  ((java-mode       . highlight-symbol-mode)
+   (emacs-lisp-mode . highlight-symbol-mode)
+   (python-mode     . highlight-symbol-mode))
 
   :bind
   (("C-c h h" . highlight-symbol)

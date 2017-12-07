@@ -10,10 +10,12 @@
 
 ;; Manage some buffer as popups (less invasive frames)
 (use-package popwin
-  :defer t
-  :commands (popwin-mode)
+  :commands
+  (popwin-mode)
+
   :init
   (setq popwin:popup-window-height 20)
+
   :config
   (popwin-mode 1))
 

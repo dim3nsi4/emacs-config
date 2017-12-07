@@ -9,8 +9,8 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package hideshowvis
-  :init
-  (add-hook 'emacs-lisp-mode-hook 'hideshowvis-enable))
+  :hook
+  (emacs-lisp-mode . hideshowvis-enable))
 
 (provide 'cfg-hideshowvis)
 

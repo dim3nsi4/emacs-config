@@ -14,14 +14,12 @@
   (interactive)
   (byte-compile-file (expand-file-name buffer-file-name)))
 
-;; --
 
 (defun align-repeat (start end regexp)
   "Between START and END, repeat alignment with respect to the given regular expression REGEXP."
   (interactive "r\nsAlign regexp: ")
   (align-regexp start end (concat "\\(\\s-*\\)" regexp) 1 1 t))
 
-;; --
 
 ;; M-w saves the current line if no region is selected
 (defadvice kill-ring-save (before slick-copy activate compile)
@@ -32,6 +30,7 @@
      (list (line-beginning-position)
            (line-beginning-position 2)))))
 
+
 ;; C-w deletes and saves the current line if no region is selected
 (defadvice kill-region (before slick-cut activate compile)
   "When called interactively with no active region, kill a single line instead."
@@ -40,7 +39,6 @@
      (list (line-beginning-position)
            (line-beginning-position 2)))))
 
-;; --
 
 (defvar my/comment-line-last-col nil)
 
@@ -100,10 +98,12 @@ If AGAIN is true, use the same mode as the last call."
         (setq my/comment-line-last-col col))
     (message "Comments not available for this mode")))
 
+
 (defun my/comment-line-and-go-down (n)
   "Toggle a comment on current N line(s) (disable line by line)."
   (interactive "p")
   (my/toggle-comment-line (+ n) (eq last-command 'my/comment-line-and-go-down)))
+
 
 (defun my/go-up-and-comment-line (n)
   "Toggle a comment on current N line(s) (disable line by line)."

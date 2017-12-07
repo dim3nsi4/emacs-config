@@ -10,7 +10,22 @@
 
 (use-package org
   :defer t
-  :commands (org-link-set-parameters)
+
+  :defines
+  (org-agenda-files
+   org-agenda-restore-windows-after-quit
+   org-agenda-window-setup
+   org-table-convert-region-max-lines
+   org-table-automatic-realign
+   org-export-with-sub-superscripts
+   org-clock-persist
+   org-latex-compiler
+   org-latex-pdf-process)
+
+  :commands
+  (org-link-set-parameters
+   org-clock-persistence-insinuate
+   org-babel-do-load-languages)
 
   :config
   (setq org-directory "~/.org-mode.d"
@@ -21,6 +36,8 @@
         org-support-shift-select t
         org-src-fontify-natively t
         org-startup-folded nil
+        org-table-convert-region-max-lines 9999
+        org-table-automatic-realign nil
         org-image-actual-width nil
         org-highlight-latex-and-related '(latex script entities)
         org-export-with-sub-superscripts (quote {})
@@ -119,6 +136,9 @@
 ;; ——
 
 (use-package org-bullets
+  :commands
+  (org-bullets-mode)
+
   :init
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 

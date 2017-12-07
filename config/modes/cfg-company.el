@@ -12,6 +12,9 @@
   :demand
   :diminish company-mode
 
+  :hook
+  ((after-init . global-company-mode))
+
   :bind
   (:map company-active-map
         ("<tab>"    . company-complete-selection)
@@ -24,48 +27,63 @@
         company-tooltip-margin 1
         company-tooltip-align-annotations nil
         company-dabbrev-downcase nil)
-
-  ;; Activate company globally
-  (add-hook 'after-init-hook 'global-company-mode)
   ;; Remove dabbrev from company's backends
   (setq company-backends (delete 'company-dabbrev company-backends)))
 
 ;; ——
 
-(req-package company-quickhelp
-  :defer t
+(use-package company-quickhelp
+  :demand
   :after company
-  :require company
+
+  :commands
+  (company-quickhelp-mode)
 
   :bind
   (:map company-active-map
         ("M-h" . company-quickhelp-manual-begin))
+
   :config
-  ;; delay before displaying the help
-  (setq company-quickhelp-delay 0.
+  (setq company-quickhelp-delay 0.1
         company-quickhelp-max-lines 100)
-  ;; Activate quickhelp
   (company-quickhelp-mode 1))
 
 ;; ——
 
-(req-package company-jedi
-  :defer t
+(use-package company-jedi
   :after company
-  :require company
+
+  :hook
+  (python-mode . my/python-mode-hook)
+
   :config
   (defun my/python-mode-hook ()
-    (add-to-list 'company-backends 'company-jedi))
-  (add-hook 'python-mode-hook 'my/python-mode-hook))
+    (add-to-list 'company-backends 'company-jedi)))
 
 ;; ——
 
-(req-package company-auctex
-  :defer t
+(use-package company-auctex
   :after company
-  :require (company auctex)
+
+  :commands
+  (company-auctex-init)
+
   :config
   (company-auctex-init))
+
+;; ——
+
+;; (use-package company-eshell-autosuggest
+;;   :defer t
+;;   :after company
+
+;;   :hook (eshell-mode . setup-company-eshell-autosuggest)
+
+;;   :config
+;;   (defun setup-company-eshell-autosuggest ()
+;;   (with-eval-after-load 'company
+;;     (setq-local company-backends '(company-eshell-autosuggest))
+;;     (setq-local company-frontends '(company-preview-frontend)))))
 
 ;; ——
 

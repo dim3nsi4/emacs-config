@@ -10,6 +10,11 @@
 
 (use-package which-key
   :demand
+
+  :commands
+  (which-key-setup-side-window-bottom
+   which-key-mode)
+
   :config
   (setq which-key-idle-delay 0.5)
   (which-key-setup-side-window-bottom)

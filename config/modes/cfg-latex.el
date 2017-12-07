@@ -29,15 +29,17 @@
 ;; ——
 
 (use-package auctex
-  :defer t
-  :defines (TeX-auto-save
-            TeX-parse-self
-            reftex-plug-into-AUCTeX)
-  :init
-  (add-hook 'LaTeX-mode-hook 'visual-line-mode)
-  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  :defines
+  (TeX-auto-save
+   TeX-parse-self
+   reftex-plug-into-AUCTeX)
+
+  :hook
+  ((LaTeX-mode . visual-line-mode)
+   (LaTeX-mode . flyspell-mode)
+   (LaTeX-mode . LaTeX-math-mode)
+   (LaTeX-mode . turn-on-reftex))
+
   :config
   (setq TeX-auto-save t
         TeX-parse-self t
@@ -47,11 +49,10 @@
 ;; ——
 
 (use-package cdlatex
-  :defer t
-  :init
-  (add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)
-  (add-hook 'latex-mode-hook 'turn-on-cdlatex)
-  (add-hook 'org-mode-hook   'turn-on-org-cdlatex))
+  :hook
+  ((LaTeX-mode-hook . turn-on-cdlatex)
+   (latex-mode-hook . turn-on-cdlatex)
+   (org-mode-hook   . turn-on-org-cdlatex)))
 
 ;; ——
 
