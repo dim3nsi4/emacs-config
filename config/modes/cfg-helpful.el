@@ -10,17 +10,19 @@
 
 (use-package helpful
   :demand
-  :requires counsel
-
-  :defines
-  (counsel-describe-function-function
-   counsel-describe-variable-function)
 
   :bind
   (("C-h f"   . helpful-callable)
    ("C-h v"   . helpful-variable)
    ("C-h k"   . helpful-key)
-   ("C-h C-h" . helpful-at-point))
+   ("C-h C-h" . helpful-at-point)))
+
+(use-package counsel
+  :requires helpful
+
+  :defines
+  (counsel-describe-function-function
+   counsel-describe-variable-function)
 
   :config
   (setq counsel-describe-function-function 'helpful-function
