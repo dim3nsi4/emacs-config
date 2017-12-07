@@ -1,5 +1,5 @@
 ;;; Package --- Summary
-;;; drag-stuff configuration.
+;;; helpful configuration.
 ;;;
 ;;; Commentary:
 ;;; Copyright (c) 2016-2017 Pierre Seimandi
@@ -8,14 +8,26 @@
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
 
-(use-package drag-stuff
-  :bind
-  (("C-«" . drag-stuff-left)
-   ("C-»" . drag-stuff-right)
-   ("C-+" . drag-stuff-up)
-   ("C--" . drag-stuff-down)))
+(use-package helpful
+  :demand
+  :requires counsel
 
-(provide 'cfg-drag-stuff)
+  :defines
+  (counsel-describe-function-function
+   counsel-describe-variable-function)
+
+  :bind
+  (("C-h f"   . helpful-callable)
+   ("C-h v"   . helpful-variable)
+   ("C-h k"   . helpful-key)
+   ("C-h C-h" . helpful-at-point))
+
+  :config
+  (setq counsel-describe-function-function 'helpful-function
+        counsel-describe-variable-function 'helpful-variable))
+
+
+(provide 'cfg-helpful)
 
 ;;; ————————————————————————————————————————————————————————
-;;; cfg-drag-stuff.el ends here
+;;; cfg-helpful.el ends here

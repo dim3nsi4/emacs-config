@@ -12,13 +12,11 @@
 
 ;; ——
 
-(req-package all-the-icons-dired
-  :defer t
-  :after dired
-  :require all-the-icons
+(use-package all-the-icons-dired
+  :after (:any dired dired-sidebar)
 
-  :config
-  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
+  :hook
+  ((dired-mode . all-the-icons-dired-mode)))
 
 ;; ——
 

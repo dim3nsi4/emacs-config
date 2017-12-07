@@ -9,7 +9,11 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package origami
-  :defer t
+  :hook
+  ((java-mode-hook       . origami-mode)
+   (python-mode-hook     . origami-mode)
+   (c-mode-common-hook   . origami-mode)
+   (emacs-lisp-mode-hook . origami-mode))
 
   :bind
   (("M-p"     . origami-recursively-toggle-node)
@@ -22,13 +26,8 @@
    ("C-c o T" . origami-forward-toggle-node)
    ("C-c o n" . origami-forward-fold)
    ("C-c o p" . origami-previous-fold)
-   ("C-c o R" . origami-reset))
+   ("C-c o R" . origami-reset)))
 
-  :init
-  (add-hook 'java-mode-hook       'origami-mode)
-  (add-hook 'python-mode-hook     'origami-mode)
-  (add-hook 'c-mode-common-hook   'origami-mode)
-  (add-hook 'emacs-lisp-mode-hook 'origami-mode))
 
 (provide 'cfg-origami)
 

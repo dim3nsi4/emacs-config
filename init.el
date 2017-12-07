@@ -10,6 +10,9 @@
 
 ;;; -*- no-byte-compile: t -*-
 
+;; Increase the garbage collector threshold
+(setq gc-cons-threshold 10000000)
+
 (defvar emacs-d user-emacs-directory)
 
 ;; (defvar emacs-d
@@ -30,6 +33,7 @@
 (package-initialize)
 
 (require 'cfg-use-package)
+
 (setq load-prefer-newer t)
 (require 'cfg-auto-compile)
 
@@ -41,7 +45,6 @@
 (require 'scrolling)
 (require 'bell)
 
-(require 'cfg-which-key)
 (require 'cfg-paradox)
 (require 'cfg-diminish)
 (require 'cfg-crux)
@@ -63,14 +66,11 @@
 (require 'cfg-popwin)
 (require 'cfg-flyspell)
 (require 'cfg-flycheck)
-(require 'cfg-modalka)
-(require 'cfg-beacon)
 (require 'cfg-anzu)
 (require 'cfg-dired)
 (require 'cfg-origami)
 (require 'cfg-image+)
 (require 'cfg-eyebrowse)
-(require 'cfg-neotree)
 (require 'cfg-org)
 (require 'cfg-markdown)
 (require 'cfg-lua-mode)
@@ -89,20 +89,25 @@
 (require 'cfg-ztree)
 (require 'cfg-google-c-style)
 (require 'cfg-diff-hl)
+(require 'cfg-helpful)
 (require 'cfg-highlight-symbol)
-(require 'cfg-gradle)
-(require 'cfg-purpose)
 
-(use-package help-fns+)
+;; (require 'cfg-modalka)
+;; (require 'cfg-beacon)
+;; (require 'cfg-neotree)
+;; (require 'cfg-which-key)
+;; (require 'cfg-gradle)
+;; (require 'cfg-purpose)
 
 ;; (require 'cfg-hideshowvis)
 ;; (use-package dokuwiki)
 ;; (require 'cfg-perspeen)
 
-(req-package-finish)
-
 (setq custom-file (expand-file-name "config/customs.el" emacs-d))
 (load custom-file)
+
+;; Reset the garbage collector threshold
+(setq gc-cons-threshold (default-value 'gc-cons-threshold))
 
 (provide 'init)
 

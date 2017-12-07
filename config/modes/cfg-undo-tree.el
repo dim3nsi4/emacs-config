@@ -9,12 +9,11 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package undo-tree
-  :defer t
-
   :bind
   (:map undo-tree-map
         ("C-z" . undo)
         ("M-z" . undo-tree-redo))
+
   :config
   ;; (global-undo-tree-mode)
   (setq undo-tree-visualizer-diff t

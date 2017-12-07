@@ -11,11 +11,16 @@
 (use-package spaceline-all-the-icons
   :demand
 
+  :commands
+  (spaceline-all-the-icons--setup-anzu
+   spaceline-all-the-icons--setup-git-ahead
+   spaceline-all-the-icons--setup-paradox
+   spaceline-all-the-icons-theme)
+
   :config
   (spaceline-all-the-icons-theme)
 
   (spaceline-all-the-icons--setup-git-ahead)
-  (spaceline-all-the-icons--setup-neotree)
   (spaceline-all-the-icons--setup-paradox)
   (spaceline-all-the-icons--setup-anzu)
 
@@ -29,12 +34,6 @@
   (spaceline-toggle-all-the-icons-git-status-on)
   (spaceline-toggle-all-the-icons-hud-off)
   (spaceline-toggle-all-the-icons-minor-modes-off)
-  (spaceline-toggle-all-the-icons-neotree-close-bracket-off)
-  (spaceline-toggle-all-the-icons-neotree-context-off)
-  (spaceline-toggle-all-the-icons-neotree-dirs-on)
-  (spaceline-toggle-all-the-icons-neotree-files-on)
-  (spaceline-toggle-all-the-icons-neotree-index-on)
-  (spaceline-toggle-all-the-icons-neotree-open-bracket-off)
   (spaceline-toggle-all-the-icons-package-updates-on)
   (spaceline-toggle-all-the-icons-paradox-filter-on)
   (spaceline-toggle-all-the-icons-paradox-line-count-on)

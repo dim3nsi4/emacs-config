@@ -9,8 +9,10 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package yasnippet
-  :defer t
   :diminish yas-minor-mode
+
+  :commands
+  (yas-reload-all)
 
   :bind
   (("C-c C-y"     . nil)
@@ -26,18 +28,18 @@
    ("M-«" . yas-prev-field)
    ("M-»" . yas-next-field))
 
-  :init
-  (progn
-    (add-hook 'prog-mode-hook #'yas-minor-mode))
+  :hook
+  (prog-mode . yas-minor-mode)
 
   :config
-  (progn
-    (yas-reload-all)))
+  (yas-reload-all))
 
-(req-package company
-  :defer t
-  :after yasnippet
-  :require yasnippet
+(use-package company
+  :requires yasnippet
+
+  :commands
+  (company-complete-common
+   yas-expand)
 
   :bind
   ("C-c C-y C-u" . company-yasnippet)

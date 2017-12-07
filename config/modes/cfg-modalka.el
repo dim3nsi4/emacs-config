@@ -8,12 +8,20 @@
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
 
-(req-package modalka
-  :defer t
-  :require key-chord
+(use-package modalka
+  :requires key-chord
+
+  :defines
+  (modalka-cursor-type
+   modalka-excluded-modes
+   modalka-mode-map
+   modalka-mode)
 
   :chords
   ("xx" . modalka-mode)
+
+  :hook
+  (post-command . my/set-powerline-color-according-to-mode)
 
   :bind
   (:map modalka-mode-map
@@ -63,8 +71,6 @@
         (set-face-background 'spaceline-highlight-face bg-color)
         (set-face-foreground 'mode-line fg-color)
         (set-face-background 'mode-line bg-color))))
-
-  (add-hook 'post-command-hook #'my/set-powerline-color-according-to-mode)
 
   (add-to-list 'modalka-excluded-modes 'magit-status-mode))
 

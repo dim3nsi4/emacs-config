@@ -9,7 +9,13 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package ediff
-  :defer t
+  :hook
+  ((ediff-before-setup . my/ediff-bsh)
+   (ediff-quit         . my/ediff-qh))
+
+  :init
+  (add-hook 'ediff-after-setup-windows-hook 'my/ediff-ash 'append)
+
   :config
   (setq ediff-window-setup-function 'ediff-setup-windows-plain
         ediff-split-window-function 'split-window-horizontally)
@@ -42,11 +48,7 @@
   (defun my/ediff-qh ()
     "Function to be called when ediff quits."
     (when my/ediff-bwin-config
-      (set-window-configuration my/ediff-bwin-config)))
-
-  (add-hook 'ediff-before-setup-hook 'my/ediff-bsh)
-  (add-hook 'ediff-after-setup-windows-hook 'my/ediff-ash 'append)
-  (add-hook 'ediff-quit-hook 'my/ediff-qh))
+      (set-window-configuration my/ediff-bwin-config))))
 
 (provide 'cfg-ediff)
 

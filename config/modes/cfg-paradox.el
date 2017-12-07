@@ -9,10 +9,12 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package paradox
-  :defer t
-  :commands (paradox-enable)
+  :commands
+  (paradox-enable)
+
   :bind
   (("<f12>" . paradox-list-packages))
+
   :config
   ;; The "paradox-token" file is supposed to contain this line:
   ;; (setq paradox-github-token "<YOUR_TOKEN>")

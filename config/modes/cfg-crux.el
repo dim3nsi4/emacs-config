@@ -9,9 +9,8 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package crux
-  :defer t
   :bind
-  (([remap kill-whole-line] . crux-kill-whole-line)
+  (([remap kill-whole-line]        . crux-kill-whole-line)
    ([remap move-beginning-of-line] . crux-move-beginning-of-line)))
 
 (provide 'cfg-crux)

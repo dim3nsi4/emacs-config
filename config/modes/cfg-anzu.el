@@ -11,6 +11,9 @@
 (use-package anzu
   :demand
 
+  :commands
+  (global-anzu-mode)
+
   :bind
   (("<f5>"   . anzu-query-replace)
    ("<S-f5>" . anzu-query-replace-regexp))

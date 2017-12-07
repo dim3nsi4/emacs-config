@@ -9,7 +9,9 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package doc-view
-  :defer t
+  :magic
+  ("%PDF" . pdf-view-mode)
+
   :config
   (setq doc-view-continuous t
         doc-view-resolution 200))

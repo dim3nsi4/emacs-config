@@ -9,8 +9,10 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package volatile-highlights
-  :defer t
   :diminish volatile-highlights-mode
+
+  :commands
+  (volatile-highlights-mode)
 
   :config
   (volatile-highlights-mode t))

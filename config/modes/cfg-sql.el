@@ -26,11 +26,10 @@
 (add-hook 'sql-interactive-mode-hook 'my/sql-save-history-hook)
 
 (use-package sqlup-mode
-  :init
-  ;; Capitalize keywords in SQL mode
-  (add-hook 'sql-mode-hook 'sqlup-mode)
-  ;; Capitalize keywords in an interactive session (e.g. psql)
-  (add-hook 'sql-interactive-mode-hook 'sqlup-mode)
+  :hook
+  ((sql-mode . sqlup-mode)
+   (sql-interactive-mode . sqlup-mode))
+
   :config
   (setq sqlup-blacklist '("schema" "table")))
 

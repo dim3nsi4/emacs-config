@@ -24,10 +24,9 @@
 
 ;; ——
 
-;; (req-package ivy-purpose
-;;   :defer t
-;;   :after purpose
-;;   :require purpose
+;; (use-package ivy-purpose
+;;   :requires purpose
+
 ;;   :bind
 ;;   (("C-x C-b" . 'ivy-purpose-switch-buffer-with-some-purpose))
 

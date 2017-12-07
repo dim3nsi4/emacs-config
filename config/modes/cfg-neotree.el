@@ -9,9 +9,19 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package neotree
-  :defer t
   :bind
   (("<S-f10>" . neotree-toggle))
+
+  :defines
+  (neo-smart-open
+   neo-autorefresh
+   neo-window-fixed-size
+   neo-window-position
+   neo-confirm-delete-directory-recursively
+   neo-confirm-change-root
+   neo-window-width
+   neo-confirm-kill-buffers-for-files-in-directory
+   neo-theme)
 
   :config
   (setq neo-smart-open t
@@ -26,20 +36,23 @@
 
 ;; ——
 
-(req-package hl-anything
-  :defer t
-  :after neotree
-  :require neotree
+(use-package hl-anything
+  :requires neotree
 
-  :init
-  (add-hook 'neotree-mode-hook #'hl-line-mode))
+  :hook
+  (neotree-mode-hook . hl-line-mode))
 
 ;; ——
 
-(req-package projectile
-  :defer t
+(use-package projectile
   :after neotree
-  :require projectile
+
+  :commands
+  (projectile-project-root
+   neotree-hide
+   neotree-show
+   neotree-dir
+   neotree-find)
 
   :bind
   (:map projectile-mode-map

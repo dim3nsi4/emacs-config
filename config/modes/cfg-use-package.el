@@ -9,7 +9,8 @@
 ;;; ————————————————————————————————————————————————————————
 
 (require 'use-package)
-(require 'req-package)
+
+(setq use-package-compute-statistics t)
 
 (use-package use-package-chords
   :config

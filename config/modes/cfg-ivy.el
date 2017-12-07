@@ -12,6 +12,12 @@
   :demand
   :diminish ivy-mode
 
+  :commands
+  (ivy-mode)
+
+  :hook
+  (minibuffer-setup . my/ivy-disable-trailing-whitespace)
+
   :bind
   (("C-x C-b" . ivy-switch-buffer)
    ("C-c C-r" . ivy-resume)
@@ -30,8 +36,12 @@
   :config
   (ivy-mode 1)
 
+  (defun my/ivy-disable-trailing-whitespace()
+    (setq show-trailing-whitespace nil))
+
   (setq ivy-height 11
         ivy-fixed-height-minibuffer t
+        ivy-use-selectable-prompt t
         ivy-wrap t
         ivy-action-wrap t
         ivy-use-virtual-buffers t
@@ -44,10 +54,8 @@
 
 ;; ——
 
-(req-package ivy-rich
-  :defer t
+(use-package ivy-rich
   :after ivy
-  :require ivy
 
   :config
   (setq ivy-virtual-abbreviate 'full
@@ -57,8 +65,62 @@
         ivy-rich-switch-buffer-mode-max-length 20
         ivy-rich-switch-buffer-align-virtual-buffer t)
 
-  (add-hook 'minibuffer-setup-hook (lambda () (setq show-trailing-whitespace nil)))
   (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich-switch-buffer-transformer))
+
+;; ——
+
+(use-package ivy-xref
+  :after ivy
+
+  :commands
+  (ivy-xref-show-xrefs)
+
+  :config
+  (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
+
+;; ——
+
+(use-package hydra
+  :requires ivy
+
+  :commands
+  (ivy--actionp
+   ivy-done)
+
+  :bind
+  (:map ivy-minibuffer-map
+        ("C-o" . my/hydra-ivy))
+
+  :config
+  (defun my/hydra-ivy ()
+    "Select one of the available actions and call `ivy-done'."
+    (interactive)
+    (let* ((actions (ivy-state-action ivy-last)))
+
+      (if (null (ivy--actionp actions))
+          (ivy-done)
+        (funcall
+         (eval
+          `(defhydra my/hydra-ivy-read-action (:color teal :hint nil)
+             "\nAction %s(ivy-action-name)\n"
+
+             ,@(mapcar (lambda (x) (list (nth 0 x) `(progn (ivy-set-action ',(nth 1 x)) (ivy-done)) (nth 2 x))) (cdr actions))
+
+             ("<left>"     ivy-prev-action         :exit nil)
+             ("<right>"    ivy-next-action         :exit nil)
+             ("<prior>"    ivy-scroll-down-command :exit nil)
+             ("<next>"     ivy-scroll-up-command   :exit nil)
+             ("<C-prior>"  ivy-beginning-of-buffer :exit nil)
+             ("<C-next>"   ivy-end-of-buffer       :exit nil)
+             ("<return>"   ivy-done                :exit t)
+             ("<M-return>" ivy-call                :exit nil)
+             ("C-j"        ivy-alt-done            :exit nil)
+             ("C-M-j"      ivy-immediate-done      :exit nil)
+             ("<up>"       ivy-previous-line       :exit nil)
+             ("<down>"     ivy-next-line           :exit nil)
+             ("C-o"        nil                     :exit t)
+             ("<escape>"   nil                     :exit t)
+             ("C-g"        nil                     :exit t))))))))
 
 ;; ——
 

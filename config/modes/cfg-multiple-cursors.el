@@ -9,7 +9,6 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package multiple-cursors
-  :defer t
   :bind
   (("C-c C-e C-e" . mc/edit-lines)
    ("M-«"         . mc/mark-previous-like-this)

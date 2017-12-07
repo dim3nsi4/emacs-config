@@ -9,8 +9,6 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package ispell
-  :defer t
-
   :bind
   (("C-c C-s s" . my/cycle-ispell-languages))
 
@@ -33,7 +31,6 @@
 ;; ——
 
 (use-package flyspell
-  :defer t
   :diminish flyspell-mode
 
   :bind
@@ -42,14 +39,14 @@
         ("C-c C-s" . nil)
         ("C-c C-s b" . flyspell-buffer))
 
-  :init
-  (add-hook 'org-mode-hook        (lambda () (flyspell-mode)))
-  (add-hook 'c++-mode-hook        (lambda () (flyspell-prog-mode)))
-  (add-hook 'c-mode-hook          (lambda () (flyspell-prog-mode)))
-  (add-hook 'java-mode-hook       (lambda () (flyspell-prog-mode)))
-  (add-hook 'python-mode-hook     (lambda () (flyspell-prog-mode)))
-  (add-hook 'emacs-lisp-mode-hook (lambda () (flyspell-prog-mode)))
-  (add-hook 'latex-mode-hook      (lambda () (flyspell-mode)))
+  :hook
+  ((org-mode        . flyspell-mode)
+   (c++-mode        . flyspell-prog-mode)
+   (c-mode          . flyspell-prog-mode)
+   (java-mode       . flyspell-prog-mode)
+   (python-mode     . flyspell-prog-mode)
+   (emacs-lisp-mode . flyspell-prog-mode)
+   (latex-mode      . flyspell-mode))
 
   :config
   ;; Avoid printing messages for every word (it can be very slow)
@@ -66,7 +63,6 @@
 ;; ——
 
 (use-package flyspell-correct-ivy
-  :defer t
   :after flyspell
 
   :bind
@@ -75,10 +71,18 @@
 
 ;; ——
 
-(req-package hydra
-  :defer t
-  :after flyspell
-  :require flyspell
+(use-package hydra
+  :requires flyspell
+
+  :commands
+  (flyspell-mode-off
+   hydra--call-interactively-remap-maybe
+   hydra-default-pre
+   hydra-idle-message
+   hydra-keyboard-quit
+   hydra-set-transient-map
+   ispell-change-dictionary
+   ispell-check-version)
 
   :bind
   (:map flyspell-mode-map

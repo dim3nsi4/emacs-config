@@ -9,9 +9,8 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package diff-hl
-  :config
-  (progn
-    (add-hook 'dired-mode-hook #'diff-hl-dired-mode)))
+  :hook
+  (dired-mode . diff-hl-dired-mode))
 
 (provide 'cfg-diff-hl)
 

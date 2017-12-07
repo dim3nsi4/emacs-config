@@ -11,6 +11,15 @@
 (use-package perspeen
   :demand
 
+  :commands
+  (perspeen-mode
+   perspeen-tab-del)
+
+  :defines
+  (perspeen-use-tab
+   perspeen-mode-map
+   perspeen-keymap-prefix)
+
   :init
   (setq perspeen-keymap-prefix (kbd "C-c t"))
 
@@ -25,10 +34,29 @@
 
 ;; ——
 
-(req-package hydra
-  :defer t
-  :after perspeen
-  :require perspeen
+(use-package hydra
+  :requires perspeen
+
+  :defines
+  (perspeen-mode-map)
+
+  :commands
+  (hydra--call-interactively-remap-maybe
+   hydra-idle-message
+   hydra-keyboard-quit
+   hydra-default-pre
+   hydra-set-transient-map
+   perspeen-change-root-dir
+   perspeen-create-ws
+   perspeen-delete-ws
+   perspeen-goto-last-ws
+   perspeen-goto-ws
+   perspeen-next-ws
+   perspeen-previous-ws
+   perspeen-rename-ws
+   perspeen-tab-create-tab
+   perspeen-tab-prev
+   perspeen-ws-eshell)
 
   :bind
   (:map perspeen-mode-map
