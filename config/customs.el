@@ -26,15 +26,14 @@
      dired-sidebar dired-subtree dokuwiki dokuwiki-mode
      drag-stuff ensime expand-region eyebrowse flx
      flycheck-pos-tip flyspell-correct-ivy gnuplot gnuplot-mode
-     google-c-style gradle-mode groovy-mode helm help-fns+
-     helpful highlight-symbol hl-anything hydra image+ ivy
-     ivy-rich ivy-xref java-snippets lua-mode magithub
-     markdown-mode matlab-mode meghanada multiple-cursors org
-     org-bullets org-ref origami paradox pdf-tools popwin
-     rainbow-mode smartparens smex sort-words sqlup-mode
-     undo-tree use-package use-package-chords vimish-fold
-     volatile-highlights wgrep which-key whitespace-cleanup-mode
-     ztree zzz-to-char))))
+     google-c-style gradle-mode groovy-mode helm helpful
+     highlight-symbol hl-anything hydra image+ ivy ivy-rich
+     ivy-xref java-snippets lua-mode magithub markdown-mode
+     matlab-mode meghanada multiple-cursors org org-bullets
+     org-ref origami paradox pdf-tools popwin rainbow-mode
+     smartparens smex sort-words sqlup-mode undo-tree use-package
+     use-package-chords vimish-fold volatile-highlights wgrep
+     which-key whitespace-cleanup-mode ztree zzz-to-char))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
