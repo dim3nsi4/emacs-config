@@ -12,21 +12,22 @@
 (defun my/bell-function ()
   "Custom alarm bell to avoid unnecessary alarms event."
   (unless (memq this-command
-                '(isearch-abort
+                '(View-scroll-half-page-backward
+                  View-scroll-half-page-forward
                   abort-recursive-edit
+                  backward-char
+                  company-abort
+                  down
                   exit-minibuffer
+                  forward-char
+                  isearch-abort
                   keyboard-quit
                   mwheel-scroll
-                  down
-                  up
-                  View-scroll-half-page-forward
-                  View-scroll-half-page-backward
-                  scroll-down
-                  scroll-up
                   next-line
                   previous-line
-                  backward-char
-                  forward-char))
+                  scroll-down
+                  scroll-up
+                  up))
     (ding)))
 (setq ring-bell-function 'my/bell-function)
 
