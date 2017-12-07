@@ -10,8 +10,8 @@
 
 ;;; -*- no-byte-compile: t -*-
 
-;; Increase the garbage collector threshold
-(setq gc-cons-threshold 10000000)
+;; Temporarily increase the garbage collector threshold
+(setq gc-cons-threshold 100000000)
 
 (defvar emacs-d user-emacs-directory)
 
@@ -37,6 +37,7 @@
 (setq load-prefer-newer t)
 (require 'cfg-auto-compile)
 
+(require 'theme)
 (require 'functions)
 (require 'keys)
 (require 'startup)
@@ -57,6 +58,7 @@
 (require 'cfg-smartparens)
 (require 'cfg-projectile)
 (require 'cfg-meghanada)
+(require 'cfg-autodisass-java-bytecode)
 (require 'cfg-ivy)
 (require 'cfg-counsel)
 (require 'cfg-swiper)
@@ -83,8 +85,6 @@
 (require 'cfg-sql)
 (require 'cfg-latex)
 (require 'cfg-wgrep)
-(require 'cfg-all-the-icons)
-(require 'cfg-spaceline-all-the-icons)
 (require 'cfg-yasnippet)
 (require 'cfg-ztree)
 (require 'cfg-google-c-style)
@@ -92,12 +92,15 @@
 (require 'cfg-helpful)
 (require 'cfg-highlight-symbol)
 
-;; (require 'cfg-modalka)
 ;; (require 'cfg-beacon)
-;; (require 'cfg-neotree)
-;; (require 'cfg-which-key)
 ;; (require 'cfg-gradle)
+;; (require 'cfg-which-key)
+;; (require 'cfg-modalka)
+;; (require 'cfg-ensime)
 ;; (require 'cfg-purpose)
+
+(require 'cfg-all-the-icons)
+(require 'cfg-spaceline-all-the-icons)
 
 ;; (require 'cfg-hideshowvis)
 ;; (use-package dokuwiki)
