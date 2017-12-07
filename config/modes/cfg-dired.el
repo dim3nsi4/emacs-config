@@ -237,6 +237,18 @@
 
 ;; ——
 
+(use-package dired-du
+  :defer t
+  :after dired
+  ;; :init
+  ;; (add-hook 'dired-mode-hook #'dired-du-mode)
+  :config
+  (setq dired-du-bind-human-toggle t
+        dired-du-update-headers t
+        dired-du-size-format t))
+
+;; ——
+
 (use-package hl-anything
   :after dired-sidebar
   :requires dired-sidebar
