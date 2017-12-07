@@ -8,6 +8,21 @@
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
 
+(defun my/update-all-autoloads ()
+  (interactive)
+  (cd emacs-d)
+  (let ((generated-autoload-file
+         (expand-file-name "loaddefs.el")))
+    (when (not (file-exists-p generated-autoload-file))
+      (with-current-buffer (find-file-noselect
+                            generated-autoload-file)
+        (insert ";;")
+        (save-buffer)))
+    (mapcar #'update-directory-autoloads
+            '("" "config" "config/modes"))))
+
+;; ——
+
 ;; Byte compile the current file
 (defun my/byte-compile-this-file ()
   "Compile the file the buffer is visiting."
@@ -110,7 +125,7 @@ If AGAIN is true, use the same mode as the last call."
   (interactive "p")
   (my/toggle-comment-line (- n) (eq last-command 'my/go-up-and-comment-line)))
 
-;; --
+;; ——
 
 (provide 'functions)
 
