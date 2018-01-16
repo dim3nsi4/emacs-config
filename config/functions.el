@@ -54,6 +54,7 @@
      (list (line-beginning-position)
            (line-beginning-position 2)))))
 
+;; ——
 
 (defvar my/comment-line-last-col nil)
 
@@ -124,6 +125,39 @@ If AGAIN is true, use the same mode as the last call."
   "Toggle a comment on current N line(s) (disable line by line)."
   (interactive "p")
   (my/toggle-comment-line (- n) (eq last-command 'my/go-up-and-comment-line)))
+
+;; ——
+
+(defun sort-words (reverse beg end)
+  "Sort words alphabetically in the selected region.
+
+   If prefixed with negative \\[universal-argument], sorts in REVERSE.
+   The region is delimited by BEG and END.
+
+   The variable `sort-fold-case' determines whether alphabetic case
+   affects the sort order.
+
+   See `sort-regexp-fields'."
+  (interactive "*P\nr")
+  (sort-regexp-fields reverse "\\w+" "\\&" beg end))
+
+(defun sort-symbols (reverse beg end)
+  "Sort symbols alphabetically in the selected region .
+
+   If prefixed with negative \\[universal-argument], sorts in REVERSE.
+   The region is delimited by BEG and END.
+
+   See `sort-words'."
+  (interactive "*P\nr")
+  (sort-regexp-fields reverse "\\(\\sw\\|\\s_\\)+" "\\&" beg end))
+
+(defun reverse-words (beg end)
+  "Reverse the order of words in region delimited by BEG and END."
+  (interactive "*r")
+  (apply 'insert
+   (reverse
+    (split-string
+     (delete-and-extract-region beg end) "\\b"))))
 
 ;; ——
 
