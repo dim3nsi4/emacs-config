@@ -37,7 +37,7 @@
         org-src-fontify-natively t
         org-startup-folded nil
         org-table-convert-region-max-lines 9999
-        org-table-automatic-realign nil
+        org-table-automatic-realign t
         org-image-actual-width nil
         org-highlight-latex-and-related '(latex script entities)
         org-export-with-sub-superscripts (quote {})
