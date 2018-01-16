@@ -25,7 +25,7 @@
   (("<f7>"   . my/dired-default-directory)
    ("<S-f7>" . dired)
    :map dired-mode-map
-        ("<mouse-2>"    . my/dired-find-file)
+        ;;; ("<mouse-2>"    . my/dired-find-file)
         ("<C-down>"     . my/dired-find-file)
         ("RET"          . my/dired-find-file)
         ("°"            . dired-diff)
@@ -178,10 +178,11 @@
 
   :bind
   (:map dired-mode-map
-        ("TAB" . my/dwim-toggle-or-open))
+        ;;; ("<mouse-2>" . my/dired-dwim-toggle-or-open)
+        ("TAB"       . my/dired-dwim-toggle-or-open))
 
   :config
-  (defun my/dwim-toggle-or-open ()
+  (defun my/dired-dwim-toggle-or-open ()
     "Toggle subtree or open the file."
     (interactive)
     (if (file-directory-p (dired-get-file-for-visit))
