@@ -72,7 +72,7 @@
 ;; ——
 
 (use-package hydra
-  :requires flyspell
+  :after flyspell
 
   :commands
   (flyspell-mode-off

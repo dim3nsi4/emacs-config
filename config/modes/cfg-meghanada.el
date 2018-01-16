@@ -43,7 +43,7 @@
 ;; ——
 
 (use-package hydra
-  :requires meghanada
+  :after meghanada
 
   :commands
   (hydra--call-interactively-remap-maybe
