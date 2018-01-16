@@ -14,12 +14,23 @@
   :commands
   (global-flycheck-mode)
 
+  :hook
+  (python-mode . my/flycheck-python-hook)
+
   :init
   (setq flycheck-keymap-prefix (kbd "C-c s"))
 
   :config
   ;; (setq flycheck-temp-prefix "/tmp/.flycheck")
   (setq flycheck-emacs-lisp-load-path 'inherit)
+
+  (defun my/flycheck-python-hook ()
+    "Custom hook for flycheck in python mode."
+    (interactive)
+    (setq flycheck-checker 'python-pylint
+          flycheck-checker-error-threshold 900
+          flycheck-pylintrc ".pylintrc"))
+
   (global-flycheck-mode t))
 
 ;; ——
