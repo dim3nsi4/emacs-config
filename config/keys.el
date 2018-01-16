@@ -27,6 +27,7 @@
 (global-set-key (kbd "<S-f6>") 'align-repeat)
 (global-set-key (kbd "<f7>") (lambda () (interactive) (dired default-directory)))
 (global-set-key (kbd "<S-f7>") 'dired)
+(global-set-key (kbd "<f8>") 'align)
 (global-set-key (kbd "<f9>") 'imenu)
 (global-set-key (kbd "<f12>") 'package-list-packages)
 (global-set-key (kbd "<S-f12>") 'package-list-packages-no-fetch)
@@ -36,6 +37,7 @@
 
 (global-set-key (kbd "M-SPC") 'dabbrev-expand) ; swapped with just-one-space "M-/"
 (global-set-key (kbd "M-/") 'just-one-space)   ; swapped with dabbrev-expand "M-SPC"
+(global-set-key (kbd "C-/") 'delete-horizontal-space)
 
 (global-set-key (kbd "<mouse-3>") 'ignore)
 (global-set-key (kbd "<S-mouse-3>") 'mouse-appearance-menu)
