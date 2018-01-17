@@ -16,8 +16,9 @@
    which-key-mode)
 
   :config
-  (setq which-key-idle-delay 0.5)
-  (which-key-setup-side-window-bottom)
+  (setq which-key-idle-delay 1.0
+        which-key-sort-order 'which-key-description-order)
+  (which-key-setup-side-window-right)
   (which-key-mode))
 
 (provide 'cfg-which-key)
