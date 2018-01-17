@@ -41,7 +41,7 @@
 
   (setq ivy-height 11
         ivy-fixed-height-minibuffer t
-        ivy-use-selectable-prompt t
+        ivy-use-selectable-prompt nil
         ivy-wrap t
         ivy-action-wrap t
         ivy-use-virtual-buffers t
