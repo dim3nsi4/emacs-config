@@ -91,10 +91,10 @@
 (require 'cfg-diff-hl)
 (require 'cfg-helpful)
 (require 'cfg-highlight-symbol)
+(require 'cfg-which-key)
 
 ;; (require 'cfg-beacon)
 ;; (require 'cfg-gradle)
-;; (require 'cfg-which-key)
 ;; (require 'cfg-modalka)
 ;; (require 'cfg-ensime)
 ;; (require 'cfg-purpose)
