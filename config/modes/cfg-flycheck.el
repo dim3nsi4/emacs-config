@@ -36,7 +36,7 @@
 ;; ——
 
 (use-package hydra
-  :requires flycheck
+  :after flycheck
 
   :commands
   (flycheck-buffer

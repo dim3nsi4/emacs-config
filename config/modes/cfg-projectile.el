@@ -43,7 +43,7 @@
 ;; ——
 
 (use-package ivy
-  :requires projectile
+  :after projectile
 
   :config
   (setq projectile-completion-system 'ivy))
@@ -52,7 +52,6 @@
 
 (use-package hydra
   :after projectile
-  :requires projectile
 
   :commands
   (hydra--call-interactively-remap-maybe

@@ -35,7 +35,7 @@
 ;; ——
 
 (use-package hydra
-  :requires perspeen
+  :after perspeen
 
   :defines
   (perspeen-mode-map)

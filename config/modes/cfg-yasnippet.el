@@ -35,7 +35,7 @@
   (yas-reload-all))
 
 (use-package company
-  :requires yasnippet
+  :after yasnippet
 
   :commands
   (company-complete-common

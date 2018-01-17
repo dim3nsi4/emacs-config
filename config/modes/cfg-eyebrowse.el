@@ -34,7 +34,7 @@
   (eyebrowse-mode t))
 
 (use-package hydra
-  :requires eyebrowse
+  :after eyebrowse
 
   :bind
   (:map eyebrowse-mode-map

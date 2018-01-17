@@ -81,7 +81,7 @@
 ;; ——
 
 (use-package hydra
-  :requires ivy
+  :after ivy
 
   :commands
   (ivy--actionp

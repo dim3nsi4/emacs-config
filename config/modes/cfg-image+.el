@@ -9,7 +9,7 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package image+
-  :requires image
+  :after image
 
   :defines
   (image-mode-map)
@@ -37,7 +37,7 @@
 ;; ——
 
 (use-package hydra
-  :requires (image image+)
+  :after (image image+)
 
   :defines
   (image-mode-map)
