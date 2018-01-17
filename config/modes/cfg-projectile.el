@@ -14,11 +14,11 @@
   :commands
   (projectile-mode)
 
-  :init
-  (setq projectile-keymap-prefix (kbd "C-c p"))
+  :bind-keymap
+  (("C-c p" . projectile-command-map))
 
   :config
-  (dolist (item '(".meghanada" "__pycache__"))
+  (dolist (item '(".meghanada" "__pycache__" "target"))
     (add-to-list 'projectile-globally-ignored-directories item))
   (dolist (item '("GTAGS" "GRTAGS" "GPATH" "*.elc" "*.class"))
     (add-to-list 'projectile-globally-ignored-files item))
