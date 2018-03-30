@@ -68,7 +68,7 @@
  '(font-lock-regexp-grouping-backslash ((t (:inherit font-lock-regexp-grouping-construct))))
  '(font-lock-regexp-grouping-construct ((t nil)))
  '(font-lock-string-face ((t (:foreground "DarkOrange4"))))
- '(font-lock-type-face ((t (:foreground "dark slate gray" :weight semi-bold))))
+ '(font-lock-type-face ((t (:foreground "grey43" :weight semi-bold))))
  '(font-lock-variable-name-face ((t (:foreground "black"))))
  '(fringe ((t (:background "grey95"))))
  '(helm-M-x-key ((t (:foreground "purple3" :underline t))))
