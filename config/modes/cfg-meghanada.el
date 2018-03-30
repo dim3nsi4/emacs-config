@@ -23,6 +23,7 @@
         ("C-S-f" . meghanada-code-beautify))
 
   :config
+  (setq meghanada-task-buffer-auto-scroll nil)
   (meghanada-eldoc-enable))
 
 ;; ——
@@ -105,7 +106,7 @@ Meghanada
     ("k" meghanada-kill-running-process)
     ("s" meghanada-switch-testcase)
     ("l" meghanada-local-variable)
-    ("y" meghanada-type-info)
+    ("y" meghanada-typeinfo)
     ("r" meghanada-reference)
 
     ("S" meghanada-server-start)
