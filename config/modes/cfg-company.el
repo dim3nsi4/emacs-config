@@ -28,34 +28,7 @@
         company-tooltip-align-annotations nil
         company-dabbrev-downcase nil)
   ;; Remove dabbrev from company's backends
-  (setq company-backends (delete 'company-dabbrev company-backends))
-
-  ;; Candidate selection using digits
-  (defun my/company-number ()
-    "Forward to `company-complete-number'.
-
-     Unless the number is potentially part of the candidate.
-     In that case, insert the number."
-    (interactive)
-    (let* ((k (this-command-keys))
-           (re (concat "^" company-prefix k)))
-      (if (cl-find-if (lambda (s) (string-match re s))
-                      company-candidates)
-          (self-insert-command 1)
-        (company-complete-number (string-to-number k)))))
-
-  ;; Binds digits to their corresponding candidate, unbinds RET and binds SPC to
-  ;; close company popup.
-  (let ((map company-active-map))
-    (mapc
-     (lambda (x)
-       (define-key map (format "%d" x) 'my/company-number))
-     (number-sequence 0 9))
-    (define-key map " " (lambda ()
-                          (interactive)
-                          (company-abort)
-                          (self-insert-command 1)))
-    (define-key map (kbd "<return>") nil)))
+  (setq company-backends (delete 'company-dabbrev company-backends)))
 
 ;; ——
 
