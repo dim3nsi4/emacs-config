@@ -23,9 +23,12 @@
 (setq package-user-dir
       (expand-file-name "elpa" emacs-d))
 
-(add-to-list 'load-path (expand-file-name "lisp/" emacs-d))
 (add-to-list 'load-path (expand-file-name "config/" emacs-d))
 (add-to-list 'load-path (expand-file-name "config/modes/" emacs-d))
+
+(add-to-list 'load-path (expand-file-name "lisp/" emacs-d))
+(let ((default-directory (expand-file-name "lisp/" emacs-d)))
+  (normal-top-level-add-subdirs-to-load-path))
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
