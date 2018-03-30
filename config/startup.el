@@ -55,7 +55,7 @@
 (setq-default fill-column 100)
 
 ;; To avoid dead circumflex issue
-(load-library "iso-transl")
+;; (load-library "iso-transl")
 
 ;; Change all prompts to y or n
 (fset 'yes-or-no-p 'y-or-n-p)
