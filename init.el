@@ -96,6 +96,7 @@
 (require 'cfg-helpful)
 (require 'cfg-highlight-symbol)
 (require 'cfg-which-key)
+(require 'cfg-pipenv)
 
 ;; (require 'cfg-beacon)
 ;; (require 'cfg-gradle)
