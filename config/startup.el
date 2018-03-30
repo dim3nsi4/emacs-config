@@ -52,7 +52,7 @@
 (load-theme 'clearview-light t)
 
 ;; Set the auto-fill column
-(setq-default fill-column 80)
+(setq-default fill-column 100)
 
 ;; To avoid dead circumflex issue
 (load-library "iso-transl")
