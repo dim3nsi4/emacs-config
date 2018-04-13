@@ -48,9 +48,6 @@
 (add-to-list 'default-frame-alist '(top    . 0))
 (add-to-list 'default-frame-alist '(left   . 0))
 
-;; Load the theme
-(load-theme 'clearview-light t)
-
 ;; Set the auto-fill column
 (setq-default fill-column 100)
 
