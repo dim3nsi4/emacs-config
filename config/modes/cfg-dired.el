@@ -178,7 +178,7 @@
 
   :bind
   (:map dired-mode-map
-        ;;; ("<mouse-2>" . my/dired-dwim-toggle-or-open)
+        ("<mouse-2>" . my/dired-dwim-toggle-or-open)
         ("TAB"       . my/dired-dwim-toggle-or-open))
 
   :config
@@ -189,7 +189,7 @@
         (progn
           (dired-subtree-toggle)
           (revert-buffer))
-      (dired-find-file)))
+      (dired-open-file)))
   (setq dired-subtree-use-backgrounds nil))
 
 ;; ——
