@@ -69,28 +69,41 @@
           "%latex -interaction nonstopmode -output-directory %o %f"
           "%latex -interaction nonstopmode -output-directory %o %f"))
 
-  ;; Fontify broken links
+  ;; Fontify broken links (require org 9.0.0 or above)
   (org-link-set-parameters
    "file"
    :face (lambda (path) (if (file-exists-p path) 'org-link 'org-warning)))
 
   ;; Default packages
-  (setq org-latex-default-packages-alist '(("" "graphicx" t)
-                                           ;; ("AUTO" "inputenc" t)
-                                           ;; ("T1" "fontenc" t)
-                                           ;; ("" "fixltx2e" nil)
-                                           ("" "longtable" nil)
-                                           ("" "float" nil)
-                                           ("" "wrapfig" nil)
-                                           ("" "rotating" nil)
-                                           ("normalem" "ulem" t)
-                                           ("" "amsmath" t)
-                                           ;; ("" "textcomp" t)
-                                           ("" "marvosym" t)
-                                           ("" "wasysym" t)
-                                           ("" "amssymb" t)
-                                           ("hidelinks" "hyperref" nil)
-                                           "\\tolerance=1000"))
+  (setq org-latex-default-packages-alist '(("AUTO"     "inputenc"  t ("pdflatex")) ;; Accept different input encodings
+                                           ("T1"       "fontenc"   t ("pdflatex")) ;; Standard package for selecting font encodings
+                                           (""         "graphicx"  t)              ;; Enhanced support for graphics
+                                           (""         "grffile"   t)              ;; Extended file name support for graphics
+                                           (""         "longtable" nil)            ;; Allow tables to flow over page boundaries
+                                           (""         "wrapfig"   nil)            ;; Produces figures which text can flow around
+                                           (""         "rotating"  nil)            ;; Rotation tools, including rotated full-page floats
+                                           (""         "float"     nil)            ;; Improved interface for floating objects
+                                           ("normalem" "ulem"      t)              ;; Package for underlining
+                                           (""         "amsmath"   t)              ;; AMS mathematical facilities for LaTeX
+                                           (""         "amsfonts"  t)              ;; TeX fonts from the American Mathematical Society
+                                           (""         "marvosym"  t)              ;; Martin Vogel's Symbols (marvosym) font
+                                           (""         "wasysym"   t)              ;; LaTeX support file to use the WASY2 fonts
+                                           (""         "hyperref"  nil)))          ;; Extensive support for hypertext in LaTeX
+
+  ;; Add custom classes
+  (add-to-list 'org-latex-classes '("new-aiaa" "\\documentclass[11pt]{new-aiaa}"
+                                    ("\\section{%s}"       . "\\section*{%s}")
+                                    ("\\subsection{%s}"    . "\\subsection*{%s}")
+                                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                                    ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+                                    ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+
+  ;; Files association
+  (setq org-file-apps (append '(("\\.png\\'"  . "feh -g +0+0 %s")) org-file-apps))
+  (setq org-file-apps (append '(("\\.jpg\\'"  . "feh -g +0+0 %s")) org-file-apps))
+  (setq org-file-apps (append '(("\\.jpeg\\'" . "feh -g +0+0 %s")) org-file-apps))
+  (setq org-file-apps (append '(("\\.tif\\'"  . "feh -g +0+0 %s")) org-file-apps))
+  (setq org-file-apps (append '(("\\.tiff\\'" . "feh -g +0+0 %s")) org-file-apps))
 
   (setq org-emphasis-alist (quote (("*" bold "<b>" "</b>")
                                    ("/" italic "<i>" "</i>")
