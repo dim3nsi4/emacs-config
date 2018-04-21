@@ -91,12 +91,14 @@
                                            (""         "hyperref"  nil)))          ;; Extensive support for hypertext in LaTeX
 
   ;; Add custom classes
-  (add-to-list 'org-latex-classes '("new-aiaa" "\\documentclass[11pt]{new-aiaa}"
-                                    ("\\section{%s}"       . "\\section*{%s}")
-                                    ("\\subsection{%s}"    . "\\subsection*{%s}")
-                                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                                    ("\\paragraph{%s}"     . "\\paragraph*{%s}")
-                                    ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+  (with-eval-after-load 'ox-latex
+    (add-to-list 'org-latex-classes '("new-aiaa"
+                                      "\\documentclass[11pt]{new-aiaa}"
+                                      ("\\section{%s}"       . "\\section*{%s}")
+                                      ("\\subsection{%s}"    . "\\subsection*{%s}")
+                                      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                                      ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+                                      ("\\subparagraph{%s}"  . "\\subparagraph*{%s}"))))
 
   ;; Files association
   (setq org-file-apps (append '(("\\.png\\'"  . "feh -g +0+0 %s")) org-file-apps))
