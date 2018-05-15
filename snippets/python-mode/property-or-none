@@ -1,0 +1,24 @@
+# -*- mode: snippet -*-
+# name: property-or-none
+# key: property-or-none
+# expand-env: ((yas-indent-line 'fixed))
+# --
+# ————— Property: $1
+
+@property
+def ${1:variable}(self) -> ${2:type}:
+    """
+    ${3:Doc string}
+    """
+    return self._$1
+
+@$1.setter
+def $1(self, $1: $2) -> None:
+    assert $1 is None \
+        or isinstance($1, $2)
+    self._$1 = $1
+
+@$1.deleter
+def $1(self) -> None:
+    del self._$1
+$0

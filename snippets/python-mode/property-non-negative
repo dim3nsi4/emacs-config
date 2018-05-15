@@ -1,0 +1,27 @@
+# -*- mode: snippet -*-
+# name: property-non-negative
+# key: property-non-negative
+# expand-env: ((yas-indent-line 'fixed))
+# --
+# ————— Property: $1
+
+@property
+def ${1:variable}(self) -> ${2:type}:
+    """
+    ${3:Doc string}
+    """
+    return self._$1
+
+@$1.setter
+def $1(self, $1: $2) -> None:
+    assert isinstance($1, $2)
+
+    if $1 < 0:
+        raise ValueError("Expecting a non-negative value for $1")
+    else:
+        self._$1 = $1
+
+@$1.deleter
+def $1(self) -> None:
+    del self._$1
+$0
