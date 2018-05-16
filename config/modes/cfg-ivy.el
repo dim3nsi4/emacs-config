@@ -90,6 +90,14 @@
 
 ;; ——
 
+(use-package ivy-dired-history
+  :after (ivy savehist)
+
+  :config
+  (add-to-list 'savehist-additional-variables 'ivy-dired-history-variable))
+
+;; ——
+
 (use-package hydra
   :after ivy
 
