@@ -126,11 +126,13 @@
 (use-package org-ref
   :after org
   :defer t
-  :defines (reftex-default-bibliography
-            org-ref-bibliography-notes
-            org-ref-default-bibliography
-            org-ref-pdf-directory
-            bibtex-completion-pdf-open-function)
+
+  :defines
+  (reftex-default-bibliography
+   org-ref-bibliography-notes
+   org-ref-default-bibliography
+   org-ref-pdf-directory
+   bibtex-completion-pdf-open-function)
 
   :init
   (setq org-ref-completion-library 'org-ref-ivy-cite)
