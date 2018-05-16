@@ -80,6 +80,16 @@
 
 ;; ——
 
+(use-package ivy-yasnippet
+  :after (ivy yasnippet)
+
+  :bind
+  (("C-c C-y"     . nil)
+   ("M-n"         . ivy-yasnippet)
+   ("C-c C-y C-y" . ivy-yasnippet)))
+
+;; ——
+
 (use-package hydra
   :after ivy
 
