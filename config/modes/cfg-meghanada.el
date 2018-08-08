@@ -9,8 +9,8 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package meghanada
-  :hook
-  (java-mode . meghanada-mode)
+  ;; :hook
+  ;; (java-mode . meghanada-mode)
 
   :init
   (setq meghanada-mode-key-prefix (kbd "C-c C-c"))
