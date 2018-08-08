@@ -13,7 +13,8 @@
   (("C-x g" . magit-status))
 
   :config
-  (setq magit-item-highlight-face 'bold))
+  (setq magit-item-highlight-face 'bold
+        magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1))
 
 ;; ——
 
