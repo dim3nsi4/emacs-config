@@ -35,6 +35,11 @@
   (interactive "r\nsAlign regexp: ")
   (align-regexp start end (concat "\\(\\s-*\\)" regexp) 1 1 t))
 
+(defun align-decimal (start end)
+    "Between START and END, align a table of numbers on (optional) decimal points."
+    (interactive "r")
+    (align-regexp start end "\\([:space:]*[+-]?[0-9]+\\)\\.?\\([0-9]*\\(?:[eE][+-][0-9]+\\)?\\)" -1 0 t))
+
 
 ;; M-w saves the current line if no region is selected
 (defadvice kill-ring-save (before slick-copy activate compile)
