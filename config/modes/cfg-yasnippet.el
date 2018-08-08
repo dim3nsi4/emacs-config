@@ -32,7 +32,9 @@
   (prog-mode . yas-minor-mode)
 
   :config
-  (yas-global-mode 1))
+  (yas-reload-all))
+
+;; ——
 
 (use-package company
   :after yasnippet
