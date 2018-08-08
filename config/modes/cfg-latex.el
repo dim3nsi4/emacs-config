@@ -8,51 +8,27 @@
 ;;; Code:
 ;;; ————————————————————————————————————————————————————————
 
-(use-package latex
+(use-package tex
   :defer t
-  :commands (font-latex-add-keywords)
-
-  :config
-  ;; Changes the default fontification for the given keywords
-  (eval-after-load "font-latex"
-    '(font-latex-add-keywords
-      '(("newenvironment" "*{[[")
-        ("renewenvironment" "*{[[")
-        ("newcommand" "*|{\\[[")
-        ("renewcommand" "*|{\\[[")
-        ("providecommand" "*|{\\[[")
-        ("fbox" "")
-        ("mbox" "")
-        ("sbox" ""))
-      'function)))
-
-;; ——
-
-(use-package auctex
-  :defines
-  (TeX-auto-save
-   TeX-parse-self
-   reftex-plug-into-AUCTeX)
+  :ensure auctex
 
   :hook
-  ((LaTeX-mode . visual-line-mode)
-   (LaTeX-mode . flyspell-mode)
+  ((LaTeX-mode . flyspell-mode)
    (LaTeX-mode . LaTeX-math-mode)
-   (LaTeX-mode . turn-on-reftex))
+   (LaTeX-mode . reftex-mode))
 
   :config
   (setq TeX-auto-save t
         TeX-parse-self t
         reftex-plug-into-AUCTeX t)
-  (setq-default TeX-master nil))
+
+  (setq-default TeX-master t
+                TeX-PDF-mode t
+                TeX-engine 'luatex))
 
 ;; ——
 
-(use-package cdlatex
-  :hook
-  ((LaTeX-mode-hook . turn-on-cdlatex)
-   (latex-mode-hook . turn-on-cdlatex)
-   (org-mode-hook   . turn-on-org-cdlatex)))
+(use-package cdlatex)
 
 ;; ——
 
