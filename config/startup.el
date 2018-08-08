@@ -10,6 +10,7 @@
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
+(auto-fill-mode -1)
 (cua-selection-mode +1)
 (which-function-mode +1)
 (global-auto-revert-mode +1)
@@ -19,6 +20,7 @@
 
 (setq-default truncate-lines t
               indent-tabs-mode nil
+              global-visual-line-mode t
               show-trailing-whitespace t)
 
 (setq kill-whole-line t
