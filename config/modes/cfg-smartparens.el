@@ -13,9 +13,11 @@
   :diminish smartparens-mode
 
   :hook
-  (emacs-lisp-mode . smartparens-mode)
-  (python-mode     . smartparens-mode)
-  (java-mode       . smartparens-mode)
+  ((emacs-lisp-mode . smartparens-mode)
+   (python-mode     . smartparens-mode)
+   (java-mode       . smartparens-mode)
+   (latex-mode      . smartparens-mode)
+   (LaTeX-mode      . smartparens-mode))
 
   :config
   (show-smartparens-global-mode +1))
