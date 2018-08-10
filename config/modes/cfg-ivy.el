@@ -10,7 +10,7 @@
 
 (use-package ivy
   :demand
-  :diminish ivy-mode
+  :diminish
 
   :commands
   (ivy-mode)
