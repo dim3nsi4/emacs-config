@@ -58,7 +58,7 @@
 (add-to-list 'default-frame-alist '(left   . 0))
 
 ;; Set the auto-fill column
-(setq-default fill-column 100)
+(setq-default fill-column 80)
 
 ;; To avoid dead circumflex issue
 ;; (load-library "iso-transl")
