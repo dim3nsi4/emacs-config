@@ -12,11 +12,11 @@
 
 ;; ——
 
-(use-package all-the-icons-dired
-  :after (:any dired dired-sidebar)
-
-  :hook
-  ((dired-mode . all-the-icons-dired-mode)))
+;; (use-package all-the-icons-dired
+;;   :after (:any dired dired-sidebar)
+;;
+;;   :hook
+;;   ((dired-mode . all-the-icons-dired-mode)))
 
 ;; ——
 
