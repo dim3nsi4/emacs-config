@@ -105,7 +105,7 @@
 ;; (require 'cfg-purpose)
 
 (require 'cfg-all-the-icons)
-(require 'cfg-spaceline-all-the-icons)
+;; (require 'cfg-spaceline-all-the-icons)
 
 ;; (require 'cfg-hideshowvis)
 ;; (use-package dokuwiki)
