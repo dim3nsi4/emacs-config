@@ -9,6 +9,8 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package highlight-symbol
+  :diminish
+
   :hook
   ((java-mode       . highlight-symbol-mode)
    (emacs-lisp-mode . highlight-symbol-mode)

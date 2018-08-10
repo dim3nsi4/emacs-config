@@ -9,6 +9,8 @@
 ;;; ————————————————————————————————————————————————————————
 
 (use-package dired
+  :diminish
+
   :commands
   (dired-dwim-target-directory
    dired-get-file-for-visit
@@ -111,6 +113,7 @@
 
 (use-package dired-rsync
   :after dired
+  :diminish
 
   :bind
   (:map dired-mode-map
@@ -120,6 +123,7 @@
 
 (use-package dired-filter
   :after dired
+  :diminish
 
   :config
   (setq dired-filter-inherit-filter-stack t)
@@ -129,6 +133,7 @@
 
 (use-package dired-narrow
   :after dired
+  :diminish
 
   :bind
   (:map dired-mode-map
@@ -142,7 +147,8 @@
 ;; ——
 
 (use-package dired-collapse
-  :after dired)
+  :after dired
+  :diminish)
   ;; :commands (dired-collapse-mode)
   ;; :init
   ;; (add-hook 'dired-mode-hook #'dired-collapse-mode))
@@ -151,6 +157,7 @@
 
 (use-package dired-subtree
   :after (:any dired dired-sidebar)
+  :diminish
 
   :commands
   (dired-subtree-toggle)
@@ -174,11 +181,14 @@
 ;; ——
 
 (use-package dired-avfs
-  :after dired)
+  :after dired
+  :diminish)
 
 ;; ——
 
 (use-package dired-sidebar
+  :diminish
+
   :bind
   (("<f10>" . dired-sidebar-toggle-sidebar))
 
@@ -220,8 +230,11 @@
 (use-package dired-du
   :defer t
   :after dired
+  :diminish
+
   ;; :init
   ;; (add-hook 'dired-mode-hook #'dired-du-mode)
+
   :config
   (setq dired-du-bind-human-toggle t
         dired-du-update-headers t

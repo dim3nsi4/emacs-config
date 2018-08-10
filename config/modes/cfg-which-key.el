@@ -10,6 +10,7 @@
 
 (use-package which-key
   :demand
+  :diminish
 
   :commands
   (which-key-setup-side-window-bottom

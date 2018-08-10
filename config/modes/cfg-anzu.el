@@ -10,6 +10,7 @@
 
 (use-package anzu
   :demand
+  :diminish
 
   :commands
   (global-anzu-mode)
