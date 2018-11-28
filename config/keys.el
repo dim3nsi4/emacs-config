@@ -24,7 +24,7 @@
 (global-set-key (kbd "<f5>") 'query-replace)
 (global-set-key (kbd "<S-f5>") 'query-replace-regexp)
 (global-set-key (kbd "<f6>") 'align-regexp)
-(global-set-key (kbd "<S-f6>") 'align-repeat)
+(global-set-key (kbd "<S-f6>") 'my/align-repeat)
 (global-set-key (kbd "<f7>") (lambda () (interactive) (dired default-directory)))
 (global-set-key (kbd "<S-f7>") 'dired)
 (global-set-key (kbd "<f8>") 'align)

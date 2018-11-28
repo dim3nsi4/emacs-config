@@ -34,7 +34,7 @@
    ("z"   . undo)
    ("%"   . er/contract-region)
    ("="   . er/expand-region)
-   ("w"   . kill-ring-save)
+   ("w"   . my/kill-ring-save)
    ("k"   . kill-line)
    ("«"   . mc/mark-previous-like-this)
    ("»"   . mc/mark-next-like-this)

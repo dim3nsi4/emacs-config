@@ -30,19 +30,19 @@
   (byte-compile-file (expand-file-name buffer-file-name)))
 
 
-(defun align-repeat (start end regexp)
+(defun my/align-repeat (start end regexp)
   "Between START and END, repeat alignment with respect to the given regular expression REGEXP."
   (interactive "r\nsAlign regexp: ")
   (align-regexp start end (concat "\\(\\s-*\\)" regexp) 1 1 t))
 
-(defun align-decimal (start end)
+(defun my/align-decimal (start end)
     "Between START and END, align a table of numbers on (optional) decimal points."
     (interactive "r")
     (align-regexp start end "\\([:space:]*[+-]?[0-9]+\\)\\.?\\([0-9]*\\(?:[eE][+-][0-9]+\\)?\\)" -1 0 t))
 
 
 ;; M-w saves the current line if no region is selected
-(defadvice kill-ring-save (before slick-copy activate compile)
+(defadvice my/kill-ring-save (before slick-copy activate compile)
   "When called interactively with no active region, copy a single line instead."
   (interactive
    (if mark-active (list (region-beginning) (region-end))
@@ -52,7 +52,7 @@
 
 
 ;; C-w deletes and saves the current line if no region is selected
-(defadvice kill-region (before slick-cut activate compile)
+(defadvice my/kill-region (before slick-cut activate compile)
   "When called interactively with no active region, kill a single line instead."
   (interactive
    (if mark-active (list (region-beginning) (region-end))
@@ -133,7 +133,7 @@ If AGAIN is true, use the same mode as the last call."
 
 ;; ——
 
-(defun sort-words (reverse beg end)
+(defun my/sort-words (reverse beg end)
   "Sort words alphabetically in the selected region.
 
    If prefixed with negative \\[universal-argument], sorts in REVERSE.
@@ -146,17 +146,17 @@ If AGAIN is true, use the same mode as the last call."
   (interactive "*P\nr")
   (sort-regexp-fields reverse "\\w+" "\\&" beg end))
 
-(defun sort-symbols (reverse beg end)
+(defun my/sort-symbols (reverse beg end)
   "Sort symbols alphabetically in the selected region .
 
    If prefixed with negative \\[universal-argument], sorts in REVERSE.
    The region is delimited by BEG and END.
 
-   See `sort-words'."
+   See `my/sort-words'."
   (interactive "*P\nr")
   (sort-regexp-fields reverse "\\(\\sw\\|\\s_\\)+" "\\&" beg end))
 
-(defun reverse-words (beg end)
+(defun my/reverse-words (beg end)
   "Reverse the order of words in region delimited by BEG and END."
   (interactive "*r")
   (apply 'insert
