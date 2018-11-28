@@ -166,6 +166,15 @@ If AGAIN is true, use the same mode as the last call."
 
 ;; ——
 
+(defun my/xml-formatter ()
+  "Format the region delimited by BEG and END using xmllint."
+  (interactive)
+  (save-excursion
+    (catch 'catcher
+      (shell-command-on-region (point-min) (point-max) "xmllint --format -" (buffer-name) t))
+    (nxml-mode)
+    (indent-region (point-min) (point-max))))
+
 (provide 'functions)
 
 ;;; ————————————————————————————————————————————————————————
