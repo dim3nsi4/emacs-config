@@ -59,6 +59,11 @@
                                            "\\|"
                                            "\\(fn:[-_[:word:]]+\\)\\)"))
 
+  ;; Command: align all tables
+  (defun my/org-align-all-tables ()
+    (interactive)
+    (org-table-map-tables 'org-table-align))
+
   ;; Default LaTeX compiler
   (setq org-latex-compiler "lualatex")
 
@@ -118,7 +123,6 @@
                                                            (gnuplot    . t)
                                                            (python     . t)
                                                            (latex      . t)
-                                                           (sh         . t)
                                                            (sqlite     . t))))
 
 ;; ——
