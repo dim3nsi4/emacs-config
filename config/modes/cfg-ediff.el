@@ -18,7 +18,8 @@
 
   :config
   (setq ediff-window-setup-function 'ediff-setup-windows-plain
-        ediff-split-window-function 'split-window-horizontally)
+        ediff-split-window-function 'split-window-horizontally
+        ediff-ignore-similar-regions t)
 
   ;; Restore window configuration after ediff
   (defvar my/ediff-bwin-config nil "Window configuration before ediff.")
