@@ -156,7 +156,7 @@
  '(show-paren-mismatch ((t (:background "orange red" :foreground "white smoke" :weight bold))))
  '(spaceline-highlight-face ((t (:inherit mode-line :foreground "Black" :background "Gray95" :weight bold))))
  '(tooltip ((t (:inherit variable-pitch :background "gray98" :foreground "black"))))
- '(trailing-whitespace ((t (:underline (:color "tomato" :style wave)))))
+ '(trailing-whitespace ((t (:foreground "Gray" :inverse-video t))))
  '(vimish-fold-fringe ((t (:inherit fringe :foreground "black" :weight bold))))
  '(vimish-fold-mouse-face ((t (:background "old lace" :inherit vimish-fold-overlay))))
  '(vimish-fold-overlay ((t (:background "floral white" :foreground "black" :box (:line-width 1 :color "moccasin")))))
