@@ -61,16 +61,14 @@
   (setq ivy-virtual-abbreviate 'full
         ivy-rich-abbreviate-paths t
         ivy-rich-switch-buffer-name-max-length 40
-        ivy-rich-switch-buffer-project-max-length 15
-        ivy-rich-switch-buffer-mode-max-length 20
         ivy-rich-switch-buffer-align-virtual-buffer t)
-
-  (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich-switch-buffer-transformer))
+  (ivy-rich-mode 1))
 
 ;; ——
 
 (use-package ivy-xref
   :after ivy
+  :diminish
 
   :commands
   (ivy-xref-show-xrefs)
