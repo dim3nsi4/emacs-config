@@ -42,7 +42,7 @@
 
 
 ;; M-w saves the current line if no region is selected
-(defadvice my/kill-ring-save (before slick-copy activate compile)
+(defadvice kill-ring-save (before slick-copy activate compile)
   "When called interactively with no active region, copy a single line instead."
   (interactive
    (if mark-active (list (region-beginning) (region-end))
@@ -52,7 +52,7 @@
 
 
 ;; C-w deletes and saves the current line if no region is selected
-(defadvice my/kill-region (before slick-cut activate compile)
+(defadvice kill-region (before slick-cut activate compile)
   "When called interactively with no active region, kill a single line instead."
   (interactive
    (if mark-active (list (region-beginning) (region-end))
