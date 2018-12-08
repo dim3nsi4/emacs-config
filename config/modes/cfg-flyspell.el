@@ -13,11 +13,19 @@
   (("C-c C-s s" . my/cycle-ispell-languages))
 
   :config
-  (setq ispell-program-name "hunspell"
-        ispell-dictionary   "american")
+  (cond
+   ((executable-find "hunspell")
+    (setq ispell-program-name "hunspell"))
+   ((executable-find "aspell")
+    (setq ispell-program-name "aspell")))
+
+  (setq ispell-dictionary "en_US")
+  (setq ispell-dictionary-alist
+        '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)
+          ("fr_FR" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "fr_FR") nil utf-8)))
 
   ;; Cycle between a dictionary list session-wide
-  (let ((langs '("francais" "american")))
+  (let ((langs '("fr_FR" "en_US")))
     (setq lang-ring (make-ring (length langs)))
     (dolist (elem langs) (ring-insert lang-ring elem)))
 
